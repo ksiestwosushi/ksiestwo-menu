@@ -244,17 +244,17 @@
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0, 0, 0, 0); /* Начальная прозрачность фона */
+      background-color: rgba(0, 0, 0, 0); 
       align-items: center;
       justify-content: center;
-      opacity: 0; /* Начальная непрозрачность */
-      transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Плавный переход для фона и прозрачности */
+      opacity: 0; 
+      transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out; 
     }
     
     .lightbox.open {
-      display: flex; /* Показываем элемент */
-      opacity: 1; /* Полностью непрозрачный */
-      background-color: rgba(0, 0, 0, 0.9); /* Конечный цвет фона */
+      display: flex; 
+      opacity: 1; 
+      background-color: rgba(0, 0, 0, 0.9); 
     }
     
     .lightbox-content {
@@ -265,12 +265,12 @@
       border-radius: var(--radius);
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
       cursor: pointer;
-      transform: scale(0.95); /* Начальное масштабирование */
-      transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.5, 1.1); /* Эффект "прыжка" */
+      transform: scale(0.95); 
+      transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.5, 1.1); 
     }
     
     .lightbox.open .lightbox-content {
-        transform: scale(1); /* Конечное масштабирование */
+        transform: scale(1); 
     }
 
     .lightbox-close {
@@ -483,7 +483,7 @@
           {enName:'Maguro Spicy Ebi Ten', plName:'Maguro Spicy Ebi Ten', descEN:'shrimp tempura wrapped in roasted tuna', descPL:'krewetka w tempurze owijana opalanym tuńczykiem', price:'45 zł', itemId:'u-magroebi'},
           {enName:'Kegon', plName:'Kegon', descEN:'salmon wrapped in grilled eel', descPL:'łosoś owijany grillowanym węgorzem', price:'45 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-343 (1).jpg', itemId:'u-kegon'},
           {enName:'Sake Aburi', plName:'Sake Aburi', descEN:'salmon wrapped in roasted spicy salmon', descPL:'łosoś owijany opalanym pikantnym łososiem', price:'45 zł', itemId:'u-sakeaburi'},
-          {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish tempura coated with flying fish roe', descPL:'maślana w tempurze obtoczona kawiorem z latającej ryby', price:'48 zł', itemId:'u-tobiohio'},
+          {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish tempura coated with flying fish roe', descPL:'maślana w tempurze obtoczona kawiorem z latająщей ryby', price:'48 zł', itemId:'u-tobiohio'},
           {enName:'Nashi Sake', plName:'Nashi Sake', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką', price:'45 zł', itemId:'u-nashisake'},
           {enName:'Sake Tataki Ebi Ten', plName:'Sake Tataki Ebi Ten', descEN:'shrimp tempura topped with salmon tartare', descPL:'krewetki w tempurze obłożone tatarem z łososia', price:'48 zł', itemId:'u-saketatent'},
           {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś owijany awokado', price:'42 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-43.jpg', itemId:'u-awokado'},
@@ -760,10 +760,8 @@
 
     function openLightbox(imgPath) {
       lightboxImg.src = imgPath;
-      lightbox.style.display = 'flex'; // Делаем его видимым, чтобы переход начался
+      lightbox.style.display = 'flex'; 
       
-      // Небольшая задержка, чтобы браузер успел отрисовать display:flex
-      // до применения класса open, что активирует плавный переход
       setTimeout(() => {
         lightbox.classList.add('open');
       }, 10); 
@@ -772,7 +770,6 @@
     function closeLightbox() {
       lightbox.classList.remove('open');
       
-      // Ждем завершения анимации (0.3s) перед скрытием элемента
       setTimeout(() => {
         lightbox.style.display = 'none';
         lightboxImg.src = ''; 
@@ -786,9 +783,10 @@
         closeLightbox();
       }
     };
-    // Предотвращаем закрытие при клике на само изображение
+    // NEW RULE: Clicking the image itself closes the lightbox
     lightboxImg.onclick = (e) => {
       e.stopPropagation();
+      closeLightbox(); 
     };
 
     
