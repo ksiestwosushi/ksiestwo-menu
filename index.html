@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -21,70 +21,12 @@
       background: var(--bg);
       color:var(--text);
       -webkit-font-smoothing:antialiased;
-      -moz-osx-osx-smoothing:grayscale;
-      padding:0; /* Убираем padding с body */
+      -moz-osx-font-smoothing:grayscale;
+      padding:24px;
       display:flex;
       justify-content:center;
     }
 
-    /* NEW: Единый фиксированный контейнер для всей верхней панели */
-    .fixed-header-bar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background: var(--card); /* Белый фон */
-        padding-top: 24px;
-        padding-bottom: 0;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        z-index: 50; 
-        display: flex;
-        flex-direction: column;
-        align-items: center; 
-    }
-    
-    /* Контейнер для иконок и EN/PL */
-    .top-row {
-        width: 100%;
-        max-width: var(--maxw);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 24px 18px 24px; /* Отступы по бокам */
-    }
-
-    .lang-switch{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      justify-content: flex-end; 
-    }
-    
-    /* Стиль для иконок */
-    .contact-icons {
-        display: flex;
-        gap: 10px;
-    }
-    .contact-icon {
-        width: 36px; 
-        height: 36px;
-        background: var(--accent);
-        color: white;
-        border-radius: 50%;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px; 
-        text-decoration: none;
-        line-height: 1; 
-        transition: background 0.2s;
-    }
-    .contact-icon:hover {
-        background: #c07758;
-    }
-
-    /* Основной прокручиваемый контейнер меню */
     .wrap{
       width:100%;
       max-width:var(--maxw);
@@ -94,10 +36,36 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.08);
       max-height: calc(100vh - 48px);
       overflow-y: auto;
-      
-      /* NEW: Отступ, чтобы быть под фиксированным заголовком (примерная высота 190px) */
-      margin-top: 190px; 
-      margin-bottom: 24px; 
+    }
+    
+    /* STICKY LANGUAGE BAR: Only the language buttons are sticky */
+    .sticky-lang-bar {
+        position: sticky;
+        top: -22px; 
+        margin: 0 -22px; 
+        padding: 22px 22px 0 22px; 
+        background: var(--card);
+        border-top-left-radius: var(--radius);
+        border-top-right-radius: var(--radius);
+        z-index: 10;
+        transition: box-shadow 0.3s;
+        display: flex; 
+        justify-content: flex-end; 
+        align-items: center; 
+        /* Optimization for smooth scroll */
+        transform: translateZ(0); 
+        -webkit-transform: translateZ(0); 
+    }
+
+    .sticky-lang-bar.scrolled {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding-bottom: 8px; 
+    }
+    
+    .lang-switch{
+      display:flex;
+      gap:8px;
+      align-items:center;
     }
     
     header{
@@ -135,27 +103,24 @@
       border-radius:8px;
       cursor:pointer;
       font-weight:600;
+      transition: background 0.2s;
     }
     .lang-btn.active{
       background:var(--accent);
       color:white;
       border-color:transparent;
     }
+    .lang-btn:hover:not(.active) {
+        background: rgba(0,0,0,0.05);
+    }
 
-    /* NEW: Фиксированная Навигация (Чипы) */
-    .fixed-nav {
-      display: flex;
-      gap: 12px;
+    /* Navigation Chips */
+    nav{
+      display:flex;
+      gap:12px;
+      margin: 14px 0;
       overflow-x: auto;
       padding-bottom: 8px; 
-      width: 100%; 
-      max-width: var(--maxw);
-      justify-content: flex-start;
-      /* Добавляем отступы, чтобы навигация была на всю ширину и скроллилась */
-      padding: 0 24px 8px 24px;
-      margin-left: -24px;
-      margin-right: -24px;
-      box-sizing: content-box;
     }
     .nav-chip{
       flex-shrink: 0;
@@ -240,16 +205,9 @@
     @media (max-width:900px){
       .content{flex-direction:column-reverse}
       .right{width:100%}
-      /* Hide fixed links on small screens and reduce margin for wrap */
-      .contact-icons {
-        display: none;
-      }
-      .wrap {
-        margin-top: 130px; /* Меньший отступ на мобильных */
-      }
     }
     
-    /* Lightbox Styles (оставляем фиксированными) */
+    /* Lightbox Styles */
     .lightbox {
       display: none;
       position: fixed;
@@ -294,35 +252,24 @@
   </style>
 </head>
 <body>
-    
-  <div class="fixed-header-bar">
-      <div class="top-row">
-          <div class="contact-icons">
-              <a href="https://www.instagram.com/ksiestwosushi?igsh=YXgwZ3Rhd2JuMmZu" target="_blank" class="contact-icon" title="Instagram">🤳</a>
-              <a href="https://maps.app.goo.gl/wFUDJNp1QXaiykeq8" target="_blank" class="contact-icon" title="Посмотреть на карте">📍</a>
-              <a href="tel:+48602111144" class="contact-icon" title="Позвонить">📞</a>
-          </div>
-          
-          <div class="lang-switch">
-              <button class="lang-btn active" data-lang="en">EN</button>
-              <button class="lang-btn" data-lang="pl">PL</button>
-          </div>
-      </div>
-      
-      <header class="top-row">
-          <div class="brand">
-              <div class="logo">KS</div>
-              <div>
-                  <h1 id="title">Księstwo Sushi</h1>
-                  <div class="sub" id="subtitle">Fine sushi — Menu</div>
-              </div>
-          </div>
-      </header>
-      
-      <nav class="fixed-nav" id="nav"></nav>
-      </div>
   <div class="wrap" id="app">
-    
+    <div class="sticky-lang-bar" id="sticky-lang-bar">
+        <div class="lang-switch">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="pl">PL</button>
+        </div>
+    </div>
+    <header>
+      <div class="brand">
+        <div class="logo">KS</div>
+        <div>
+          <h1 id="title">Księstwo Sushi</h1>
+          <div class="sub" id="subtitle">Fine sushi — Menu</div>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav"></nav>
     <div class="content">
       <div class="left" id="menu-area">
         </div>
@@ -391,40 +338,40 @@
         id:'uramaki',
         title:{en:'Uramaki (8 pc)', pl:'Uramaki (8 szt.)'},
         items:[
-          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', price:'38 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-170.jpg'},
-          {enName:'Ohio Spice Sake', plName:'Ohio Spice Sake', descEN:'salmon wrapped in roasted butterfish', price:'42 zł'},
-          {enName:'Maguro Spicy Ebi Ten', plName:'Maguro Spicy Ebi Ten', descEN:'shrimp tempura wrapped in roasted tuna', price:'45 zł'},
-          {enName:'Kegon', plName:'Kegon', descEN:'salmon wrapped in grilled eel', price:'45 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-343 (1).jpg'},
-          {enName:'Sake Aburi', plName:'Sake Aburi', descEN:'salmon wrapped in roasted spicy salmon', price:'45 zł'},
-          {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish tempura coated with flying fish roe', price:'48 zł'},
-          {enName:'Nashi Sake', plName:'Nashi Sake', descEN:'salmon wrapped in Japanese pear', price:'45 zł'},
-          {enName:'Sake Tataki Ebi Ten', plName:'Sake Tataki Ebi Ten', descEN:'shrimp tempura topped with salmon tartare', price:'48 zł'},
-          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', price:'42 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-43.jpg'},
-          {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', price:'42 zł'},
-          {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', price:'45 zł'},
-          {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', price:'42 zł'},
-          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', price:'40 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-94.jpg'},
-          {enName:'Rainbow', plName:'Rainbow', descEN:'assorted', price:'48 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-511.jpg'}
+          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-170.jpg'},
+          {enName:'Ohio Spice Sake', plName:'Ohio Spice Sake', descEN:'salmon wrapped in roasted butterfish', descPL:'łosoś owijany opalaną maślaną', price:'42 zł'},
+          {enName:'Maguro Spicy Ebi Ten', plName:'Maguro Spicy Ebi Ten', descEN:'shrimp tempura wrapped in roasted tuna', descPL:'krewetka w tempurze owijana opalanym tuńczykiem', price:'45 zł'},
+          {enName:'Kegon', plName:'Kegon', descEN:'salmon wrapped in grilled eel', descPL:'łosoś owijany grillowanym węgorzem', price:'45 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-343 (1).jpg'},
+          {enName:'Sake Aburi', plName:'Sake Aburi', descEN:'salmon wrapped in roasted spicy salmon', descPL:'łosoś owijany opalanym pikantnym łososiem', price:'45 zł'},
+          {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish tempura coated with flying fish roe', descPL:'maślana w tempurze obtoczona kawiorem z latającej ryby', price:'48 zł'},
+          {enName:'Nashi Sake', plName:'Nashi Sake', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką', price:'45 zł'},
+          {enName:'Sake Tataki Ebi Ten', plName:'Sake Tataki Ebi Ten', descEN:'shrimp tempura topped with salmon tartare', descPL:'krewetki w tempurze obłożone tatarem z łososia', price:'48 zł'},
+          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś owijany awokado', price:'42 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-43.jpg'},
+          {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', descPL:'łosoś owijany mango', price:'42 zł'},
+          {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z siekanym porem i orange pepper', price:'45 zł'},
+          {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka w tempurze zawijana w papier sojowy', price:'42 zł'},
+          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owijane łososiem', price:'40 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-94.jpg'},
+          {enName:'Rainbow', plName:'Rainbow', descEN:'assorted', descPL:'surimi owijane wachlarzem ryb', price:'48 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-511.jpg'}
         ]
       },
       {
         id:'uramaki-temp',
         title:{en:'Uramaki in Tempura (8 pc)', pl:'Uramaki w Tempurze (8 szt.)'},
         items:[
-          {enName:'Tempura Sake', plName:'Tempura Sake', descEN:'salmon', price:'38 zł'},
-          {enName:'Tempura Ohio', plName:'Tempura Ohio', descEN:'butterfish', price:'38 zł'},
-          {enName:'Tempura Maguro', plName:'Tempura Maguro', descEN:'tuna', price:'42 zł'},
-          {enName:'Tempura Ebi', plName:'Tempura Ebi', descEN:'steamed shrimp', price:'40 zł'},
-          {enName:'Tempura Unagi Kabayaki', plName:'Tempura Unagi Kabayaki', descEN:'grilled eel', price:'45 zł'}
+          {enName:'Tempura Sake', plName:'Tempura Sake', descEN:'salmon', descPL:'łosoś', price:'38 zł'},
+          {enName:'Tempura Ohio', plName:'Tempura Ohio', descEN:'butterfish', descPL:'maślana', price:'38 zł'},
+          {enName:'Tempura Maguro', plName:'Tempura Maguro', descEN:'tuna', descPL:'tuńczyk', price:'42 zł'},
+          {enName:'Tempura Ebi', plName:'Tempura Ebi', descEN:'steamed shrimp', descPL:'parzona krewetka', price:'40 zł'},
+          {enName:'Tempura Unagi Kabayaki', plName:'Tempura Unagi Kabayaki', descEN:'grilled eel', descPL:'grillowany węgorz', price:'45 zł'}
         ]
       },
       {
         id:'oyakomaki',
         title:{en:'Oyakomaki / Sashimi', pl:'Oyakomaki / Sashimi'},
         items:[
-          {enName:'Sake Ebi Tataki (2 pcs)', plName:'Sake Ebi Tataki (2 szt.)', descEN:'chopped shrimp wrapped in salmon', price:'36 zł'},
-          {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'salmon caviar wrapped in tuna', price:'42 zł'},
-          {enName:'Sashimi Mizu (9 pcs)', plName:'Sashimi Mizu (9 szt.)', descEN:'slices of raw fish — salmon, tuna, butterfish', price:'95 zł'}
+          {enName:'Sake Ebi Tataki (2 pcs)', plName:'Sake Ebi Tataki (2 szt.)', descEN:'chopped shrimp wrapped in salmon', descPL:'siekana krewetka owijana w łososia', price:'36 zł'},
+          {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'salmon caviar wrapped in tuna', descPL:'kawior z łososia owijany tuńczykiem', price:'42 zł'},
+          {enName:'Sashimi Mizu (9 pcs)', plName:'Sashimi Mizu (9 szt.)', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'slajsy surowej ryby – łosoś, tuńczyk, maślana', price:'95 zł'}
         ]
       }
     ];
@@ -435,13 +382,31 @@
     const langBtns = document.querySelectorAll('.lang-btn');
     let LANG = 'en';
     
+    // --- STICKY LOGIC ELEMENTS ---
+    const stickyLangBar = document.getElementById('sticky-lang-bar');
+    const wrap = document.querySelector('.wrap');
+    
     // Тексты для блока "Notice"
     const NOTICE_TEXTS = {
         en: 'We kindly inform you that we add a waiter service of 10% to the final bill.<br><br>According to the recipe, items may contain: cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame, philadelphia cheese, mayonnaise, sauces, edible gold.',
         pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.<br><br>Zgodnie z recepturą mogą zawierać: ogórka, oshinko, kampyo, awokado, mango, melona, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'
     };
     
-    // Функции прокрутки больше не нужны, так как нет "липких" элементов, только "фиксированные".
+    // Функция для проверки состояния прокрутки и применения тени (для Sticky Lang Bar)
+    function checkStickyState() {
+        if (wrap.scrollTop > 0) {
+            stickyLangBar.classList.add('scrolled');
+        } else {
+            stickyLangBar.classList.remove('scrolled');
+        }
+    }
+    
+    // Включаем прослушивание прокрутки на элементе wrap
+    wrap.addEventListener('scroll', checkStickyState);
+    
+    // При первой загрузке тоже проверяем
+    window.addEventListener('load', checkStickyState);
+
 
     function createNav(){
       nav.innerHTML = '';
@@ -449,21 +414,18 @@
         const chip = document.createElement('button');
         chip.className='nav-chip';
         chip.textContent = sec.title[LANG];
-        // Скроллим главный wrap, а не окно
         chip.onclick = ()=>{ 
             const targetElement = document.getElementById(sec.id);
             if (targetElement) {
-                // Вычисляем позицию элемента относительно контейнера wrap
-                const wrapTop = document.getElementById('app').getBoundingClientRect().top;
-                const targetTop = targetElement.getBoundingClientRect().top;
-                // Скроллим на нужную позицию внутри wrap
-                document.getElementById('app').scrollTop += (targetTop - wrapTop);
+                // Scroll the wrap container to the element's position
+                targetElement.scrollIntoView({behavior:'smooth', block:'start'});
             }
         };
         nav.appendChild(chip);
       });
     }
 
+    const originalRenderMenu = renderMenu; 
 
     function renderMenu(){
       menuArea.innerHTML = '';
@@ -542,6 +504,7 @@
       document.getElementById('notice-text').innerHTML = NOTICE_TEXTS[LANG];
 
       const contacts = document.getElementById('contacts');
+      // Вставляем иконки в блок контактов
       contacts.innerHTML = (LANG==='en')
         ? '📞 +48 602 111 144<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warsaw'
         : '📞 +48 602 111 144<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warszawa';
