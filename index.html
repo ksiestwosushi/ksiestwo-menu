@@ -403,10 +403,10 @@
     const stickyLangBar = document.getElementById('sticky-lang-bar');
     const wrap = document.querySelector('.wrap');
     
-    // Тексты для блока "Notice"
+    // Тексты для блока "Notice" (ОБНОВЛЕНО)
     const NOTICE_TEXTS = {
-        en: 'We kindly inform you that we add a waiter service of 10% to the final bill.<br><br>According to the recipe, items may contain: cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame, philadelphia cheese, mayonnaise, sauces, edible gold.',
-        pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.<br><br>Zgodnie z recepturą mogą zawierać: ogórka, oshinko, kampyo, awokado, mango, melona, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'
+        en: 'We kindly inform you that we add a waiter service of 10% to the final bill.<br><br>According to the recipe, items may contain: **gluten**, cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame, philadelphia cheese, mayonnaise, sauces, edible gold.',
+        pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.<br><br>Zgodnie z recepturą mogą zawierać: **gluten**, ogórka, oshinko, kampyo, awokado, mango, melona, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'
     };
     
     // Функция для проверки состояния прокрутки и применения тени (для Sticky Lang Bar)
@@ -514,17 +514,11 @@
     function updateTexts(){
       document.getElementById('title').textContent = 'Księstwo Sushi';
       document.getElementById('subtitle').textContent = (LANG==='en') ? 'Fine sushi — Menu' : 'Wyborne sushi — Menu';
-      // УДАЛЕНО: document.getElementById('hours-title').textContent = (LANG==='en') ? 'Contacts' : 'Kontakt';
       document.getElementById('notice-title').textContent = (LANG==='en') ? 'Notice' : 'Uwaga';
       document.getElementById('footer-left').textContent = 'Księstwo Sushi';
       document.getElementById('footer-right').textContent = (LANG==='en') ? 'Menu — web version' : 'Menu — wersja online';
       
       document.getElementById('notice-text').innerHTML = NOTICE_TEXTS[LANG];
-
-      // УДАЛЕНО: const contacts = document.getElementById('contacts');
-      // УДАЛЕНО: contacts.innerHTML = (LANG==='en')
-      // УДАЛЕНО:  ? '📞 +48 602 111 144<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warsaw'
-      // УДАЛЕНО:  : '📞 +48 602 111 144<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warszawa';
     }
 
 
