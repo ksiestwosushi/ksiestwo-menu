@@ -195,8 +195,7 @@
 
     <div class="content">
       <div class="left" id="menu-area">
-        <!-- sections injected here -->
-      </div>
+        </div>
 
       <aside class="right">
         <div class="section">
@@ -262,8 +261,9 @@
           {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', descPL:'łosoś w mango', price:'42 zł'},
           {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z porem i pomarańczowym pieprzem', price:'45 zł'},
           {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka tempura w sojowym papierze', price:'42 zł'},
-          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owinięte łososiem', price:'40 zł'},
-          {enName:'Rainbow', plName:'Rainbow', descEN:'assorted', descPL:'asortyment', price:'48 zł'}
+          // >>>>>>>>>>> ИЗМЕНЕНИЕ: ОБНОВЛЕН imgFile ДЛЯ РОЛЛА CALIFORNIA GOLD <<<<<<<<<<
+          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owinięte łososiem', price:'40 zł', imgFile:'IMG-20251014-WA0000.jpg'},
+          {enName:'Rainbow', plName:'Rainbow', descEN:'assorted', descPL:'asortyмент', price:'48 zł'}
         ]
       },
       {
@@ -328,8 +328,9 @@
           img.style.height='100%';
           img.style.objectFit='cover';
           img.alt = (it[LANG==='en'?'enName':'plName']);
-          img.src = 'https://via.placeholder.com/300x200?text=photo';
-          // You can replace img.src with relative path 'images/filename.jpg'
+          // --- ПРОВЕРКА НАЛИЧИЯ imgFile ДЛЯ УСТАНОВКИ ИЗОБРАЖЕНИЯ ---
+          img.src = it.imgFile ? ('images/' + it.imgFile) : 'https://via.placeholder.com/300x200?text=photo';
+          // Put your photos in a local folder named "images" next to this html file.
           thumb.appendChild(img);
 
           const meta = document.createElement('div');
@@ -388,10 +389,6 @@
     createNav();
     renderMenu();
     updateTexts();
-
-    // Optional: allow replacing img placeholders by drag-n-drop or file path later (commented hint)
-    // To replace images: open file and replace img.src value 'https://via.placeholder...' with 'images/yourphoto.jpg'
-    // Put your photos in a local folder named "images" next to this html file.
   </script>
 </body>
 </html>
