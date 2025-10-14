@@ -253,7 +253,9 @@
 
         <div class="section">
           <h2 id="notice-title">Notice</h2>
-          <div class="small">We kindly inform you that we add a waiter service of 10% to the final bill.</div>
+          <div class="small" id="notice-text">
+            We kindly inform you that we add a waiter service of 10% to the final bill.
+          </div>
         </div>
       </aside>
     </div>
@@ -317,17 +319,19 @@
           {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z porem i pomarańczowym pieprzem', price:'45 zł'},
           {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka tempura w sojowym papierze', price:'42 zł'},
           {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owinięte łososiem', price:'40 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-94.jpg'},
-          // ОБНОВЛЕНО: Rainbow теперь содержит imgFile (V2-511)
-          {enName:'Rainbow', plName:'Rainbow', descEN:'assorted', descPL:'asortyмент', price:'48 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-511.jpg'}
+          // ИСПРАВЛЕНО
+          {enName:'Rainbow', plName:'Rainbow', descEN:'assorted', descPL:'asortyment', price:'48 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-511.jpg'}
         ]
       },
       {
         id:'uramaki-temp',
-        title:{en:'Uramaki w Tempurze', pl:'Uramaki w tempurze'},
+        title:{en:'Uramaki in Tempura (8 pc)', pl:'Uramaki w Tempurze (8 szt.)'},
         items:[
-          {enName:'Tempura Sake', plName:'Tempura Sake', descEN:'salmon', descPL:'łosoś', price:'—'},
-          {enName:'Tempura Ohio', plName:'Tempura Ohio', descEN:'butterfish', descPL:'butterfish', price:'—'},
-          {enName:'Tempura Maguro', plName:'Tempura Maguro', descEN:'tuna', descPL:'tuńczyk', price:'—'}
+          {enName:'Tempura Sake', plName:'Tempura Sake', descEN:'salmon', descPL:'łosoś', price:'38 zł'},
+          {enName:'Tempura Ohio', plName:'Tempura Ohio', descEN:'butterfish', descPL:'maślana', price:'38 zł'},
+          {enName:'Tempura Maguro', plName:'Tempura Maguro', descEN:'tuna', descPL:'tuńczyk', price:'42 zł'},
+          {enName:'Tempura Ebi', plName:'Tempura Ebi', descEN:'steamed shrimp', descPL:'parzona krewetka', price:'40 zł'},
+          {enName:'Tempura Unagi Kabayaki', plName:'Tempura Unagi Kabayaki', descEN:'grilled eel', descPL:'grillowany węgorz', price:'45 zł'}
         ]
       },
       {
@@ -336,7 +340,8 @@
         items:[
           {enName:'Sake Ebi Tataki (2 pcs)', plName:'Sake Ebi Tataki (2 szt.)', descEN:'chopped shrimp wrapped in salmon', descPL:'posiekana krewetka w łososiu', price:'36 zł'},
           {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'salmon caviar wrapped in tuna', descPL:'ikura w tuńczyku', price:'42 zł'},
-          {enName:'Sashimi Mizu (9 pcs)', plName:'Sashimi Mizu (9 szt.)', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plastry surowych ryb — łosoś, tuńczyk, butterfish', price:'95 zł'}
+          // ИСПРАВЛЕНО
+          {enName:'Sashimi Mizu (9 pcs)', plName:'Sashimi Mizu (9 szt.)', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plastry surowych ryb — łosoś, tuńczyk, maślana', price:'95 zł'}
         ]
       }
     ];
@@ -346,6 +351,12 @@
     const menuArea = document.getElementById('menu-area');
     const langBtns = document.querySelectorAll('.lang-btn');
     let LANG = 'en';
+
+    // Тексты для блока "Notice"
+    const NOTICE_TEXTS = {
+        en: 'We kindly inform you that we add a waiter service of 10% to the final bill.',
+        pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.<br><br>Zgodnie z recepturą mogą zawierać: ogórka, oshinko, kampyo, awokado, mango, melona, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'
+    };
 
     function createNav(){
       nav.innerHTML = '';
@@ -436,6 +447,10 @@
       document.getElementById('notice-title').textContent = (LANG==='en') ? 'Notice' : 'Uwaga';
       document.getElementById('footer-left').textContent = 'Księstwo Sushi';
       document.getElementById('footer-right').textContent = (LANG==='en') ? 'Menu — web version' : 'Menu — wersja online';
+      
+      // Обновление текста Notice
+      document.getElementById('notice-text').innerHTML = NOTICE_TEXTS[LANG];
+
       // update contact block (if you want different translations)
       const contacts = document.getElementById('contacts');
       contacts.innerHTML = (LANG==='en')
