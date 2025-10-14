@@ -277,12 +277,6 @@
 
       <aside class="right">
         <div class="section">
-          <h2 id="hours-title">Contacts</h2>
-          <div class="small" id="contacts">
-            </div>
-        </div>
-
-        <div class="section">
           <h2 id="notice-title">Notice</h2>
           <div class="small" id="notice-text">
             </div>
@@ -520,17 +514,17 @@
     function updateTexts(){
       document.getElementById('title').textContent = 'Księstwo Sushi';
       document.getElementById('subtitle').textContent = (LANG==='en') ? 'Fine sushi — Menu' : 'Wyborne sushi — Menu';
-      document.getElementById('hours-title').textContent = (LANG==='en') ? 'Contacts' : 'Kontakt';
+      // УДАЛЕНО: document.getElementById('hours-title').textContent = (LANG==='en') ? 'Contacts' : 'Kontakt';
       document.getElementById('notice-title').textContent = (LANG==='en') ? 'Notice' : 'Uwaga';
       document.getElementById('footer-left').textContent = 'Księstwo Sushi';
       document.getElementById('footer-right').textContent = (LANG==='en') ? 'Menu — web version' : 'Menu — wersja online';
       
       document.getElementById('notice-text').innerHTML = NOTICE_TEXTS[LANG];
 
-      const contacts = document.getElementById('contacts');
-      contacts.innerHTML = (LANG==='en')
-        ? '📞 +48 602 111 144<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warsaw'
-        : '📞 +48 602 111 144<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warszawa';
+      // УДАЛЕНО: const contacts = document.getElementById('contacts');
+      // УДАЛЕНО: contacts.innerHTML = (LANG==='en')
+      // УДАЛЕНО:  ? '📞 +48 602 111 144<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warsaw'
+      // УДАЛЕНО:  : '📞 +48 602 111 144<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warszawa';
     }
 
 
