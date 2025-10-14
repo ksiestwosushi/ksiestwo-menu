@@ -535,4 +535,49 @@
     function attachLightboxListeners() {
       // Небольшая задержка, чтобы элементы успели появиться в DOM
       setTimeout(() => { 
-        document.querySelectorAll('.js-lig
+        document.querySelectorAll('.js-lightbox-link').forEach(link => {
+          // Удаляем предыдущие обработчики (важно при смене языка)
+          link.onclick = null; 
+          
+          link.onclick = (e) => {
+            e.preventDefault(); // Останавливаем переход по ссылке
+            const imgPath = link.dataset.img;
+            // Открываем, только если это не заглушка
+            if (imgPath.indexOf('placeholder') === -1) {
+                openLightbox(imgPath);
+            }
+          };
+        });
+      }, 100); 
+    }
+    
+    // Переопределение функции renderMenu для добавления обработчиков после рендеринга
+    const tempRenderMenu = renderMenu;
+    renderMenu = function() {
+        tempRenderMenu(); // Вызываем оригинальную функцию рендеринга
+        attachLightboxListeners(); // Добавляем новые обработчики для лайтбокса
+    }
+
+    // --- КОНЕЦ ЛОГИКИ ЛАЙТБОКСА ---
+
+
+    // language buttons
+    langBtns.forEach(b=>{
+      b.addEventListener('click', ()=>{
+        langBtns.forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        LANG = b.dataset.lang;
+        createNav();
+        // Здесь вызывается новая renderMenu, которая вызывает attachLightboxListeners
+        renderMenu(); 
+        updateTexts();
+      });
+    });
+
+    // init
+    createNav();
+    renderMenu();
+    updateTexts();
+  </script>
+</body>
+</html>
