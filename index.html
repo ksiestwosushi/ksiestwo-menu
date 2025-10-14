@@ -30,15 +30,14 @@
     .wrap{
       width:100%;
       max-width:var(--maxw);
-      /* УДАЛЕН ГРАДИЕНТ ДЛЯ ФОНА, ДОБАВЛЕНО ФОНОВОЕ ИЗОБРАЖЕНИЕ */
+      /* ФОНОВЫЙ УЗОР ИЗ uzor dla menu.jpg */
       background: var(--card); /* Основной белый фон */
-      background-image: url('images/image_b7f568.jpg'); 
+      background-image: url('images/uzor dla menu.jpg'); /* ОБНОВЛЕННЫЙ ФАЙЛ ФОНА */
       background-size: cover; 
       background-position: center;
       background-repeat: no-repeat;
       
-      /* Добавлен полупрозрачный белый слой поверх фона для читаемости */
-      /* Используем псевдоэлемент для этого, или просто уменьшим прозрачность, но для простоты - добавим полупрозрачность в белый фон */
+      /* Полупрозрачный белый слой для читаемости текста поверх узора */
       background-color: rgba(255, 255, 255, 0.9); 
       
       border-radius:16px;
@@ -381,13 +380,13 @@
   <script>
     // DATA: menu items with EN and PL text and prices (zł)
     const MENU = [
-      // 1. НОВЫЙ РАЗДЕЛ ДЛЯ ГАЛЕРЕИ (Популярные Суши)
+      // 1. РАЗДЕЛ ДЛЯ ГАЛЕРЕИ (Теперь просто "Popular")
       {
         id: 'sushi-gallery',
-        title: {en: 'Popular Sushi', pl: 'Popularne Sushi'},
+        title: {en: 'Popular', pl: 'Popularne'}, /* ИЗМЕНЕНО */
         isGallery: true
       },
-      // 2. НОВЫЙ РАЗДЕЛ ДЛЯ НАБОРОВ
+      // 2. РАЗДЕЛ ДЛЯ НАБОРОВ (Без миниатюр и исключен из галереи, цельные описания)
       {
         id:'sushi-sets',
         title:{en:'Sushi Sets', pl:'Zestawy Sushi'},
@@ -395,30 +394,31 @@
           {
             enName:'KIRO (14 pcs)', 
             plName:'KIRO (14 szt.)', 
-            // Описание: одна цельная строка. Нет cite-тэга, значит нет миниатюры.
+            // Цельное описание, без cite-тэгов
             descEN:'4x Hosomaki (tuna, salmon, butterfish), 4x Hosomaki (cucumber, oshinko, kampyo), 4x Futomaki Ohio/Kani (butterfish or surimi), 2x Nigiri (salmon)', 
             descPL:'4x Hosomaki (tuńczyk, łosoś, maślana), 4x Hosomaki (ogórek, oshinko, kampyo), 4x Futomaki Ohio/Kani (maślana lub surimi), 2x Nigiri (łosoś)', 
             price:'70 zł', 
-            itemId:'set-kiro'
+            itemId:'set-kiro',
+            imgFile:null // Убрали imgFile, чтобы не появлялись миниатюры в списке меню
           },
           {
             enName:'ORENJI (16 pcs)', 
             plName:'ORENJI (16 szt.)', 
-            // Описание: одна цельная строка. Нет cite-тэга, значит нет миниатюры.
+            // Цельное описание, без cite-тэгов
             descEN:'4x California Ebi (steamed shrimp), 4x California Awokado Kani (surimi wrapped in avocado), 4x Ohio/Awokado Kani (butterfish/surimi wrapped in sesame), 4x Nigiri (salmon/shrimp)', 
             descPL:'4x California Ebi (parzona krewetka), 4x California Awokado Kani (surimi owijane awokado), 4x Ohio/Awokado Kani (maślana/surimi owijane w sezam), 4x Nigiri (łosoś/krewetka)', 
             price:'90 zł', 
-            itemId:'set-orenji'
+            itemId:'set-orenji',
+            imgFile:null // Убрали imgFile
           },
           {
             enName:'AKA (24 pcs)', 
             plName:'AKA (24 szt.)', 
-            // Описание: одна цельная строка. Нет cite-тэга, значит нет миниатюры.
+            // Цельное описание, без cite-тэгов. imgFile удален.
             descEN:'4x Gold California (surimi wrapped in salmon), 4x Ebi Ten (shrimp tempura), 4x Mango Sake (salmon wrapped in mango), 4x Futomaki Ohio Ten (butterfish tempura), 4x Futomaki Ebi Spicy (spicy shrimp), 4x Nigiri (tuna/eel)', 
             descPL:'4x Gold California (surimi owijane łososiem), 4x Ebi Ten (krewetka w tempurze), 4x Mango Sake (łosoś owijany mango), 4x Futomaki Ohio Ten (maślana w tempurze), 4x Futomaki Ebi Spicy (pikantna krewetka), 4x Nigiri (tuńczyk/węgorz)', 
             price:'130 zł', 
-            // imgFile возвращен для отображения в Галерее
-            imgFile:'image_b8bc97.jpg', 
+            imgFile:null, // Убрали imgFile, чтобы не появлялись миниатюры в списке меню
             itemId:'set-aka'
           }
         ]
@@ -486,8 +486,8 @@
           {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish tempura coated with flying fish roe', descPL:'maślana w tempurze obtoczona kawiorem z latająщей ryby', price:'48 zł', itemId:'u-tobiohio'},
           {enName:'Nashi Sake', plName:'Nashi Sake', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką', price:'45 zł', itemId:'u-nashisake'},
           {enName:'Sake Tataki Ebi Ten', plName:'Sake Tataki Ebi Ten', descEN:'shrimp tempura topped with salmon tartare', descPL:'krewetki w tempurze obłożone tatarem z łososia', price:'48 zł', itemId:'u-saketatent'},
-          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś owijany awokado', price:'42 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-43.jpg', itemId:'u-awokado'},
-          {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', descPL:'łosoś owijany mango', price:'42 zł', itemId:'u-mango'},
+          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoсь owijany awokado', price:'42 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-43.jpg', itemId:'u-awokado'},
+          {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', descPL:'łosoсь owijany mango', price:'42 zł', itemId:'u-mango'},
           {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z siekanym porem i orange pepper', price:'45 zł', itemId:'u-magorange'},
           {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka w tempurze zawijana w papier sojowy', price:'42 zł', itemId:'u-ebitenmame'},
           {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owijane łososiem', price:'40 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-94.jpg', itemId:'u-goldcal'},
@@ -571,7 +571,8 @@
     function getGalleryItems(lang) {
         const galleryItems = [];
         MENU.forEach(section => {
-            if (section.items) {
+            // ИСКЛЮЧАЕМ РАЗДЕЛ "Sushi Sets" (id:'sushi-sets') ИЗ ГАЛЕРЕИ
+            if (section.items && section.id !== 'sushi-sets') { 
                 section.items.forEach(item => {
                     // Включаем в галерею только те элементы, у которых есть фото
                     if (item.imgFile && item.itemId) { 
@@ -690,7 +691,7 @@
                 name.textContent = (LANG==='en'?it.enName:it.plName);
                 const desc = document.createElement('div');
                 desc.className='desc';
-                desc.innerHTML = (LANG==='en'?it.descEN:it.descPL) || '';
+                desc.innerHTML = (LANG==='en'?it.descEN:it.plDesc) || ''; /* Используем plDesc для польского */
                 const price = document.createElement('div');
                 price.className='price';
                 price.textContent = it.price || '';
