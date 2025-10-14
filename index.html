@@ -21,7 +21,7 @@
       background: var(--bg);
       color:var(--text);
       -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+      -moz-osx-osx-smoothing:grayscale;
       padding:24px;
       display:flex;
       justify-content:center;
@@ -38,7 +38,7 @@
       overflow-y: auto;
     }
     
-    /* UPDATED: Sticky Language Bar for alignment and smooth scroll */
+    /* Sticky Language Buttons */
     .sticky-lang-bar {
         position: sticky;
         top: -22px; 
@@ -49,12 +49,11 @@
         border-top-right-radius: var(--radius);
         z-index: 10;
         transition: box-shadow 0.3s;
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
         /* FIX: Улучшение производительности при прокрутке */
         transform: translateZ(0); 
         -webkit-transform: translateZ(0); 
+        /* FIX: Снова делаем блочным, чтобы lang-switch управлял выравниванием */
+        display: block; 
     }
 
     .sticky-lang-bar.scrolled {
@@ -66,34 +65,37 @@
       display:flex;
       gap:8px;
       align-items:center;
+      /* Сдвигаем вправо */
       justify-content: flex-end; 
     }
     
-    /* Contact Icons styling */
-    .sticky-icons {
+    /* NEW: Fixed links container for the top-left corner */
+    .fixed-header-links {
+        position: fixed;
+        top: 24px; 
+        left: 24px; 
         display: flex;
-        gap: 10px; 
+        gap: 10px;
+        z-index: 100; /* Выше, чем sticky-lang-bar */
     }
 
-    /* UPDATED: Sticky Icon for vertical alignment */
-    .sticky-icon {
+    .fixed-link {
         width: 36px; 
         height: 36px;
         background: var(--accent);
         color: white;
         border-radius: 50%;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 18px; 
         text-decoration: none;
         transition: background 0.2s;
-        /* FIX: Центрирование символа внутри круга */
-        line-height: 1; 
+        line-height: 1; /* Для центрирования эмодзи */
     }
 
-    .sticky-icon:hover {
+    .fixed-link:hover {
         background: #c07758;
     }
     
@@ -231,6 +233,10 @@
     @media (max-width:900px){
       .content{flex-direction:column-reverse}
       .right{width:100%}
+      /* Hide fixed header links on small screens to avoid clutter */
+      .fixed-header-links {
+        display: none; 
+      }
     }
     
     /* Lightbox Styles */
@@ -281,12 +287,6 @@
   <div class="wrap" id="app">
     <div class="sticky-lang-bar" id="sticky-lang-bar">
         
-        <div class="sticky-icons">
-            <a href="https://www.instagram.com/ksiestwosushi?igsh=YXgwZ3Rhd2JuMmZu" target="_blank" class="sticky-icon" title="Instagram">🤳</a>
-            <a href="https://maps.app.goo.gl/wFUDJNp1QXaiykeq8" target="_blank" class="sticky-icon" title="Посмотреть на карте">📍</a>
-            <a href="tel:+48602111144" class="sticky-icon" title="Позвонить">📞</a>
-        </div>
-        
         <div class="lang-switch">
             <button class="lang-btn active" data-lang="en">EN</button>
             <button class="lang-btn" data-lang="pl">PL</button>
@@ -334,7 +334,11 @@
     <img class="lightbox-content" id="lightbox-img">
   </div>
   
-  
+  <div class="fixed-header-links">
+      <a href="https://www.instagram.com/ksiestwosushi?igsh=YXgwZ3Rhd2JuMmZu" target="_blank" class="fixed-link" title="Instagram">🤳</a>
+      <a href="https://maps.app.goo.gl/wFUDJNp1QXaiykeq8" target="_blank" class="fixed-link" title="Посмотреть на карте">📍</a>
+      <a href="tel:+48602111144" class="fixed-link" title="Позвонить">📞</a>
+  </div>
   <script>
     // DATA: menu items with EN and PL text and prices (zł)
     const MENU = [
