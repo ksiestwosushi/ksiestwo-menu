@@ -34,18 +34,17 @@
       border-radius:16px;
       padding:22px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      /* Важно, чтобы прокрутка была на body/wrap, чтобы sticky работало корректно */
-      max-height: calc(100vh - 48px); /* Ограничиваем высоту wrap для корректной работы прокрутки */
-      overflow-y: auto; /* Включаем прокрутку внутри wrap */
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
     }
     
-    /* --- STICKY STYLES for Language Buttons --- */
+    /* Sticky Language Buttons */
     .sticky-lang-bar {
         position: sticky;
-        top: -22px; /* Прилипает к самому верху wrap */
-        margin: 0 -22px; /* Растягиваем на всю ширину wrap */
-        padding: 22px 22px 0 22px; /* Возвращаем padding */
-        background: var(--card); /* Белый фон для перекрытия контента */
+        top: -22px;
+        margin: 0 -22px;
+        padding: 22px 22px 0 22px;
+        background: var(--card);
         border-top-left-radius: var(--radius);
         border-top-right-radius: var(--radius);
         z-index: 10;
@@ -56,45 +55,47 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       padding-bottom: 8px; 
     }
-
+    
     .lang-switch{
       display:flex;
       gap:8px;
       align-items:center;
       justify-content: flex-end; 
     }
-    /* ----------------------------------------- */
-
-
-    /* --- STYLES FOR HOME BUTTON (FIXED) --- */
-    .home-button {
-      position: fixed; /* Прилипает к окну браузера */
-      bottom: 30px; /* Отступ от нижнего края */
-      right: 30px; /* Отступ от правого края */
-      width: 50px;
-      height: 50px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px; /* Размер иконки */
-      cursor: pointer;
-      z-index: 100; /* Поверх всего */
-      opacity: 0; /* Скрыто по умолчанию */
-      transition: opacity 0.3s, transform 0.3s;
-      transform: scale(0.9);
+    
+    /* NEW FIXED LINKS STYLES */
+    .fixed-links {
+        position: fixed;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 90;
     }
 
-    .home-button.visible {
-      opacity: 1;
-      transform: scale(1);
+    .fixed-link {
+        width: 48px;
+        height: 48px;
+        background: var(--accent);
+        color: white;
+        border-radius: 50%;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        text-decoration: none;
+        transition: background 0.2s;
     }
-    /* ------------------------------------- */
 
+    .fixed-link:hover {
+        background: #c07758; /* Slightly darker accent */
+    }
+    /* END NEW FIXED LINKS STYLES */
+    
+    /* Rest of the styles */
     header{
       display:flex;
       align-items:center;
@@ -225,34 +226,44 @@
     @media (max-width:900px){
       .content{flex-direction:column-reverse}
       .right{width:100%}
+      
+      /* New: move fixed links to bottom center on mobile */
+      .fixed-links {
+          top: auto;
+          bottom: 30px;
+          left: 50%;
+          right: auto;
+          transform: translateX(-50%);
+          flex-direction: row;
+      }
     }
     
-    /* --- СТИЛИ ДЛЯ ЛАЙТБОКСА --- */
+    /* Lightbox Styles */
     .lightbox {
-      display: none; /* Скрыто по умолчанию */
-      position: fixed; /* Поверх всего */
+      display: none;
+      position: fixed;
       z-index: 1000;
       left: 0;
       top: 0;
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0, 0, 0, 0.9); /* Черный фон с прозрачностью */
+      background-color: rgba(0, 0, 0, 0.9);
       align-items: center;
       justify-content: center;
       transition: opacity 0.3s ease;
     }
     .lightbox.open {
-      display: flex; /* Показать при добавлении класса 'open' */
+      display: flex;
     }
     .lightbox-content {
       margin: auto;
       display: block;
-      max-width: 90%; /* Ограничение ширины */
-      max-height: 90vh; /* Ограничение высоты */
+      max-width: 90%;
+      max-height: 90vh;
       border-radius: var(--radius);
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-      cursor: pointer; /* Указывает, что можно кликнуть для закрытия */
+      cursor: pointer;
     }
     .lightbox-close {
       position: absolute;
@@ -269,7 +280,6 @@
       color: #bbb;
       text-decoration: none;
     }
-    /* -------------------------- */
   </style>
 </head>
 <body>
@@ -300,17 +310,13 @@
         <div class="section">
           <h2 id="hours-title">Contacts</h2>
           <div class="small" id="contacts">
-            📞 +48 123 456 789<br>
-            📸 @ksiestwosushi<br>
-            📍 ul. Example 12, Warsaw
-          </div>
+            </div>
         </div>
 
         <div class="section">
           <h2 id="notice-title">Notice</h2>
           <div class="small" id="notice-text">
-            We kindly inform you that we add a waiter service of 10% to the final bill.
-          </div>
+            </div>
         </div>
       </aside>
     </div>
@@ -320,14 +326,17 @@
       <div class="small" id="footer-right">Menu — open web version</div>
     </footer>
     
-    <button class="home-button" id="home-button">🔺</button>
-
-    
   </div>
   
   <div id="myLightbox" class="lightbox">
     <span class="lightbox-close">&times;</span>
     <img class="lightbox-content" id="lightbox-img">
+  </div>
+  
+  <div class="fixed-links">
+      <a href="tel:+48602111144" class="fixed-link" title="Позвонить">📞</a>
+      <a href="https://maps.app.goo.gl/wFUDJNp1QXaiykeq8" target="_blank" class="fixed-link" title="Посмотреть на карте">🗺️</a>
+      <a href="https://www.instagram.com/ksiestwosushi?igsh=YXgwZ3Rhd2JuMmZu" target="_blank" class="fixed-link" title="Instagram">📸</a>
   </div>
   <script>
     // DATA: menu items with EN and PL text and prices (zł)
@@ -365,40 +374,40 @@
         id:'uramaki',
         title:{en:'Uramaki (8 pc)', pl:'Uramaki (8 szt.)'},
         items:[
-          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-170.jpg'},
-          {enName:'Ohio Spice Sake', plName:'Ohio Spice Sake', descEN:'salmon wrapped in roasted butterfish', descPL:'łosoś owijany opalaną maślaną', price:'42 zł'},
-          {enName:'Maguro Spicy Ebi Ten', plName:'Maguro Spicy Ebi Ten', descEN:'shrimp tempura wrapped in roasted tuna', descPL:'krewetka w tempurze owijana opalanym tuńczykiem', price:'45 zł'},
-          {enName:'Kegon', plName:'Kegon', descEN:'salmon wrapped in grilled eel', descPL:'łosoś owijany grillowanym węgorzem', price:'45 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-343 (1).jpg'},
-          {enName:'Sake Aburi', plName:'Sake Aburi', descEN:'salmon wrapped in roasted spicy salmon', descPL:'łosoś owijany opalanym pikantnym łososiem', price:'45 zł'},
-          {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish tempura coated with flying fish roe', descPL:'maślana w tempurze obtoczona kawiorem z latającej ryby', price:'48 zł'},
-          {enName:'Nashi Sake', plName:'Nashi Sake', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką', price:'45 zł'},
-          {enName:'Sake Tataki Ebi Ten', plName:'Sake Tataki Ebi Ten', descEN:'shrimp tempura topped with salmon tartare', descPL:'krewetki w tempurze obłożone tatarem z łososia', price:'48 zł'},
-          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś w awokado', price:'42 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-43.jpg'},
-          {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', descPL:'łosoś w mango', price:'42 zł'},
-          {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z porem i pomarańczowym pieprzem', price:'45 zł'},
-          {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka tempura w sojowym papierze', price:'42 zł'},
-          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owinięte łososiem', price:'40 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-94.jpg'},
-          {enName:'Rainbow', plName:'Rainbow', descEN:'assorted', descPL:'asortyment', price:'48 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-511.jpg'}
+          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', price:'38 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-170.jpg'},
+          {enName:'Ohio Spice Sake', plName:'Ohio Spice Sake', descEN:'salmon wrapped in roasted butterfish', price:'42 zł'},
+          {enName:'Maguro Spicy Ebi Ten', plName:'Maguro Spicy Ebi Ten', descEN:'shrimp tempura wrapped in roasted tuna', price:'45 zł'},
+          {enName:'Kegon', plName:'Kegon', descEN:'salmon wrapped in grilled eel', price:'45 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-343 (1).jpg'},
+          {enName:'Sake Aburi', plName:'Sake Aburi', descEN:'salmon wrapped in roasted spicy salmon', price:'45 zł'},
+          {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish tempura coated with flying fish roe', price:'48 zł'},
+          {enName:'Nashi Sake', plName:'Nashi Sake', descEN:'salmon wrapped in Japanese pear', price:'45 zł'},
+          {enName:'Sake Tataki Ebi Ten', plName:'Sake Tataki Ebi Ten', descEN:'shrimp tempura topped with salmon tartare', price:'48 zł'},
+          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', price:'42 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-43.jpg'},
+          {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', price:'42 zł'},
+          {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', price:'45 zł'},
+          {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', price:'42 zł'},
+          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', price:'40 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-94.jpg'},
+          {enName:'Rainbow', plName:'Rainbow', descEN:'assorted', price:'48 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-511.jpg'}
         ]
       },
       {
         id:'uramaki-temp',
         title:{en:'Uramaki in Tempura (8 pc)', pl:'Uramaki w Tempurze (8 szt.)'},
         items:[
-          {enName:'Tempura Sake', plName:'Tempura Sake', descEN:'salmon', descPL:'łosoś', price:'38 zł'},
-          {enName:'Tempura Ohio', plName:'Tempura Ohio', descEN:'butterfish', descPL:'maślana', price:'38 zł'},
-          {enName:'Tempura Maguro', plName:'Tempura Maguro', descEN:'tuna', descPL:'tuńczyk', price:'42 zł'},
-          {enName:'Tempura Ebi', plName:'Tempura Ebi', descEN:'steamed shrimp', descPL:'parzona krewetka', price:'40 zł'},
-          {enName:'Tempura Unagi Kabayaki', plName:'Tempura Unagi Kabayaki', descEN:'grilled eel', descPL:'grillowany węgorz', price:'45 zł'}
+          {enName:'Tempura Sake', plName:'Tempura Sake', descEN:'salmon', price:'38 zł'},
+          {enName:'Tempura Ohio', plName:'Tempura Ohio', descEN:'butterfish', price:'38 zł'},
+          {enName:'Tempura Maguro', plName:'Tempura Maguro', descEN:'tuna', price:'42 zł'},
+          {enName:'Tempura Ebi', plName:'Tempura Ebi', descEN:'steamed shrimp', price:'40 zł'},
+          {enName:'Tempura Unagi Kabayaki', plName:'Tempura Unagi Kabayaki', descEN:'grilled eel', price:'45 zł'}
         ]
       },
       {
         id:'oyakomaki',
         title:{en:'Oyakomaki / Sashimi', pl:'Oyakomaki / Sashimi'},
         items:[
-          {enName:'Sake Ebi Tataki (2 pcs)', plName:'Sake Ebi Tataki (2 szt.)', descEN:'chopped shrimp wrapped in salmon', descPL:'posiekana krewetka w łososiu', price:'36 zł'},
-          {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'salmon caviar wrapped in tuna', descPL:'ikura w tuńczyku', price:'42 zł'},
-          {enName:'Sashimi Mizu (9 pcs)', plName:'Sashimi Mizu (9 szt.)', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plastry surowych ryb — łosoś, tuńczyk, maślana', price:'95 zł'}
+          {enName:'Sake Ebi Tataki (2 pcs)', plName:'Sake Ebi Tataki (2 szt.)', descEN:'chopped shrimp wrapped in salmon', price:'36 zł'},
+          {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'salmon caviar wrapped in tuna', price:'42 zł'},
+          {enName:'Sashimi Mizu (9 pcs)', plName:'Sashimi Mizu (9 szt.)', descEN:'slices of raw fish — salmon, tuna, butterfish', price:'95 zł'}
         ]
       }
     ];
@@ -412,9 +421,7 @@
     // --- STICKY LOGIC ELEMENTS ---
     const stickyLangBar = document.getElementById('sticky-lang-bar');
     const wrap = document.querySelector('.wrap');
-    const homeButton = document.getElementById('home-button'); /* Added */
-
-
+    
     // Тексты для блока "Notice"
     const NOTICE_TEXTS = {
         en: 'We kindly inform you that we add a waiter service of 10% to the final bill.<br><br>According to the recipe, items may contain: cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame, philadelphia cheese, mayonnaise, sauces, edible gold.',
@@ -430,33 +437,11 @@
         }
     }
     
-    // --- HOME BUTTON LOGIC ---
-    // Функция для показа/скрытия кнопки
-    function checkHomeButtonVisibility() {
-        // Показываем кнопку, если прокручено больше 100px (т.е. мы не в самом верху)
-        if (wrap.scrollTop > 100) {
-            homeButton.classList.add('visible');
-        } else {
-            homeButton.classList.remove('visible');
-        }
-    }
-    
-    // Функция для прокрутки наверх
-    homeButton.addEventListener('click', () => {
-        wrap.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
- // --- END HOME BUTTON LOGIC ---
-    
     // Включаем прослушивание прокрутки на элементе wrap
     wrap.addEventListener('scroll', checkStickyState);
-    wrap.addEventListener('scroll', checkHomeButtonVisibility); /* Added */
     
     // При первой загрузке тоже проверяем
     window.addEventListener('load', checkStickyState);
-    window.addEventListener('load', checkHomeButtonVisibility); /* Added */
 
 
     function createNav(){
@@ -493,11 +478,8 @@
           thumb.className = 'thumb';
 
           const defaultImgPath = 'https://via.placeholder.com/300x200?text=photo';
-          // Если it.imgFile указан, используем его, иначе — заглушку
           const imgPath = it.imgFile ? ('images/' + it.imgFile) : defaultImgPath;
           
-          
-          // Создание ссылки (<a>) вокруг изображения
           const link = document.createElement('a');
           link.href = '#'; 
           link.className = 'js-lightbox-link'; 
@@ -507,7 +489,7 @@
           img.style.width = '100%';
           img.style.height = '100%';
           img.style.objectFit = 'cover';
-          img.alt = (it[LANG==='en' ? 'enName' : 'plName']);
+          img.alt = (LANG==='en'?it.enName:it.plName);
           img.src = imgPath; 
           
           link.appendChild(img);
@@ -549,55 +531,46 @@
       document.getElementById('footer-left').textContent = 'Księstwo Sushi';
       document.getElementById('footer-right').textContent = (LANG==='en') ? 'Menu — web version' : 'Menu — wersja online';
       
-      // Обновление текста Notice (включая перевод аллергенов)
       document.getElementById('notice-text').innerHTML = NOTICE_TEXTS[LANG];
 
-      // update contact block (if you want different translations)
       const contacts = document.getElementById('contacts');
+      // UPDATED CONTACTS with the new phone number
       contacts.innerHTML = (LANG==='en')
-        ? '📞 +48 123 456 789<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warsaw'
-        : '📞 +48 123 456 789<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warszawa';
+        ? '📞 +48 602 111 144<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warsaw'
+        : '📞 +48 602 111 144<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warszawa';
     }
 
 
-    // --- ЛОГИКА ЛАЙТБОКСА ---
+    // --- LIGHTBOX LOGIC ---
     const lightbox = document.getElementById('myLightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     const closeBtn = document.querySelector('.lightbox-close');
 
-    // Функция открытия лайтбокса
     function openLightbox(imgPath) {
       lightbox.classList.add('open');
       lightboxImg.src = imgPath;
     }
 
-    // Обработчик для закрытия лайтбокса
     function closeLightbox() {
       lightbox.classList.remove('open');
       lightboxImg.src = ''; 
     }
 
-    // Присвоение обработчика закрытия
     closeBtn.onclick = closeLightbox;
     lightbox.onclick = (e) => {
-      // Закрываем, если кликнули на фон или само изображение, но не на кнопку закрытия
       if (e.target === lightbox || e.target === lightboxImg) {
         closeLightbox();
       }
     };
 
-    // Функция, которая ищет все ссылки и назначает им обработчик клика
     function attachLightboxListeners() {
-      // Небольшая задержка, чтобы элементы успели появиться в DOM
       setTimeout(() => { 
         document.querySelectorAll('.js-lightbox-link').forEach(link => {
-          // Удаляем предыдущие обработчики (важно при смене языка)
           link.onclick = null; 
           
           link.onclick = (e) => {
-            e.preventDefault(); // Останавливаем переход по ссылке
+            e.preventDefault();
             const imgPath = link.dataset.img;
-            // Открываем, только если это не заглушка
             if (imgPath.indexOf('placeholder') === -1) {
                 openLightbox(imgPath);
             }
@@ -606,15 +579,12 @@
       }, 100); 
     }
     
-    // Переопределение функции renderMenu для добавления обработчиков после рендеринга
     const tempRenderMenu = renderMenu;
     renderMenu = function() {
-        tempRenderMenu(); // Вызываем оригинальную функцию рендеринга
-        attachLightboxListeners(); // Добавляем новые обработчики для лайтбокса
+        tempRenderMenu();
+        attachLightboxListeners();
     }
-
-    // --- КОНЕЦ ЛОГИКИ ЛАЙТБОКСА ---
-
+   // --- END LIGHTBOX LOGIC ---
 
     // language buttons
     langBtns.forEach(b=>{
@@ -623,7 +593,6 @@
         b.classList.add('active');
         LANG = b.dataset.lang;
         createNav();
-        // Здесь вызывается новая renderMenu, которая вызывает attachLightboxListeners
         renderMenu(); 
         updateTexts();
       });
@@ -636,4 +605,3 @@
   </script>
 </body>
 </html>
-
