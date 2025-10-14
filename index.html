@@ -250,6 +250,51 @@
       color: #bbb;
       text-decoration: none;
     }
+
+    /* GALLERY STYLES */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Адаптивная сетка */
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .gallery-item {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .gallery-item:hover {
+      transform: translateY(-2px);
+    }
+    .gallery-img-wrapper {
+      aspect-ratio: 4/3; /* Соотношение сторон для фото */
+      width: 100%;
+      display: block;
+    }
+    .gallery-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .gallery-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 8px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   </style>
 </head>
 <body>
@@ -300,6 +345,13 @@
   <script>
     // DATA: menu items with EN and PL text and prices (zł)
     const MENU = [
+      // НОВЫЙ РАЗДЕЛ ДЛЯ ГАЛЕРЕИ
+      {
+        id: 'sushi-gallery',
+        title: {en: 'Sushi Photo Gallery', pl: 'Galeria Zdjęć Sushi'},
+        isGallery: true
+      },
+      // СУЩЕСТВУЮЩИЕ РАЗДЕЛЫ МЕНЮ
       {
         id:'starters',
         title:{en:'Starters', pl:'Przystawki'},
@@ -320,7 +372,6 @@
             descEN:'flavorful broth with vegetables, meat and ramen noodles. Chicken 48 zł / Beef 55 zł', 
             descPL:'aromatyczny bulion z mięsem, warzywami i makaronem ramen', 
             price:'48 zł / 55 zł',
-            // ДОБАВЛЕНО НОВОЕ ФОТО
             imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-729 (1).jpg'
           }
         ]
@@ -329,25 +380,25 @@
         id:'sushi',
         title:{en:'Sushi — Nigiri / Futomaki', pl:'Sushi — Nigiri / Futomaki'},
         items:[
-          // --- NIGIRI (2 szt.) ---
-          {enName:'Sake (Nigiri)', plName:'Sake (Nigiri)', descEN:'salmon', descPL:'łosoś', price:'26 zł'},
-          {enName:'Ohio (Nigiri)', plName:'Ohio (Nigiri)', descEN:'butterfish', descPL:'maślana', price:'25 zł'},
-          {enName:'Maguro (Nigiri)', plName:'Maguro (Nigiri)', descEN:'tuna', descPL:'tuńczyk', price:'30 zł'},
-          {enName:'Unagi (Nigiri)', plName:'Unagi (Nigiri)', descEN:'eel', descPL:'węgorz', price:'30 zł'}, 
-          {enName:'Hotate (Nigiri)', plName:'Hotate (Nigiri)', descEN:'scallops', descPL:'małże św. Jakuba', price:'32 zł'}, 
-          {enName:'Tako (Nigiri)', plName:'Tako (Nigiri)', descEN:'octopus', descPL:'ośmiornica', price:'30 zł'}, 
-          {enName:'Ika (Nigiri)', plName:'Ika (Nigiri)', descEN:'squid', descPL:'kalmar', price:'30 zł'}, 
-          {enName:'Ebi (Nigiri)', plName:'Ebi (Nigiri)', descEN:'shrimp', descPL:'krewetka', price:'30 zł'}, 
+          // --- NIGIRI (2 szt.) - ИСПРАВЛЕНО КОЛИЧЕСТВО ---
+          {enName:'Sake (Nigiri 2 pcs)', plName:'Sake (Nigiri 2 szt.)', descEN:'salmon', descPL:'łosoś', price:'26 zł'},
+          {enName:'Ohio (Nigiri 2 pcs)', plName:'Ohio (Nigiri 2 szt.)', descEN:'butterfish', descPL:'maślana', price:'25 zł'},
+          {enName:'Maguro (Nigiri 2 pcs)', plName:'Maguro (Nigiri 2 szt.)', descEN:'tuna', descPL:'tuńczyk', price:'30 zł'},
+          {enName:'Unagi (Nigiri 2 pcs)', plName:'Unagi (Nigiri 2 szt.)', descEN:'eel', descPL:'węgorz', price:'30 zł'}, 
+          {enName:'Hotate (Nigiri 2 pcs)', plName:'Hotate (Nigiri 2 szt.)', descEN:'scallops', descPL:'małże św. Jakuba', price:'32 zł'}, 
+          {enName:'Tako (Nigiri 2 pcs)', plName:'Tako (Nigiri 2 szt.)', descEN:'octopus', descPL:'ośmiornica', price:'30 zł'}, 
+          {enName:'Ika (Nigiri 2 pcs)', plName:'Ika (Nigiri 2 szt.)', descEN:'squid', descPL:'kalmar', price:'30 zł'}, 
+          {enName:'Ebi (Nigiri 2 pcs)', plName:'Ebi (Nigiri 2 szt.)', descEN:'shrimp', descPL:'krewetka', price:'30 zł'}, 
           
-          // --- FUTOMAKI (4 szt.) ---
-          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł'},
-          {enName:'Maguro Negi Togarashi', plName:'Maguro Negi Togarashi', descEN:'tuna with spicy leek', descPL:'tuńczyk z porem na ostro', price:'42 zł'},
-          {enName:'Ohio Spice Mango', plName:'Ohio Spice Mango', descEN:'spicy butterfish with mango', descPL:'pikantna maślana z mango', price:'40 zł'}, 
-          {enName:'Ebi Spicy', plName:'Ebi Spicy', descEN:'spicy shrimp', descPL:'pikantna parzona krewetka', price:'40 zł'}, 
-          {enName:'Ebi Tempura', plName:'Ebi Tempura', descEN:'shrimp tempura', descPL:'krewetka w tempurze', price:'40 zł'}, 
-          {enName:'Unagi Kabayaki', plName:'Unagi Kabayaki', descEN:'grilled eel with kabayaki sauce', descPL:'grillowany węgorz w sosie kabayaki', price:'45 zł'}, 
-          {enName:'Ika Tempura', plName:'Ika Tempura', descEN:'squid tempura', descPL:'kalmar w tempurze', price:'48 zł'}, 
-          {enName:'Veggi', plName:'Veggi', descEN:'vegetables', descPL:'warzywa', price:'36 zł'} 
+          // --- FUTOMAKI (4 szt.) - ИСПРАВЛЕНО КОЛИЧЕСТВО ---
+          {enName:'Sake Philadelphia (4 pcs)', plName:'Sake Philadelphia (4 szt.)', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł'},
+          {enName:'Maguro Negi Togarashi (4 pcs)', plName:'Maguro Negi Togarashi (4 szt.)', descEN:'tuna with spicy leek', descPL:'tuńczyk z porem na ostro', price:'42 zł'},
+          {enName:'Ohio Spice Mango (4 pcs)', plName:'Ohio Spice Mango (4 szt.)', descEN:'spicy butterfish with mango', descPL:'pikantna maślana z mango', price:'40 zł'}, 
+          {enName:'Ebi Spicy (4 pcs)', plName:'Ebi Spicy (4 szt.)', descEN:'spicy shrimp', descPL:'pikantna parzona krewetka', price:'40 zł'}, 
+          {enName:'Ebi Tempura (4 pcs)', plName:'Ebi Tempura (4 szt.)', descEN:'shrimp tempura', descPL:'krewetka w tempurze', price:'40 zł'}, 
+          {enName:'Unagi Kabayaki (4 pcs)', plName:'Unagi Kabayaki (4 szt.)', descEN:'grilled eel with kabayaki sauce', descPL:'grillowany węgorz w sosie kabayaki', price:'45 zł'}, 
+          {enName:'Ika Tempura (4 pcs)', plName:'Ika Tempura (4 szt.)', descEN:'squid tempura', descPL:'kalmar w tempurze', price:'48 zł'}, 
+          {enName:'Veggi (4 pcs)', plName:'Veggi (4 szt.)', descEN:'vegetables', descPL:'warzywa', price:'36 zł'} 
         ]
       },
       {
@@ -437,7 +488,6 @@
             const targetElement = document.getElementById(sec.id);
             if (targetElement) {
                 // Scroll the wrap container to the element's position. 
-                // scroll-margin-top in CSS handles the offset from the sticky bar.
                 targetElement.scrollIntoView({behavior:'smooth', block:'start'});
             }
         };
@@ -445,10 +495,31 @@
       });
     }
 
-    const originalRenderMenu = renderMenu; 
+    // НОВАЯ ФУНКЦИЯ: Сбор всех элементов для галереи
+    function getGalleryItems(lang) {
+        const galleryItems = [];
+        MENU.forEach(section => {
+            // Собираем элементы только из разделов, связанных с суши, и только те, у которых есть imgFile
+            if (['sushi', 'uramaki', 'uramaki-temp', 'oyakomaki'].includes(section.id) && section.items) {
+                section.items.forEach(item => {
+                    if (item.imgFile) {
+                        // Извлекаем только нужные данные для галереи
+                        galleryItems.push({
+                            name: item[lang + 'Name'],
+                            imgFile: item.imgFile,
+                            price: item.price
+                        });
+                    }
+                });
+            }
+        });
+        return galleryItems;
+    }
+
 
     function renderMenu(){
       menuArea.innerHTML = '';
+      
       MENU.forEach(sec=>{
         const s = document.createElement('section');
         s.className='section';
@@ -457,58 +528,93 @@
         h2.textContent = sec.title[LANG];
         s.appendChild(h2);
 
-        const container = document.createElement('div');
-        container.className='items';
+        // СПЕЦИАЛЬНЫЙ РЕНДЕРИНГ ДЛЯ ГАЛЕРЕИ
+        if (sec.isGallery) {
+            const galleryItems = getGalleryItems(LANG);
+            const grid = document.createElement('div');
+            grid.className = 'gallery-grid';
+            
+            galleryItems.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'gallery-item js-lightbox-link'; // Используем тот же класс для кликабельности
+                itemDiv.dataset.img = 'images/' + item.imgFile;
 
-        sec.items.forEach(it=>{
-          const div = document.createElement('div');
-          div.className='item';
+                const wrapper = document.createElement('div');
+                wrapper.className = 'gallery-img-wrapper';
 
-          const thumb = document.createElement('div');
-          thumb.className = 'thumb';
+                const img = document.createElement('img');
+                img.alt = item.name;
+                img.src = 'images/' + item.imgFile;
+                
+                wrapper.appendChild(img);
 
-          const defaultImgPath = 'https://via.placeholder.com/300x200?text=photo';
-          const imgPath = it.imgFile ? ('images/' + it.imgFile) : defaultImgPath;
-          
-          const link = document.createElement('a');
-          link.href = '#'; 
-          link.className = 'js-lightbox-link'; 
-          link.dataset.img = imgPath; 
+                const caption = document.createElement('div');
+                caption.className = 'gallery-caption';
+                caption.textContent = item.name + ' (' + item.price + ')';
 
-          const img = document.createElement('img');
-          img.style.width = '100%';
-          img.style.height = '100%';
-          img.style.objectFit = 'cover';
-          img.alt = (LANG==='en'?it.enName:it.plName);
-          img.src = imgPath; 
-          
-          link.appendChild(img);
-          thumb.appendChild(link);
-          
+                itemDiv.appendChild(wrapper);
+                itemDiv.appendChild(caption);
+                grid.appendChild(itemDiv);
+            });
+
+            s.appendChild(grid);
+            
+        } else {
+            // СТАНДАРТНЫЙ РЕНДЕРИНГ МЕНЮ
+            const container = document.createElement('div');
+            container.className='items';
+
+            sec.items.forEach(it=>{
+                const div = document.createElement('div');
+                div.className='item';
+
+                const thumb = document.createElement('div');
+                thumb.className = 'thumb';
+
+                const defaultImgPath = 'https://via.placeholder.com/300x200?text=photo';
+                const imgPath = it.imgFile ? ('images/' + it.imgFile) : defaultImgPath;
+                
+                const link = document.createElement('a');
+                link.href = '#'; 
+                link.className = 'js-lightbox-link'; 
+                link.dataset.img = imgPath; 
+
+                const img = document.createElement('img');
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.alt = (LANG==='en'?it.enName:it.plName);
+                img.src = imgPath; 
+                
+                link.appendChild(img);
+                thumb.appendChild(link);
+                
 
 
-          const meta = document.createElement('div');
-          meta.className='meta';
-          const name = document.createElement('div');
-          name.className='name';
-          name.textContent = (LANG==='en'?it.enName:it.plName);
-          const desc = document.createElement('div');
-          desc.className='desc';
-          desc.textContent = (LANG==='en'?it.descEN:it.descPL) || '';
-          const price = document.createElement('div');
-          price.className='price';
-          price.textContent = it.price || '';
+                const meta = document.createElement('div');
+                meta.className='meta';
+                const name = document.createElement('div');
+                name.className='name';
+                name.textContent = (LANG==='en'?it.enName:it.plName);
+                const desc = document.createElement('div');
+                desc.className='desc';
+                desc.textContent = (LANG==='en'?it.descEN:it.descPL) || '';
+                const price = document.createElement('div');
+                price.className='price';
+                price.textContent = it.price || '';
 
-          meta.appendChild(name);
-          if(desc.textContent) meta.appendChild(desc);
-          meta.appendChild(price);
+                meta.appendChild(name);
+                if(desc.textContent) meta.appendChild(desc);
+                meta.appendChild(price);
 
-          div.appendChild(thumb);
-          div.appendChild(meta);
-          container.appendChild(div);
-        });
+                div.appendChild(thumb);
+                div.appendChild(meta);
+                container.appendChild(div);
+            });
 
-        s.appendChild(container);
+            s.appendChild(container);
+        }
+        
         menuArea.appendChild(s);
       });
     }
@@ -540,6 +646,7 @@
     }
 
     closeBtn.onclick = closeLightbox;
+    // Lightbox closes on background click
     lightbox.onclick = (e) => {
       if (e.target === lightbox || e.target === lightboxImg) {
         closeLightbox();
@@ -547,13 +654,17 @@
     };
 
     function attachLightboxListeners() {
+      // Small delay to ensure all dynamically created elements are in the DOM
       setTimeout(() => { 
         document.querySelectorAll('.js-lightbox-link').forEach(link => {
+          // Clear previous listeners to prevent duplicates
           link.onclick = null; 
           
           link.onclick = (e) => {
             e.preventDefault();
+            // Get image path from data-img attribute
             const imgPath = link.dataset.img;
+            // Prevent opening lightbox for placeholder images
             if (imgPath.indexOf('placeholder') === -1) {
                 openLightbox(imgPath);
             }
@@ -562,6 +673,7 @@
       }, 100); 
     }
     
+    // Wrapping renderMenu to automatically re-attach listeners after content update
     const tempRenderMenu = renderMenu;
     renderMenu = function() {
         tempRenderMenu();
