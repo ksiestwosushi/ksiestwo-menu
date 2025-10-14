@@ -38,7 +38,7 @@
       overflow-y: auto;
     }
     
-    /* UPDATED: Sticky Language Bar for alignment */
+    /* UPDATED: Sticky Language Bar for alignment and smooth scroll */
     .sticky-lang-bar {
         position: sticky;
         top: -22px; 
@@ -49,10 +49,12 @@
         border-top-right-radius: var(--radius);
         z-index: 10;
         transition: box-shadow 0.3s;
-        /* NEW: Display flex to align elements inside */
         display: flex; 
-        justify-content: space-between; /* Распределяем пространство */
-        align-items: center; /* Центрируем по вертикали */
+        justify-content: space-between; 
+        align-items: center; 
+        /* FIX: Улучшение производительности при прокрутке */
+        transform: translateZ(0); 
+        -webkit-transform: translateZ(0); 
     }
 
     .sticky-lang-bar.scrolled {
@@ -67,14 +69,15 @@
       justify-content: flex-end; 
     }
     
-    /* NEW: Style for the Contact Icons inside the sticky bar (LEFT SIDE) */
+    /* Contact Icons styling */
     .sticky-icons {
         display: flex;
-        gap: 10px; /* Расстояние между иконками */
+        gap: 10px; 
     }
 
+    /* UPDATED: Sticky Icon for vertical alignment */
     .sticky-icon {
-        width: 36px; /* Чуть меньше размер для гармонии */
+        width: 36px; 
         height: 36px;
         background: var(--accent);
         color: white;
@@ -86,6 +89,8 @@
         font-size: 18px; 
         text-decoration: none;
         transition: background 0.2s;
+        /* FIX: Центрирование символа внутри круга */
+        line-height: 1; 
     }
 
     .sticky-icon:hover {
@@ -135,7 +140,7 @@
       border-color:transparent;
     }
 
-    /* UPDATED: Navigation Chips for horizontal scroll */
+    /* Navigation Chips for horizontal scroll */
     nav{
       display:flex;
       gap:12px;
@@ -226,8 +231,6 @@
     @media (max-width:900px){
       .content{flex-direction:column-reverse}
       .right{width:100%}
-      
-      /* No fixed links needed here as they are now sticky on top */
     }
     
     /* Lightbox Styles */
