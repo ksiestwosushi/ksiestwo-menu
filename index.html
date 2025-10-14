@@ -305,13 +305,13 @@
         title:{en:'Uramaki (8 pc)', pl:'Uramaki (8 szt.)'},
         items:[
           {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł'},
-          // >>>>>>>>>>> ИЗМЕНЕНИЕ: Добавлен imgFile для ролла Awokado Sake (ВНИМАНИЕ: временно закомментирован!) <<<<<<<<<<
-          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś w awokado', price:'42 zł', /* imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-94.jpg' */},
+          // ИСПРАВЛЕНО: Awokado Sake теперь использует правильный файл
+          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś w awokado', price:'42 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-94.jpg'},
           {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', descPL:'łosoś w mango', price:'42 zł'},
           {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z porem i pomarańczowym pieprzem', price:'45 zł'},
           {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka tempura w sojowym papierze', price:'42 zł'},
-          // >>>>>>>>>>> ИЗМЕНЕНИЕ: Добавлен imgFile для ролла Gold California (ВНИМАНИЕ: временно закомментирован!) <<<<<<<<<<
-          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owinięte łososiem', price:'40 zł', /* imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-43.jpg' */},
+          // ИСПРАВЛЕНО: Gold California теперь использует правильный файл
+          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owinięte łososiem', price:'40 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-43.jpg'},
           {enName:'Rainbow', plName:'Rainbow', descEN:'assorted', descPL:'asortyмент', price:'48 zł'}
         ]
       },
@@ -352,7 +352,6 @@
       });
     }
 
-    // Сохраняем оригинальную функцию для последующего вызова
     const originalRenderMenu = renderMenu; 
 
     function renderMenu(){
@@ -375,9 +374,8 @@
           const thumb = document.createElement('div');
           thumb.className = 'thumb';
 
-          // Логика формирования пути к изображению
           const defaultImgPath = 'https://via.placeholder.com/300x200?text=photo';
-          // Если imgFile указан, используем его, предполагая, что он находится в папке 'images/'
+          // Если it.imgFile указан, используем его, иначе — заглушку
           const imgPath = it.imgFile ? ('images/' + it.imgFile) : defaultImgPath;
           
           
@@ -516,5 +514,3 @@
   </script>
 </body>
 </html>
-
-
