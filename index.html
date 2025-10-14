@@ -319,7 +319,9 @@
             plName:'Ramen Chicken / Beef', 
             descEN:'flavorful broth with vegetables, meat and ramen noodles. Chicken 48 zł / Beef 55 zł', 
             descPL:'aromatyczny bulion z mięsem, warzywami i makaronem ramen', 
-            price:'48 zł / 55 zł'
+            price:'48 zł / 55 zł',
+            // ДОБАВЛЕНО НОВОЕ ФОТО
+            imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-729 (1).jpg'
           }
         ]
       },
@@ -403,10 +405,10 @@
     const stickyLangBar = document.getElementById('sticky-lang-bar');
     const wrap = document.querySelector('.wrap');
     
-    // Тексты для блока "Notice" (ОБНОВЛЕНО)
+    // Тексты для блока "Notice" - ОБНОВЛЕНО: ДОБАВЛЕН ГЛЮТЕН
     const NOTICE_TEXTS = {
-        en: 'We kindly inform you that we add a waiter service of 10% to the final bill.<br><br>According to the recipe, items may contain: gluten, cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame, philadelphia cheese, mayonnaise, sauces, edible gold.',
-        pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.<br><br>Zgodnie z recepturą mogą zawierać: gluten, ogórka, oshinko, kampyo, awokado, mango, melona, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'
+        en: 'We kindly inform you that we add a waiter service of 10% to the final bill.<br><br>According to the recipe, items may contain: cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame, philadelphia cheese, mayonnaise, sauces, **gluten**, edible gold.',
+        pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.<br><br>Zgodnie z recepturą mogą zawierać: ogórka, oshinko, kampyo, awokado, mango, melona, sałatę, sezam, serek philadelphia, majonez, sosy, **gluten**, złoto jadalne.'
     };
     
     // Функция для проверки состояния прокрутки и применения тени (для Sticky Lang Bar)
@@ -587,4 +589,3 @@
   </script>
 </body>
 </html>
-
