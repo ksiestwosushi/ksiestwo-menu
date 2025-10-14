@@ -35,11 +35,11 @@
       padding:22px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.08);
       /* Важно, чтобы прокрутка была на body/wrap, чтобы sticky работало корректно */
-      max-height: 100vh; /* Ограничиваем высоту wrap для корректной работы прокрутки */
+      max-height: calc(100vh - 48px); /* Ограничиваем высоту wrap для корректной работы прокрутки */
       overflow-y: auto; /* Включаем прокрутку внутри wrap */
     }
     
-    /* --- STICKY STYLES --- */
+    /* --- STICKY STYLES for Language Buttons --- */
     .sticky-lang-bar {
         position: sticky;
         top: -22px; /* Прилипает к самому верху wrap */
@@ -63,15 +63,44 @@
       align-items:center;
       justify-content: flex-end; 
     }
-    /* --------------------- */
+    /* ----------------------------------------- */
 
+
+    /* --- STYLES FOR HOME BUTTON (FIXED) --- */
+    .home-button {
+      position: fixed; /* Прилипает к окну браузера */
+      bottom: 30px; /* Отступ от нижнего края */
+      right: 30px; /* Отступ от правого края */
+      width: 50px;
+      height: 50px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px; /* Размер иконки */
+      cursor: pointer;
+      z-index: 100; /* Поверх всего */
+      opacity: 0; /* Скрыто по умолчанию */
+      transition: opacity 0.3s, transform 0.3s;
+      transform: scale(0.9);
+    }
+
+    .home-button.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+    /* ------------------------------------- */
 
     header{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      margin-bottom: 14px; /* Увеличиваем отступ, чтобы не слипалось */
+      margin-bottom: 14px; 
     }
     .brand{
       display:flex;
@@ -290,6 +319,9 @@
       <div class="contacts" id="footer-left">Księstwo Sushi</div>
       <div class="small" id="footer-right">Menu — open web version</div>
     </footer>
+    
+    <button class="home-button" id="home-button">🏠</button>
+    
   </div>
   
   <div id="myLightbox" class="lightbox">
@@ -379,6 +411,8 @@
     // --- STICKY LOGIC ELEMENTS ---
     const stickyLangBar = document.getElementById('sticky-lang-bar');
     const wrap = document.querySelector('.wrap');
+    const homeButton = document.getElementById('home-button'); /* Added */
+
 
     // Тексты для блока "Notice"
     const NOTICE_TEXTS = {
@@ -386,9 +420,8 @@
         pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.<br><br>Zgodnie z recepturą mogą zawierać: ogórka, oshinko, kampyo, awokado, mango, melona, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'
     };
     
-    // Функция для проверки состояния прокрутки и применения тени
+    // Функция для проверки состояния прокрутки и применения тени (для Sticky Lang Bar)
     function checkStickyState() {
-        // Мы проверяем, если прокрутка в wrap началась
         if (wrap.scrollTop > 0) {
             stickyLangBar.classList.add('scrolled');
         } else {
@@ -396,12 +429,33 @@
         }
     }
     
+    // --- HOME BUTTON LOGIC ---
+    // Функция для показа/скрытия кнопки
+    function checkHomeButtonVisibility() {
+        // Показываем кнопку, если прокручено больше 100px (т.е. мы не в самом верху)
+        if (wrap.scrollTop > 100) {
+            homeButton.classList.add('visible');
+        } else {
+            homeButton.classList.remove('visible');
+        }
+    }
+    
+    // Функция для прокрутки наверх
+    homeButton.addEventListener('click', () => {
+        wrap.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+ // --- END HOME BUTTON LOGIC ---
+    
     // Включаем прослушивание прокрутки на элементе wrap
     wrap.addEventListener('scroll', checkStickyState);
+    wrap.addEventListener('scroll', checkHomeButtonVisibility); /* Added */
+    
     // При первой загрузке тоже проверяем
     window.addEventListener('load', checkStickyState);
-
-    // --- END STICKY LOGIC ---
+    window.addEventListener('load', checkHomeButtonVisibility); /* Added */
 
 
     function createNav(){
@@ -505,7 +559,7 @@
     }
 
 
-     // --- ЛОГИКА ЛАЙТБОКСА ---
+    // --- ЛОГИКА ЛАЙТБОКСА ---
     const lightbox = document.getElementById('myLightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     const closeBtn = document.querySelector('.lightbox-close');
