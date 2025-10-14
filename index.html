@@ -30,15 +30,8 @@
     .wrap{
       width:100%;
       max-width:var(--maxw);
-      /* ФОНОВЫЙ УЗОР ИЗ uzor dla menu.jpg */
-      background: var(--card); /* Основной белый фон */
-      background-image: url('images/uzor dla menu.jpg'); /* ОБНОВЛЕННЫЙ ФАЙЛ ФОНА */
-      background-size: cover; 
-      background-position: center;
-      background-repeat: no-repeat;
-      
-      /* Полупрозрачный белый слой для читаемости текста поверх узора */
-      background-color: rgba(255, 255, 255, 0.9); 
+      /* Убран фоновый узор */
+      background: var(--card); /* Только основной белый фон */
       
       border-radius:16px;
       padding:22px;
@@ -528,8 +521,8 @@
     
     // Тексты для блока "Notice"
     const NOTICE_TEXTS = {
-        en: 'We kindly inform you that we add a waiter service of 10% to the final bill.<br><br>According to the recipe, items may contain: cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame, philadelphia cheese, mayonnaise, sauces, gluten, edible gold.',
-        pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.<br><br>Zgodnie z recepturą mogą zawierać: ogórka, oshinko, kampyo, awokado, mango, melona, sałatę, sezam, serek philadelphia, majonez, sosy, gluten, złoto jadalne.'
+        en: 'We kindly inform you that we add a waiter service of 10% to the final bill.<br><br>According to the recipe, items may contain: cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame, philadelphia cheese, mayonnaise, sauces, **gluten**, edible gold.',
+        pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.<br><br>Zgodnie z recepturą mogą zawierać: ogórka, oshinko, kampyo, awokado, mango, melona, sałatę, sezam, serek philadelphia, majonez, sosy, **gluten**, złoto jadalne.'
     };
     
     // Функция для проверки состояния прокрутки и применения тени (для Sticky Lang Bar)
@@ -688,7 +681,6 @@
                 name.textContent = (LANG==='en'?it.enName:it.plName);
                 const desc = document.createElement('div');
                 desc.className='desc';
-                // ИСПРАВЛЕНО: Используем descEN или descPL в зависимости от текущего языка
                 desc.innerHTML = (LANG==='en' ? it.descEN : it.descPL) || ''; 
                 const price = document.createElement('div');
                 price.className='price';
@@ -840,4 +832,3 @@
   </script>
 </body>
 </html>
-
