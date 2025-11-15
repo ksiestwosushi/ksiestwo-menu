@@ -129,8 +129,7 @@
     .items{
       display:grid;
       gap:10px;
-      /* Возвращаем список к одной колонке для всех */
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr; /* Одна колонка для простого списка */
     }
 
     .item{
@@ -162,23 +161,6 @@
     .name{font-weight:700;margin-bottom:6px}
     .desc{font-size:13px;color:var(--muted);margin-bottom:6px}
     .price{font-weight:800;color:var(--accent)}
-
-    /* Сбрасываем все специальные стили, которые были для Nigiri */
-    @media (min-width: 768px) {
-        .items {
-            grid-template-columns: 1fr; 
-            text-align: left; 
-        }
-        .item {
-            flex-direction: row; 
-            padding: 8px; 
-        }
-        .thumb {
-            width: 88px;
-            height: 62px; 
-        }
-    }
-
 
     footer{
       margin-top:18px;
@@ -252,8 +234,8 @@
         id:'starters',
         title:{en:'Starters', pl:'Przystawki'},
         items:[
-          {enName:'Goma Wakame', plName:'Goma Wakame', descEN:'wakame salad', descPL:'sałatka wakame', price:'20 zł', imgFile: 'STARTER_GOMA.jpg'},
-          {enName:'Ebiten (3 pcs)', plName:'Ebiten (3 szt.)', descEN:'shrimp tempura served with ponzu sauce', descPL:'krewetka tempura z sosem ponzu', price:'30 zł', imgFile: 'STARTER_EBITEN.jpg'},
+          {enName:'Goma Wakame', plName:'Goma Wakame', descEN:'wakame salad', descPL:'sałatka wakame', price:'20 zł'},
+          {enName:'Ebiten (3 pcs)', plName:'Ebiten (3 szt.)', descEN:'shrimp tempura served with ponzu sauce', descPL:'krewetka tempura z sosem ponzu', price:'30 zł'},
           {enName:'Sake Tataki', plName:'Sake Tataki', descEN:'salmon tartare', descPL:'tatar z łososia', price:'50 zł'},
           {enName:'Maguro Tataki', plName:'Maguro Tataki', descEN:'tuna tartare', descPL:'tatar z tuńczyka', price:'55 zł'}
         ]
@@ -263,44 +245,37 @@
         id:'soups',
         title:{en:'Soups', pl:'Zupy'},
         items:[
-          {enName:'Ramen Chicken', plName:'Ramen Chicken', descEN:'flavorful broth with vegetables, meat and ramen noodles', descPL:'bulion z warzywami, mięsem i makaronem ramen', price:'48 zł', imgFile: 'RAMEN.jpg'},
+          {enName:'Ramen Chicken', plName:'Ramen Chicken', descEN:'flavorful broth with vegetables, meat and ramen noodles', descPL:'bulion z warzywami, mięsem i makaronem ramen', price:'48 zł'},
           {enName:'Ramen Beef', plName:'Ramen Beef', descEN:'beef ramen', descPL:'ramen wołowy', price:'55 zł'}
         ]
       },
-      // 3. Nigiri 
+      // 3. Sushi: Nigiri / Futomaki
       {
-        id:'nigiri',
-        title:{en:'Nigiri', pl:'Nigiri'},
+        id:'sushi',
+        title:{en:'Sushi — Nigiri / Futomaki', pl:'Sushi — Nigiri / Futomaki'},
         items:[
-          {enName:'Sake', plName:'Sake', descEN:'salmon — 2 pc', descPL:'łosoś — 2 szt.', price:'26 zł', imgFile: 'NIGIRI#1.jpg'}, 
-          {enName:'Ohio', plName:'Ohio', descEN:'butterfish — 2 pc', descPL:'butterfish — 2 szt.', price:'25 zł', imgFile: 'NIGIRI#2.jpg'}, 
-          {enName:'Maguro', plName:'Maguro', descEN:'tuna — 2 pc', descPL:'tuńczyk — 2 szt.', price:'30 zł', imgFile: 'MAGURO.jpg'} 
+          {enName:'Sake (Nigiri)', plName:'Sake (Nigiri)', descEN:'salmon — 2 pc', descPL:'łosoś — 2 szt.', price:'26 zł', imgFile: 'NIGIRI#1.jpg'}, // Файл пользователя
+          {enName:'Ohio (Nigiri)', plName:'Ohio (Nigiri)', descEN:'butterfish — 2 pc', descPL:'butterfish — 2 szt.', price:'25 zł', imgFile: 'NIGIRI#2.jpg'}, // Файл пользователя
+          {enName:'Maguro (Nigiri)', plName:'Maguro (Nigiri)', descEN:'tuna — 2 pc', descPL:'tuńczyk — 2 szt.', price:'30 zł'}, // Плейсхолдер (нет фото тунца нигири)
+          {enName:'Sake Philadelphia (Futomaki)', plName:'Sake Philadelphia (Futomaki)', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł', imgFile: 'FUTOMAKI.jpg'}, // Файл пользователя
+          {enName:'Maguro Negi Togarashi', plName:'Maguro Negi Togarashi', descEN:'tuna with spicy leek', descPL:'tuńczyk z ostrą dymką', price:'42 zł', imgFile: 'MAGURO.jpg'} // Файл пользователя
         ]
       },
-      // 4. Futomaki 
-      {
-        id:'futomaki',
-        title:{en:'Futomaki', pl:'Futomaki'},
-        items:[
-          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł', imgFile: 'FUTOMAKI.jpg'}, 
-          {enName:'Maguro Negi Togarashi', plName:'Maguro Negi Togarashi', descEN:'tuna with spicy leek', descPL:'tuńczyk z ostrą dymką', price:'42 zł'}
-        ]
-      },
-      // 5. Uramaki 
+      // 4. Uramaki
       {
         id:'uramaki',
         title:{en:'Uramaki (8 pc)', pl:'Uramaki (8 szt.)'},
         items:[
-          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł', imgFile: 'URAMAKi.jpg'}, 
-          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś w awokado', price:'42 zł'},
+          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł', imgFile: 'URAMAKi.jpg'}, // Файл пользователя
+          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś w awokado', price:'42 zł'}, // Удален 3380.jpg
           {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', descPL:'łosoсь w mango', price:'42 zł'},
-          {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk з porem i pomarańczowym pieprzem', price:'45 zł'},
+          {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z porem i pomarańczowym pieprzem', price:'45 zł'},
           {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka tempura w sojowym papierze', price:'42 zł'},
           {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owinięte łososiem', price:'40 zł'},
           {enName:'Rainbow', plName:'Rainbow', descEN:'assorted', descPL:'asortyмент', price:'48 zł'}
         ]
       },
-      // 6. Uramaki w Tempurze
+      // 5. Uramaki w Tempurze
       {
         id:'uramaki-temp',
         title:{en:'Uramaki w Tempurze', pl:'Uramaki w tempurze'},
@@ -310,21 +285,14 @@
           {enName:'Tempura Maguro', plName:'Tempura Maguro', descEN:'tuna', descPL:'tuńczyk', price:'—'}
         ]
       },
-      // 7. Oyakomaki
+      // 6. Oyakomaki / Sashimi
       {
         id:'oyakomaki',
-        title:{en:'Oyakomaki', pl:'Oyakomaki'},
+        title:{en:'Oyakomaki / Sashimi', pl:'Oyakomaki / Sashimi'},
         items:[
-          {enName:'Sake Ebi Tataki (2 pcs)', plName:'Sake Ebi Tataki (2 szt.)', descEN:'chopped shrimp wrapped in salmon', descPL:'posiekana krewetka w łososiu', price:'36 zł', imgFile: 'Oyakomaki.jpg'}, 
-          {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'salmon caviar wrapped in tuna', descPL:'ikura w tuńczyku', price:'42 zł'}
-        ]
-      },
-      // 8. Sashimi
-      {
-        id:'sashimi',
-        title:{en:'Sashimi', pl:'Sashimi'},
-        items:[
-          {enName:'Mizu (9 pcs)', plName:'Mizu (9 szt.)', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plastry surowych ryb — łosoś, tuńczyk, butterfish', price:'95 zł'}
+          {enName:'Sake Ebi Tataki (2 pcs)', plName:'Sake Ebi Tataki (2 szt.)', descEN:'chopped shrimp wrapped in salmon', descPL:'posiekana krewetka w łososiu', price:'36 zł', imgFile: 'Oyakomaki.jpg'}, // Файл пользователя
+          {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'salmon caviar wrapped in tuna', descPL:'ikura w tuńczyku', price:'42 zł'},
+          {enName:'Sashimi Mizu (9 pcs)', plName:'Sashimi Mizu (9 szt.)', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plastry surowych ryb — łosoś, tuńczyk, butterfish', price:'95 zł'}
         ]
       }
     ];
@@ -366,14 +334,13 @@
           const thumb = document.createElement('div');
           thumb.className='thumb';
           
-          // Image loading logic
           const img = document.createElement('img');
           img.style.width='100%';
           img.style.height='100%';
           img.style.objectFit='cover';
           img.alt = (it[LANG==='en'?'enName':'plName']);
           
-          // Используем файл, указанный в данных, или плейсхолдер
+          // Логика загрузки фото: если есть imgFile, используем его, иначе - плейсхолдер
           const imgSrc = it.imgFile ? `images/${it.imgFile}` : 'https://via.placeholder.com/300x200?text=photo';
           img.src = imgSrc;
           
@@ -417,12 +384,6 @@
       contacts.innerHTML = (LANG==='en')
         ? '📞 +48 123 456 789<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warsaw'
         : '📞 +48 123 456 789<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warszawa';
-        
-      // Обновляем текст в aside.right
-      const notice = document.querySelector('.right .section:nth-child(2) .small');
-      notice.textContent = (LANG==='en') 
-        ? 'We kindly inform you that we add a waiter service of 10% to the final bill.' 
-        : 'Uprzejmie informujemy, że do rachunku końcowego doliczamy opłatę za obsługę kelnerską w wysokości 10%.';
     }
 
     // language buttons
