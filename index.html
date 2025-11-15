@@ -122,36 +122,38 @@
     .item{
       display:flex;
       gap:12px;
-      align-items:center; /* Возвращено для выравнивания с миниатюрами */
-      padding:8px;
+      align-items:center; 
+      padding:8px 0;
       border-radius:10px;
     }
     
-    /* Стили для миниатюры блюда */
-    .thumb{
-      width:88px;
-      height:62px;
-      background:#eee;
-      border-radius:8px;
-      overflow:hidden;
-      flex-shrink:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:var(--muted);
-      font-size:12px;
-    }
-    .thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      cursor: pointer; /* Делаем кликабельным */
-    }
+    /* Эти классы больше не используются в списке, но оставим их на случай, если вы решите их вернуть:
+    .thumb { display: none !important; } */
     
     .meta{flex:1}
     .name{font-weight:700;margin-bottom:6px}
     .desc{font-size:13px;color:var(--muted);margin-bottom:6px}
-    .price{font-weight:800;color:var(--accent)}
+    .price{font-weight:800;color:var(--accent); white-space: nowrap;}
+    
+    .item-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        gap: 15px;
+    }
+    
+    /* Разделитель между позициями */
+    .items .item:not(:last-child) {
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+    }
+    .items .item:last-child {
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+    /* Конец разделителя */
 
     footer{
       margin-top:18px;
@@ -170,7 +172,7 @@
       .right{width:100%}
     }
     
-    /* --- СТИЛИ ДЛЯ ЛАЙТБОКСА --- */
+    /* --- СТИЛИ ДЛЯ ЛАЙТБОКСА (Главного фото) --- */
     .lightbox {
       display: none; 
       position: fixed; 
@@ -269,7 +271,7 @@
         border-radius: var(--radius);
         border: 1px solid rgba(0,0,0,0.03);
         margin-bottom: 14px;
-        padding: 0 14px;
+        padding: 0 14px; /* Добавили отступы для текста в списке */
     }
     summary {
         font-weight: bold;
@@ -396,11 +398,11 @@
         introDescEN: 'Classic Japanese sushi: Nigiri (rice with fish on top) and Futomaki (thick, traditional rolls).',
         introDescPL: 'Klasyczne japońskie sushi: Nigiri (ryż z rybą na wierzchu) i Futomaki (grube, tradycyjne rolki).',
         items:[
-          {enName:'Sake (Nigiri)', plName:'Sake (Nigiri)', descEN:'salmon — 2 pc', descPL:'łosoś — 2 szt.', price:'26 zł', imgFile: 'NIGIRI#1.jpg'}, // Файл пользователя
-          {enName:'Ohio (Nigiri)', plName:'Ohio (Nigiri)', descEN:'butterfish — 2 pc', descPL:'butterfish — 2 szt.', price:'25 zł', imgFile: 'NIGIRI#2.jpg'}, // Файл пользователя
+          {enName:'Sake (Nigiri)', plName:'Sake (Nigiri)', descEN:'salmon — 2 pc', descPL:'łosoś — 2 szt.', price:'26 zł', imgFile: 'NIGIRI#1.jpg'}, 
+          {enName:'Ohio (Nigiri)', plName:'Ohio (Nigiri)', descEN:'butterfish — 2 pc', descPL:'butterfish — 2 szt.', price:'25 zł', imgFile: 'NIGIRI#2.jpg'}, 
           {enName:'Maguro (Nigiri)', plName:'Maguro (Nigiri)', descEN:'tuna — 2 pc', descPL:'tuńczyk — 2 szt.', price:'30 zł'},
-          {enName:'Sake Philadelphia (Futomaki)', plName:'Sake Philadelphia (Futomaki)', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł', imgFile: 'FUTOMAKI.jpg'}, // Файл пользователя
-          {enName:'Maguro Negi Togarashi', plName:'Maguro Negi Togarashi', descEN:'tuna with spicy leek', descPL:'tuńczyk z ostrą dymką', price:'42 zł', imgFile: 'MAGURO.jpg'} // Файл пользователя
+          {enName:'Sake Philadelphia (Futomaki)', plName:'Sake Philadelphia (Futomaki)', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł', imgFile: 'FUTOMAKI.jpg'}, 
+          {enName:'Maguro Negi Togarashi', plName:'Maguro Negi Togarashi', descEN:'tuna with spicy leek', descPL:'tuńczyk z ostrą dymką', price:'42 zł', imgFile: 'MAGURO.jpg'} 
         ]
       },
       {
@@ -410,7 +412,7 @@
         introDescEN: 'Uramaki, or inside-out rolls, characterized by rice on the outside and nori seaweed wrapped around the fillings. They offer complex textures and flavors.',
         introDescPL: 'Uramaki, czyli rolki "ryżem na zewnątrz", charakteryzują się ryżem na zewnątrz i wodorostami nori wokół nadzienia. Oferują złożone tekstury i smaki.',
         items:[
-          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł', imgFile: 'URAMAKi.jpg'}, // Файл пользователя
+          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł', imgFile: 'URAMAKi.jpg'}, 
           {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś w awokado', price:'42 zł'},
           {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', descPL:'łosoś w mango', price:'42 zł'},
           {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z porem i pomarańczowym pieprzem', price:'45 zł'},
@@ -438,7 +440,7 @@
         introDescEN: 'Specialities: Oyakomaki (wrapped delicacies) and Sashimi (thin slices of raw fish without rice).',
         introDescPL: 'Specjalności: Oyakomaki (zawijane delikatesy) i Sashimi (cienkie plastry surowej ryby bez ryżu).',
         items:[
-          {enName:'Sake Ebi Tataki (2 pcs)', plName:'Sake Ebi Tataki (2 szt.)', descEN:'chopped shrimp wrapped in salmon', descPL:'posiekana krewetka w łososiu', price:'36 zł', imgFile: 'Oyakomaki.jpg'}, // Файл пользователя
+          {enName:'Sake Ebi Tataki (2 pcs)', plName:'Sake Ebi Tataki (2 szt.)', descEN:'chopped shrimp wrapped in salmon', descPL:'posiekana krewetka w łososiu', price:'36 zł', imgFile: 'Oyakomaki.jpg'}, 
           {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'salmon caviar wrapped in tuna', descPL:'ikura w tuńczyku', price:'42 zł'},
           {enName:'Sashimi Mizu (9 pcs)', plName:'Sashimi Mizu (9 szt.)', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plastry surowych ryb — łosoś, tuńczyk, butterfish', price:'95 zł'}
         ]
@@ -462,13 +464,14 @@
       });
     }
 
-    // --- ОБНОВЛЕННАЯ ФУНКЦИЯ РЕНДЕРИНГА (С INTRO-КАРТОЙ И СПИСКОМ С МИНИАТЮРАМИ ВНУТРИ <details>) ---
+    // --- ОБНОВЛЕННАЯ ФУНКЦИЯ РЕНДЕРИНГА (С INTRO-КАРТОЙ, НО БЕЗ ФОТО В СПИСКЕ) ---
     function renderMenu(){
       menuArea.innerHTML = '';
       MENU.forEach(sec=>{
         const s = document.createElement('section');
         s.id = sec.id;
 
+        // Заголовок секции, который находится над intro-карточкой
         const h2 = document.createElement('h2');
         h2.textContent = sec.title[LANG];
         h2.className = 'menu-section'; 
@@ -496,34 +499,25 @@
             details.open = false; 
             
             const summary = document.createElement('summary');
+            // Меняем текст на "Показать доступные позиции"
             const viewText = (LANG === 'en' ? 'View available items' : 'Pokaż dostępne pozycje');
-            summary.innerHTML = '<span class="summary-text">' + viewText + '</span>';
+            summary.innerHTML = '<span class="summary-text">' + viewText + '</span>'; 
             details.appendChild(summary);
 
             const container = document.createElement('div');
             container.className='items';
             
-            // 3. Рендеринг отдельных позиций внутри <details>
+            // 3. Рендеринг отдельных позиций: ТОЛЬКО ТЕКСТ
             sec.items.forEach(it => {
                 const div = document.createElement('div');
                 div.className='item';
 
-                // --- ЛОГИКА МИНИАТЮРЫ ДЛЯ КАЖДОГО БЛЮДА ---
-                const thumb = document.createElement('div');
-                thumb.className='thumb';
-
-                const itemImg = document.createElement('img');
-                const imgSrc = it.imgFile ? `images/${it.imgFile}` : 'https://via.placeholder.com/300x200?text=photo';
-                itemImg.src = imgSrc;
-                itemImg.alt = (LANG==='en'?it.enName:it.plName);
-                // Миниатюра также открывает лайтбокс
-                itemImg.onclick = () => { openLightbox(imgSrc); }; 
-
-                thumb.appendChild(itemImg);
-                div.appendChild(thumb);
-                // --- КОНЕЦ ЛОГИКИ МИНИАТЮРЫ ---
+                // Мы НЕ создаем блок .thumb
 
                 // Логика мета-данных (название, описание, цена)
+                const itemContent = document.createElement('div');
+                itemContent.className = 'item-content';
+
                 const meta = document.createElement('div');
                 meta.className='meta';
                 
@@ -541,16 +535,58 @@
 
                 meta.appendChild(name);
                 if(desc.textContent) meta.appendChild(desc);
-                meta.appendChild(price);
 
-                div.appendChild(meta);
+                itemContent.appendChild(meta);
+                itemContent.appendChild(price);
+
+                div.appendChild(itemContent);
                 container.appendChild(div);
             });
             
             details.appendChild(container);
             s.appendChild(details); // Добавляем <details> в секцию
             
-        } 
+        } else {
+            // Если нет introPhoto, просто рендерим список
+            const sectionWithoutIntro = document.createElement('div');
+            sectionWithoutIntro.className = 'section';
+
+            const container = document.createElement('div');
+            container.className='items';
+
+            sec.items.forEach(it => {
+                const div = document.createElement('div');
+                div.className='item';
+                
+                // Текст
+                const itemContent = document.createElement('div');
+                itemContent.className = 'item-content';
+                
+                const meta = document.createElement('div');
+                meta.className='meta';
+                const name = document.createElement('div');
+                name.className='name';
+                name.textContent = (LANG==='en'?it.enName:it.plName);
+                const desc = document.createElement('div');
+                desc.className='desc';
+                desc.textContent = (LANG==='en'?it.descEN:it.descPL) || '';
+                
+                const price = document.createElement('div');
+                price.className='price';
+                price.textContent = it.price || '';
+
+                meta.appendChild(name);
+                if(desc.textContent) meta.appendChild(desc);
+                
+                itemContent.appendChild(meta);
+                itemContent.appendChild(price);
+                
+                div.appendChild(itemContent);
+                container.appendChild(div);
+            });
+            sectionWithoutIntro.appendChild(container);
+            s.appendChild(sectionWithoutIntro);
+        }
         
         menuArea.appendChild(s);
       });
