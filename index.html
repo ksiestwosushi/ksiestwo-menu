@@ -295,6 +295,22 @@
       border-radius: 0 0 var(--radius) var(--radius); 
       line-height: 1.3;
     }
+    
+    /* Дополнительные стили для блока с отдельным фото (Maguro) */
+    .maguro-photo-block {
+      background: #fdfdfd; 
+      border-radius: var(--radius);
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .maguro-photo-block img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
 
     /* Стилизация стрелочки/кнопки для списка */
     details {
@@ -341,6 +357,11 @@
         padding-top: 10px;
         padding-bottom: 10px;
         border-top: 1px solid rgba(0,0,0,0.05); 
+    }
+    /* Отключаем верхний бордер для вложенного items (если есть) */
+    details details .items {
+        border-top: none; 
+        padding-top: 0;
     }
 
   </style>
@@ -415,10 +436,9 @@
       {
         id:'soups',
         title:{en:'Soups', pl:'Zupy'},
-        introPhoto: 'images/RAMEN ZUPA.jpg', // <--- НОВОЕ ФОТО
+        introPhoto: 'images/RAMEN ZUPA.jpg', 
         introDescEN: 'Traditional Japanese soups, including rich Ramen bowls with various fillings.',
         introDescPL: 'Tradycyjne japońskie zupy, w tym bogate miski Ramenu z różnymi dodatkami.',
-        // Новый, ненавязчивый текст, который будет отображаться под основным описанием
         smallNoteEN: 'Note: Ramen portion is 800ml, best for sharing (2 people).',
         smallNotePL: 'Uwaga: Porcja Ramenu to 800ml, polecamy do podziału (dla 2 osób).',
         items:[
@@ -430,13 +450,27 @@
       {
         id:'nigiri',
         title:{en:'Nigiri (2 pc)', pl:'Nigiri (2 szt.)'},
-        introPhoto: 'images/NIGIRI#2.jpg', // <--- ВОЗВРАЩЕНО НА NIGIRI#2.jpg
+        introPhoto: 'images/NIGIRI#2.jpg', // <--- ИЗМЕНЕНИЕ: Теперь NIGIRI#2.jpg
         introDescEN: 'Hand-pressed rice topped with fresh fish or seafood.',
         introDescPL: 'Ręcznie formowany ryż z plastrem świeżej ryby lub owoców morza.',
         items:[
+          // Nigiri, кроме Maguro, остаются здесь
           {enName:'Sake', plName:'Sake', descEN:'salmon', descPL:'łosoś', price:'26 zł'}, 
           {enName:'Ohio', plName:'Ohio', descEN:'butterfish', descPL:'ryba maślana', price:'25 zł'}, 
-          {enName:'Maguro', plName:'Maguro', descEN:'tuna', descPL:'tuńczyk', price:'30 zł'}
+          // Maguro будет вынесено ниже, чтобы добавить фото
+        ],
+        // Дополнительная секция для Maguro, чтобы включить фото MAGURO.jpg
+        subSections: [
+            {
+                subId: 'nigiri-maguro',
+                subTitle: {en:'Maguro (Tuna)', pl:'Maguro (Tuńczyk)'},
+                subPhoto: 'images/MAGURO.jpg',
+                subDescEN: 'Tuna nigiri is considered a classic, renowned for its deep red color and rich flavor.',
+                subDescPL: 'Nigiri z tuńczykiem, uważane za klasykę, cenione za głęboki czerwony kolor i bogaty smak.',
+                subItems: [
+                    {enName:'Maguro', plName:'Maguro', descEN:'tuna', descPL:'tuńczyk', price:'30 zł'}
+                ]
+            }
         ]
       },
       // --- РАЗДЕЛ FUTOMAKI (ОТДЕЛЬНО) ---
@@ -522,14 +556,50 @@
       });
     }
 
-    // --- ФУНКЦИЯ РЕНДЕРИНГА (ТОЛЬКО ТЕКСТ В СПИСКЕ) ---
+    // --- ФУНКЦИЯ РЕНДЕРИНГА ПОЗИЦИЙ ---
+    function renderItems(container, items){
+        items.forEach(it => {
+            const div = document.createElement('div');
+            div.className='item';
+
+            const itemContent = document.createElement('div');
+            itemContent.className = 'item-content';
+
+            const meta = document.createElement('div');
+            meta.className='meta';
+            
+            const name = document.createElement('div');
+            name.className='name';
+            name.textContent = (LANG==='en'?it.enName:it.plName);
+            
+            const desc = document.createElement('div');
+            desc.className='desc';
+            desc.textContent = (LANG==='en'?it.descEN:it.descPL) || '';
+            
+            const price = document.createElement('div');
+            price.className='price';
+            price.textContent = it.price || '';
+
+            meta.appendChild(name);
+            if(desc.textContent) meta.appendChild(desc);
+
+            itemContent.appendChild(meta);
+            itemContent.appendChild(price);
+
+            div.appendChild(itemContent);
+            container.appendChild(div);
+        });
+    }
+
+
+    // --- ОСНОВНАЯ ФУНКЦИЯ РЕНДЕРИНГА МЕНЮ ---
     function renderMenu(){
       menuArea.innerHTML = '';
       MENU.forEach(sec=>{
         const s = document.createElement('section');
         s.id = sec.id;
 
-        // Заголовок секции, который находится над intro-карточкой
+        // Заголовок секции
         const h2 = document.createElement('h2');
         h2.textContent = sec.title[LANG];
         h2.className = 'menu-section'; 
@@ -562,7 +632,7 @@
 
             s.appendChild(introCard); 
 
-            // 2. Создание раскрывающегося блока <details>
+            // 2. Создание раскрывающегося блока <details> для основных позиций
             const details = document.createElement('details');
             details.open = false; 
             
@@ -574,39 +644,51 @@
             const container = document.createElement('div');
             container.className='items';
             
-            // 3. Рендеринг отдельных позиций: ТОЛЬКО ТЕКСТ
-            sec.items.forEach(it => {
-                const div = document.createElement('div');
-                div.className='item';
+            // Рендеринг основных позиций
+            renderItems(container, sec.items);
+            
+            // 3. Дополнительные вложенные секции (для Maguro)
+            if (sec.subSections && sec.subSections.length > 0) {
+                sec.subSections.forEach(subSec => {
+                    const subDetails = document.createElement('details');
+                    subDetails.open = false;
 
-                // Логика мета-данных (название, описание, цена)
-                const itemContent = document.createElement('div');
-                itemContent.className = 'item-content';
+                    const subSummary = document.createElement('summary');
+                    subSummary.innerHTML = '<span class="summary-text">' + subSec.subTitle[LANG] + '</span>';
+                    subDetails.appendChild(subSummary);
 
-                const meta = document.createElement('div');
-                meta.className='meta';
-                
-                const name = document.createElement('div');
-                name.className='name';
-                name.textContent = (LANG==='en'?it.enName:it.plName);
-                
-                const desc = document.createElement('div');
-                desc.className='desc';
-                desc.textContent = (LANG==='en'?it.descEN:it.descPL) || '';
-                
-                const price = document.createElement('div');
-                price.className='price';
-                price.textContent = it.price || '';
+                    const subContainer = document.createElement('div');
 
-                meta.appendChild(name);
-                if(desc.textContent) meta.appendChild(desc);
+                    // Добавление фото и описания для подсекции (Maguro)
+                    if (subSec.subPhoto) {
+                        const subPhotoBlock = document.createElement('div');
+                        subPhotoBlock.className = 'maguro-photo-block';
+                        
+                        const subImg = document.createElement('img');
+                        subImg.src = subSec.subPhoto;
+                        subImg.alt = subSec.subTitle[LANG];
+                        subImg.onclick = () => { openLightbox(subSec.subPhoto); }; 
+                        subPhotoBlock.appendChild(subImg);
 
-                itemContent.appendChild(meta);
-                itemContent.appendChild(price);
+                        const subP = document.createElement('p');
+                        subP.textContent = (LANG === 'en' ? subSec.subDescEN : subSec.subDescPL);
+                        subP.style.paddingTop = '10px';
+                        subP.style.borderTop = '1px solid rgba(0,0,0,0.05)';
+                        
+                        subContainer.appendChild(subPhotoBlock);
+                        subContainer.appendChild(subP);
+                    }
+                    
+                    const subItemsContainer = document.createElement('div');
+                    subItemsContainer.className = 'items';
+                    renderItems(subItemsContainer, subSec.subItems);
+                    
+                    subContainer.appendChild(subItemsContainer);
+                    subDetails.appendChild(subContainer);
+                    container.appendChild(subDetails);
+                });
+            }
 
-                div.appendChild(itemContent);
-                container.appendChild(div);
-            });
             
             details.appendChild(container);
             s.appendChild(details); 
@@ -619,36 +701,8 @@
             const container = document.createElement('div');
             container.className='items';
 
-            sec.items.forEach(it => {
-                const div = document.createElement('div');
-                div.className='item';
-                
-                // Текст
-                const itemContent = document.createElement('div');
-                itemContent.className = 'item-content';
-                
-                const meta = document.createElement('div');
-                meta.className='meta';
-                const name = document.createElement('div');
-                name.className='name';
-                name.textContent = (LANG==='en'?it.enName:it.plName);
-                const desc = document.createElement('div');
-                desc.className='desc';
-                desc.textContent = (LANG==='en'?it.descEN:it.descPL) || '';
-                
-                const price = document.createElement('div');
-                price.className='price';
-                price.textContent = it.price || '';
-
-                meta.appendChild(name);
-                if(desc.textContent) meta.appendChild(desc);
-                
-                itemContent.appendChild(meta);
-                itemContent.appendChild(price);
-                
-                div.appendChild(itemContent);
-                container.appendChild(div);
-            });
+            renderItems(container, sec.items);
+            
             sectionWithoutIntro.appendChild(container);
             s.appendChild(sectionWithoutIntro);
         }
@@ -726,4 +780,3 @@
   </script>
 </body>
 </html>
-
