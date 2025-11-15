@@ -295,22 +295,6 @@
       border-radius: 0 0 var(--radius) var(--radius); 
       line-height: 1.3;
     }
-    
-    /* Дополнительные стили для блока с отдельным фото (Maguro) */
-    .maguro-photo-block {
-      background: #fdfdfd; 
-      border-radius: var(--radius);
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid rgba(0,0,0,0.05);
-    }
-    .maguro-photo-block img {
-      display: block;
-      width: 100%;
-      height: auto;
-      border-radius: var(--radius);
-      cursor: pointer;
-    }
 
     /* Стилизация стрелочки/кнопки для списка */
     details {
@@ -357,11 +341,6 @@
         padding-top: 10px;
         padding-bottom: 10px;
         border-top: 1px solid rgba(0,0,0,0.05); 
-    }
-    /* Отключаем верхний бордер для вложенного items (если есть) */
-    details details .items {
-        border-top: none; 
-        padding-top: 0;
     }
 
   </style>
@@ -450,27 +429,24 @@
       {
         id:'nigiri',
         title:{en:'Nigiri (2 pc)', pl:'Nigiri (2 szt.)'},
-        introPhoto: 'images/NIGIRI#2.jpg', // <--- ИЗМЕНЕНИЕ: Теперь NIGIRI#2.jpg
+        introPhoto: 'images/NIGIRI#2.jpg', 
         introDescEN: 'Hand-pressed rice topped with fresh fish or seafood.',
         introDescPL: 'Ręcznie formowany ryż z plastrem świeżej ryby lub owoców morza.',
         items:[
-          // Nigiri, кроме Maguro, остаются здесь
+          // Maguro удален отсюда
           {enName:'Sake', plName:'Sake', descEN:'salmon', descPL:'łosoś', price:'26 zł'}, 
-          {enName:'Ohio', plName:'Ohio', descEN:'butterfish', descPL:'ryba maślana', price:'25 zł'}, 
-          // Maguro будет вынесено ниже, чтобы добавить фото
-        ],
-        // Дополнительная секция для Maguro, чтобы включить фото MAGURO.jpg
-        subSections: [
-            {
-                subId: 'nigiri-maguro',
-                subTitle: {en:'Maguro (Tuna)', pl:'Maguro (Tuńczyk)'},
-                subPhoto: 'images/MAGURO.jpg',
-                subDescEN: 'Tuna nigiri is considered a classic, renowned for its deep red color and rich flavor.',
-                subDescPL: 'Nigiri z tuńczykiem, uważane za klasykę, cenione za głęboki czerwony kolor i bogaty smak.',
-                subItems: [
-                    {enName:'Maguro', plName:'Maguro', descEN:'tuna', descPL:'tuńczyk', price:'30 zł'}
-                ]
-            }
+          {enName:'Ohio', plName:'Ohio', descEN:'butterfish', descPL:'ryba maślana', price:'25 zł'}
+        ]
+      },
+      // --- НОВЫЙ РАЗДЕЛ MAGURO (ОТДЕЛЬНО) ---
+      {
+        id:'maguro-special',
+        title:{en:'Maguro Nigiri (2 pc)', pl:'Maguro Nigiri (2 szt.)'},
+        introPhoto: 'images/MAGURO.jpg', // <--- ФОТО MAGURO.jpg
+        introDescEN: 'Tuna nigiri is considered a classic, renowned for its deep red color and rich flavor.',
+        introDescPL: 'Nigiri z tuńczykiem, uważane za klasykę, cenione za głęboki czerwony kolor i bogaty smak.',
+        items:[
+          {enName:'Maguro', plName:'Maguro', descEN:'tuna', descPL:'tuńczyk', price:'30 zł'}
         ]
       },
       // --- РАЗДЕЛ FUTOMAKI (ОТДЕЛЬНО) ---
@@ -632,7 +608,7 @@
 
             s.appendChild(introCard); 
 
-            // 2. Создание раскрывающегося блока <details> для основных позиций
+            // 2. Создание раскрывающегося блока <details> для позиций
             const details = document.createElement('details');
             details.open = false; 
             
@@ -644,51 +620,8 @@
             const container = document.createElement('div');
             container.className='items';
             
-            // Рендеринг основных позиций
+            // Рендеринг позиций
             renderItems(container, sec.items);
-            
-            // 3. Дополнительные вложенные секции (для Maguro)
-            if (sec.subSections && sec.subSections.length > 0) {
-                sec.subSections.forEach(subSec => {
-                    const subDetails = document.createElement('details');
-                    subDetails.open = false;
-
-                    const subSummary = document.createElement('summary');
-                    subSummary.innerHTML = '<span class="summary-text">' + subSec.subTitle[LANG] + '</span>';
-                    subDetails.appendChild(subSummary);
-
-                    const subContainer = document.createElement('div');
-
-                    // Добавление фото и описания для подсекции (Maguro)
-                    if (subSec.subPhoto) {
-                        const subPhotoBlock = document.createElement('div');
-                        subPhotoBlock.className = 'maguro-photo-block';
-                        
-                        const subImg = document.createElement('img');
-                        subImg.src = subSec.subPhoto;
-                        subImg.alt = subSec.subTitle[LANG];
-                        subImg.onclick = () => { openLightbox(subSec.subPhoto); }; 
-                        subPhotoBlock.appendChild(subImg);
-
-                        const subP = document.createElement('p');
-                        subP.textContent = (LANG === 'en' ? subSec.subDescEN : subSec.subDescPL);
-                        subP.style.paddingTop = '10px';
-                        subP.style.borderTop = '1px solid rgba(0,0,0,0.05)';
-                        
-                        subContainer.appendChild(subPhotoBlock);
-                        subContainer.appendChild(subP);
-                    }
-                    
-                    const subItemsContainer = document.createElement('div');
-                    subItemsContainer.className = 'items';
-                    renderItems(subItemsContainer, subSec.subItems);
-                    
-                    subContainer.appendChild(subItemsContainer);
-                    subDetails.appendChild(subContainer);
-                    container.appendChild(subDetails);
-                });
-            }
-
             
             details.appendChild(container);
             s.appendChild(details); 
