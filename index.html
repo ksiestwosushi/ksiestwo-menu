@@ -415,8 +415,6 @@
     }
     /* ------------------------------------------- */
 
-    /* Удалили все стили, связанные со слайдером/каруселью */
-
   </style>
 </head>
 <body>
@@ -453,11 +451,7 @@
           </div>
         </div>
 
-        <div class="section">
-          <h2 id="notice-title">Notice</h2>
-          <div class="small">We kindly inform you that we add a waiter service of 10% to the final bill.</div>
-        </div>
-      </aside>
+        </aside>
     </div>
 
     <footer>
@@ -522,10 +516,10 @@
           {enName:'Ebi', plName:'Ebi', descEN:'shrimp', descPL:'krewetka', price:'30 zł'}
         ]
       },
-      // --- РАЗДЕЛ FUTOMAKI (ОТДЕЛЬНО) ---
+      // --- РАЗДЕЛ FUTOMAKI (ОТДЕЛЬНО) - КОЛИЧЕСТВО ИЗМЕНЕНО НА 6, ПОЗИЦИИ ВОССТАНОВЛЕНЫ ---
       {
         id:'futomaki',
-        title:{en:'Futomaki (4 pc)', pl:'Futomaki (4 szt.)'},
+        title:{en:'Futomaki (6 pc)', pl:'Futomaki (6 szt.)'},
         introPhoto: 'images/futomaki.jpg', 
         introDescEN: 'Thick, traditional rolls with the seaweed on the outside.',
         introDescPL: 'Grube, tradycyjne rolki z wodorostem na zewnątrz.',
@@ -607,7 +601,6 @@
     const langBtns = document.querySelectorAll('#lang-switch-fixed .lang-btn'); 
     let LANG = 'pl'; 
 
-    // УДАЛЕНА вся логика SLIDER/CAROUSEL (updateSlide, createSliderStructure, currentSlideMap, autoCycleInterval, carouselIntervals)
     
     function createNav(){
       nav.innerHTML = '';
@@ -770,8 +763,6 @@
         
         menuArea.appendChild(s);
         
-        // Удалена вся логика инициализации слайдера
-
       });
     }
     // --- КОНЕЦ ФУНКЦИИ РЕНДЕРИНГА ---
@@ -781,7 +772,7 @@
       document.getElementById('title').textContent = 'Księstwo Sushi';
       document.getElementById('subtitle').textContent = (LANG==='en') ? 'Fine sushi — Menu' : 'Wyborne sushi — Menu';
       document.getElementById('hours-title').textContent = (LANG==='en') ? 'Contacts' : 'Kontakt';
-      document.getElementById('notice-title').textContent = (LANG==='en') ? 'Notice' : 'Uwaga';
+      // УДАЛЕНА строка для notice-title
       document.getElementById('footer-left').textContent = 'Księstwo Sushi';
       document.getElementById('footer-right').textContent = (LANG==='en') ? 'Menu — web version' : 'Menu — wersja online';
       
@@ -796,12 +787,7 @@
       
       contacts.innerHTML = contactsContent;
       
-      const notice = document.querySelector('.right .section:nth-child(2) .small');
-      notice.textContent = (LANG==='en') 
-        ? 'We kindly inform you that we add a waiter service of 10% to the final bill.' 
-        : 'Uprzejmie informujemy, że do rachunku końcowego doliczamy opłatę za obsługę kelnerską w wysokości 10%.';
-
-      // Удалена логика обновления слайдов
+      // УДАЛЕНА логика для "NOTICE"
     }
 
 
