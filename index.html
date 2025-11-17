@@ -343,6 +343,44 @@
         border-top: 1px solid rgba(0,0,0,0.05); 
     }
 
+    /* --- СТИЛИ ДЛЯ 2-КОЛОНОЧНОГО МАКЕТА URAMAKI --- */
+    #uramaki-combined .items {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 20px; /* 0px по вертикали, 20px по горизонтали */
+    }
+    .item-column {
+        display: flex;
+        flex-direction: column;
+        gap: 0; /* Убираем gap, так как .item имеет свои отступы */
+    }
+    .item-column h3 { /* Заголовок для колонки (Uramaki / Tempura) */
+        font-size: 14px;
+        margin: 0 0 5px 0;
+        padding-bottom: 5px;
+        border-bottom: 1px solid var(--accent);
+        color: var(--accent);
+    }
+    /* Убираем разделители внутри колонок, кроме последнего */
+    .item-column .item:not(:last-child) {
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+    }
+    .item-column .item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    /* Адаптация для мобильных: 2 колонки превращаются в 1 */
+    @media (max-width: 700px) {
+      #uramaki-combined .items {
+        grid-template-columns: 1fr;
+        gap: 20px 0; /* 20px по вертикали, 0px по горизонтали */
+      }
+    }
+    /* ------------------------------------------- */
+
   </style>
 </head>
 <body>
@@ -429,12 +467,12 @@
       {
         id:'nigiri',
         title:{en:'Nigiri (2 pc)', pl:'Nigiri (2 szt.)'},
-        introPhoto: 'images/NIGIRI#2.jpg', // Фото с креветками
+        introPhoto: 'images/NIGIRI#2.jpg', 
         introDescEN: 'Hand-pressed rice topped with fresh fish or seafood.',
         introDescPL: 'Ręcznie formowany ryż z plastrem świeżej ryby lub owoców morza.',
         items:[
           {enName:'Sake', plName:'Sake', descEN:'salmon', descPL:'łosoś', price:'26 zł'}, 
-          {enName:'Ohio', plName:'Ohio', descEN:'butterfish', descPL:'ryba maślana', price:'25 zł'}, 
+          {enName:'Ohio', plName:'Ohio', descEN:'butterfish', descPL:'ryba maślana', price:'25 zł'},
           {enName:'Maguro', plName:'Maguro', descEN:'tuna', descPL:'tuńczyk', price:'30 zł'},
           {enName:'Unagi', plName:'Unagi', descEN:'eel', descPL:'węgorz', price:'30 zł'},
           {enName:'Hotate', plName:'Hotate', descEN:'scallops', descPL:'małże św. Jakuba', price:'32 zł'},
@@ -446,7 +484,7 @@
       // --- РАЗДЕЛ FUTOMAKI (ОТДЕЛЬНО) ---
       {
         id:'futomaki',
-        title:{en:'Futomaki (4 pc)', pl:'Futomaki (4 szt.)'}, // Обновлено на 4 шт. согласно меню
+        title:{en:'Futomaki (4 pc)', pl:'Futomaki (4 szt.)'},
         introPhoto: 'images/FUTOMAKI.jpg', 
         introDescEN: 'Thick, traditional rolls with the seaweed on the outside.',
         introDescPL: 'Grube, tradycyjne rolki z wodorostem na zewnątrz.',
@@ -461,32 +499,39 @@
           {enName:'Veggie', plName:'Veggie', descEN:'vegetables', descPL:'warzywa', price:'36 zł'}
         ]
       },
+      // --- ОБЪЕДИНЕННЫЙ РАЗДЕЛ URAMAKI & TEMPURA ---
       {
-        id:'uramaki',
-        title:{en:'Uramaki (8 pc)', pl:'Uramaki (8 szt.)'},
-        introPhoto: 'images/URAMAKi.jpg', 
-        introDescEN: 'Uramaki, or inside-out rolls, characterized by rice on the outside and nori seaweed wrapped around the fillings. They offer complex textures and flavors.',
-        introDescPL: 'Uramaki, czyli rolki "ryżem na zewnątrz", charakteryzują się ryżem na zewnątrz i wodorostami nori wokół nadzienia. Oferują złożone tekstury i smaki.',
-        items:[
+        id:'uramaki-combined',
+        title:{en:'Uramaki & Tempura (8 pc)', pl:'Uramaki & Tempura (8 szt.)'},
+        introPhoto: 'images/tempura.jpg', // <--- НОВОЕ ГЛАВНОЕ ФОТО
+        introDescEN: 'Our selection of Uramaki (inside-out rolls) and crispy Uramaki w Tempurze.',
+        introDescPL: 'Nasz wybór Uramaki (rolek ryżem na zewnątrz) oraz chrupiących Uramaki w Tempurze.',
+        
+        // Список Uramaki (14 позиций из меню)
+        items_uramaki: [
           {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł'}, 
-          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś w awokado', price:'42 zł'},
-          {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', descPL:'łosoś w mango', price:'42 zł'},
-          {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z porem i pomarańczowym pieprzem', price:'45 zł'},
-          {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka tempura w sojowym papierze', price:'42 zł'},
-          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owinięte łososiem', price:'40 zł'},
-          {enName:'Rainbow', plName:'Rainbow', descEN:'assorted', descPL:'asortyment', price:'48 zł'}
-        ]
-      },
-      {
-        id:'uramaki-temp',
-        title:{en:'Uramaki in Tempura', pl:'Uramaki w tempurze'},
-        introPhoto: 'images/tempura_main_photo.jpg', 
-        introDescEN: 'Warm, crispy Uramaki rolls deep-fried in tempura batter for a delightful crunch.',
-        introDescPL: 'Ciepłe, chrupiące rolki Uramaki smażone w cieście tempura, dla uzyskania cudownej chrupkości.',
-        items:[
-          {enName:'Tempura Sake', plName:'Tempura Sake', descEN:'salmon', descPL:'łosoś', price:'45 zł'},
-          {enName:'Tempura Ohio', plName:'Tempura Ohio', descEN:'butterfish', descPL:'ryba maślana', price:'48 zł'},
-          {enName:'Tempura Maguro', plName:'Tempura Maguro', descEN:'tuna', descPL:'tuńczyk', price:'50 zł'}
+          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś owijany awokado', price:'42 zł'},
+          {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', descPL:'łosoś owijany mango', price:'42 zł'},
+          {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z siekanym porem i orange pepper', price:'45 zł'},
+          {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka w tempurze zawijana w papier sojowy', price:'42 zł'},
+          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owijane łososiem', price:'40 zł'},
+          {enName:'Rainbow', plName:'Rainbow', descEN:'surimi wrapped in assorted fish', descPL:'surimi owijane wachlarzem ryb', price:'48 zł'},
+          {enName:'Ohio Spice Sake', plName:'Ohio Spice Sake', descEN:'salmon wrapped in butterfish', descPL:'łosoś owijany opalaną maślaną', price:'42 zł'},
+          {enName:'Maguro Spicy Ebi Ten', plName:'Maguro Spicy Ebi Ten', descEN:'shrimp tempura wrapped in tuna', descPL:'krewetka w tempurze owijana opalanym tuńczykiem', price:'45 zł'},
+          {enName:'Kegon', plName:'Kegon', descEN:'salmon wrapped in grilled eel', descPL:'łosoś owijany grillowanym węgorzem', price:'45 zł'},
+          {enName:'Sake Aburi', plName:'Sake Aburi', descEN:'salmon wrapped in seared salmon', descPL:'łosoś owijany opalanym pikantnym łososiem', price:'45 zł'},
+          {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish in tempura coated with caviar', descPL:'maślana w tempurze obtoczona latającą rybą', price:'48 zł'}, // Примечание: "kawior z latającej ryby"
+          {enName:'Nashi Sake', plName:'Nashi Sake', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką', price:'45 zł'},
+          {enName:'Sake Tataki Ebiten', plName:'Sake Tataki Ebiten', descEN:'shrimp tempura wrapped in salmon tartare', descPL:'krewetka w tempurze obtoczona tatarem z łososia', price:'48 zł'}
+        ],
+
+        // Список Uramaki w Tempurze (5 позиций из меню)
+        items_tempura: [
+          {enName:'Tempura Sake', plName:'Tempura Sake', descEN:'salmon', descPL:'łosoś', price:'38 zł'},
+          {enName:'Tempura Ohio', plName:'Tempura Ohio', descEN:'butterfish', descPL:'maślana', price:'38 zł'},
+          {enName:'Tempura Maguro', plName:'Tempura Maguro', descEN:'tuna', descPL:'tuńczyk', price:'42 zł'},
+          {enName:'Tempura Ebi', plName:'Tempura Ebi', descEN:'steamed shrimp', descPL:'parzona krewetka', price:'40 zł'},
+          {enName:'Tempura Unagi Kabayaki', plName:'Tempura Unagi Kabayaki', descEN:'grilled eel', descPL:'grillowany węgorz', price:'45 zł'}
         ]
       },
       // --- РАЗДЕЛ OYAKOMAKI (ОТДЕЛЬНО) ---
@@ -497,8 +542,9 @@
         introDescEN: 'Our specialty rolls, often wrapped in fish or avocado instead of nori.',
         introDescPL: 'Nasze specjalne rolki, często zawijane w rybę lub awokado zamiast nori.',
         items:[
-          {enName:'Sake Ebi Tataki', plName:'Sake Ebi Tataki', descEN:'chopped shrimp wrapped in salmon', descPL:'posiekana krewetka w łososiu', price:'36 zł'}, 
-          {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'salmon caviar wrapped in tuna', descPL:'ikura w tuńczyku', price:'42 zł'}
+          {enName:'Sake Ebi Tataki', plName:'Sake Ebi Tataki', descEN:'chopped shrimp wrapped in salmon', descPL:'siekana krewetka owijana w łososia', price:'36 zł'}, 
+          {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'caviar with salmon wrapped in tuna', descPL:'kawior z łososia owijany tuńczykiem', price:'42 zł'},
+          {enName:'Maguro Sake Tataki', plName:'Maguro Sake Tataki', descEN:'chopped salmon wrapped in tuna', descPL:'siekany łosoś owijany tuńczykiem', price:'45 zł'} // Добавлено из нового меню
         ]
       },
       // --- РАЗДЕЛ SASHIMI (ОТДЕЛЬНО) ---
@@ -509,7 +555,7 @@
         introDescEN: 'Thinly sliced raw fish and seafood, served without rice.',
         introDescPL: 'Cienko krojone plastry surowej ryby i owoców morza, podawane bez ryżu.',
         items:[
-          {enName:'Sashimi Mizu', plName:'Sashimi Mizu', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plastry surowych ryb — łosoś, tuńczyk, ryba maślana', price:'95 zł'}
+          {enName:'Mizu', plName:'Mizu', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plaster surowej ryby — łosoś, tuńczyk, maślana', price:'45 zł'} // Цена обновлена с 95 до 45
         ]
       }
     ];
@@ -601,7 +647,7 @@
             // Дополнительное маленькое примечание (для рамена)
             if (sec.smallNoteEN && sec.smallNotePL) {
                 const smallNote = document.createElement('p');
-                smallNote.className = 'small-note'; // Использование нового класса для стилизации
+                smallNote.className = 'small-note'; 
                 smallNote.textContent = (LANG === 'en' ? sec.smallNoteEN : sec.smallNotePL);
                 introCard.appendChild(smallNote);
             }
@@ -619,15 +665,37 @@
 
             const container = document.createElement('div');
             container.className='items';
-            
-            // Рендеринг позиций
-            renderItems(container, sec.items);
+
+            // --- СПЕЦИАЛЬНАЯ ЛОГИКА ДЛЯ ДВУХ КОЛОНОК (Uramaki) ---
+            if (sec.id === 'uramaki-combined') {
+                // Создаем левую колонку
+                const colLeft = document.createElement('div');
+                colLeft.className = 'item-column';
+                const h3Left = document.createElement('h3');
+                h3Left.textContent = (LANG === 'en' ? 'Uramaki' : 'Uramaki');
+                colLeft.appendChild(h3Left);
+                renderItems(colLeft, sec.items_uramaki); // Рендерим обычные урамаки
+                container.appendChild(colLeft);
+
+                // Создаем правую колонку
+                const colRight = document.createElement('div');
+                colRight.className = 'item-column';
+                const h3Right = document.createElement('h3');
+                h3Right.textContent = (LANG === 'en' ? 'Uramaki in Tempura' : 'Uramaki w Tempurze');
+                colRight.appendChild(h3Right);
+                renderItems(colRight, sec.items_tempura); // Рендерим темпура урамаки
+                container.appendChild(colRight);
+
+            } else {
+                // Стандартный рендеринг для всех остальных секций
+                renderItems(container, sec.items);
+            }
             
             details.appendChild(container);
             s.appendChild(details); 
             
         } else {
-            // Если нет introPhoto, просто рендерим список в блоке .section
+            // Если нет introPhoto (для старых секций, если понадобятся)
             const sectionWithoutIntro = document.createElement('div');
             sectionWithoutIntro.className = 'section';
 
