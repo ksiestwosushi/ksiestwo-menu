@@ -278,11 +278,12 @@
         background: var(--card); 
         border-radius: var(--radius);
         border: 1px solid rgba(0,0,0,0.03);
-        overflow: hidden; /* Важно для слайдера */
+        overflow: hidden; 
     }
     .intro-card img {
         display: block;
-        border-radius: var(--radius) var(--radius) 0 0; 
+        /* Убрали здесь border-radius, чтобы его контролировал .slider-image-wrapper */
+        border-radius: 0; 
         margin-bottom: 0;
         width: 100%;
         height: auto;
@@ -358,14 +359,14 @@
     #uramaki-combined .items {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 0 20px; /* 0px по вертикали, 20px по горизонтали */
+        gap: 0 20px; 
     }
     .item-column {
         display: flex;
         flex-direction: column;
-        gap: 0; /* Убираем gap, так как .item имеет свои отступы */
+        gap: 0; 
     }
-    .item-column h3 { /* Заголовок для колонки (Uramaki / Tempura) */
+    .item-column h3 { 
         font-size: 14px;
         margin: 0 0 5px 0;
         padding-bottom: 5px;
@@ -387,7 +388,7 @@
     @media (max-width: 700px) {
       #uramaki-combined .items {
         grid-template-columns: 1fr;
-        gap: 20px 0; /* 20px по вертикали, 0px по горизонтали */
+        gap: 20px 0; 
       }
     }
     /* ------------------------------------------- */
@@ -398,23 +399,43 @@
         position: relative;
         overflow: hidden;
         width: 100%;
+        /* Убрали border-radius, чтобы его контролировал .slider-image-wrapper */
+    }
+
+    /* НОВЫЙ ВРАППЕР ДЛЯ ФИКСАЦИИ СООТНОШЕНИЯ СТОРОН (4:3) */
+    .slider-image-wrapper {
+        position: relative; 
+        width: 100%;
+        padding-top: 75%; /* 75% высоты = 4/3 аспект */
+        overflow: hidden;
         border-radius: var(--radius) var(--radius) 0 0;
     }
+
     .slider-track {
         display: flex;
         transition: transform 0.3s ease-in-out;
+        /* track должен иметь высоту wrapper'а для корректного сдвига */
+        height: 100%; 
+        position: absolute; /* Позиционируем относительно container */
+        top: 0;
+        left: 0;
+        width: 100%;
     }
     .slider-slide {
         min-width: 100%;
         position: relative;
     }
+
     .slider-slide img {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-        display: block;
+        height: 100%;
+        object-fit: cover; /* КЛЮЧ: заполняет область без искажений */
         cursor: pointer;
-        /* Убираем border-radius, который задан для .intro-card img, так как он теперь на контейнере слайдера */
-        border-radius: 0; 
     }
+
     /* Заголовок слайда */
     .slide-caption {
         position: absolute;
@@ -428,6 +449,7 @@
         font-weight: 600;
         text-align: center;
         pointer-events: none; 
+        z-index: 5;
     }
 
     /* Кнопки навигации */
@@ -541,16 +563,13 @@
       {
         id:'starters',
         title:{en:'Starters', pl:'Przystawki'},
-        // *** ИЗМЕНЕНИЕ: ВМЕСТО introPhoto ИСПОЛЬЗУЕМ sliderPhotos ***
         introDescEN: 'A selection of light and fresh starters to begin your sushi experience.',
         introDescPL: 'Wybór lekkich i świeżych przystawek na rozpoczęcie przygody z sushi.',
         sliderPhotos: [
             {src: 'images/VAKAME.jpg', nameEN: 'Goma Wakame', namePL: 'Goma Wakame'},
             {src: 'images/EBITEN.jpg', nameEN: 'Ebiten (3 pcs)', namePL: 'Ebiten (3 szt.)'},
             {src: 'images/TARTAR_LOSOS.jpg', nameEN: 'Sake Tataki', namePL: 'Sake Tataki'},
-            // Maguro Tataki можно добавить, если будет фото
         ],
-        // ***************************************************************
         items:[
           {enName:'Goma Wakame', plName:'Goma Wakame', descEN:'wakame salad', descPL:'sałatka wakame', price:'20 zł'},
           {enName:'Ebiten (3 pcs)', plName:'Ebiten (3 szt.)', descEN:'shrimp tempura served with ponzu sauce', descPL:'krewetka tempura z sosem ponzu', price:'30 zł'},
@@ -700,6 +719,7 @@
         currentSlideMap[sectionId] = index;
 
         // Move the track
+        // Слайдер теперь смещает весь трек, а слайды имеют 100% ширины
         const offset = -index * 100;
         track.style.transform = `translateX(${offset}%)`;
 
@@ -715,13 +735,18 @@
     function createSliderStructure(sec) {
         const sliderContainer = document.createElement('div');
         sliderContainer.className = 'slider-container';
-
+        
+        // Трек, который будет двигаться
         const track = document.createElement('div');
         track.className = 'slider-track';
 
         sec.sliderPhotos.forEach((photo, index) => {
             const slide = document.createElement('div');
             slide.className = 'slider-slide';
+
+            // НОВЫЙ ВРАППЕР ДЛЯ ФИКСАЦИИ РАЗМЕРА 4:3
+            const imgWrapper = document.createElement('div');
+            imgWrapper.className = 'slider-image-wrapper';
 
             const img = document.createElement('img');
             img.src = photo.src;
@@ -734,15 +759,17 @@
             caption.className = 'slide-caption';
             caption.textContent = (LANG === 'en' ? photo.nameEN : photo.namePL);
 
-            slide.appendChild(img);
-            slide.appendChild(caption);
+            // Собираем слайд
+            imgWrapper.appendChild(img);
+            imgWrapper.appendChild(caption);
+            slide.appendChild(imgWrapper);
             track.appendChild(slide);
         });
 
         // Navigation Buttons (Left/Right)
         const navLeft = document.createElement('button');
         navLeft.className = 'slider-nav-btn slider-nav-left';
-        navLeft.innerHTML = '&#9664;'; // Стрелка влево
+        navLeft.innerHTML = '◀'; // Стрелка влево
         navLeft.onclick = () => {
             const currentIndex = currentSlideMap[sec.id] || 0;
             updateSlide(sec.id, currentIndex - 1);
@@ -750,7 +777,7 @@
         
         const navRight = document.createElement('button');
         navRight.className = 'slider-nav-btn slider-nav-right';
-        navRight.innerHTML = '&#9654;'; // Стрелка вправо
+        navRight.innerHTML = '▶'; // Стрелка вправо
         navRight.onclick = () => {
             const currentIndex = currentSlideMap[sec.id] || 0;
             updateSlide(sec.id, currentIndex + 1);
@@ -768,6 +795,7 @@
             dotsContainer.appendChild(dot);
         });
 
+        // Собираем контейнер слайдера
         sliderContainer.appendChild(track);
         sliderContainer.appendChild(navLeft);
         sliderContainer.appendChild(navRight);
@@ -862,6 +890,7 @@
             const img = document.createElement('img');
             img.src = sec.introPhoto;
             img.alt = sec.title[LANG];
+            // Поскольку это одно фото, его можно сразу открыть в лайтбоксе
             img.onclick = () => { openLightbox(sec.introPhoto); }; 
             
             // Основное описание
