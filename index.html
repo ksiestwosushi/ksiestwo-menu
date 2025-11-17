@@ -130,7 +130,7 @@
     .left{
       flex:1.1;
       min-width:260px;
-      /* ВОССТАНОВИЛИ АНИМАЦИЮ СМЕНЫ ЯЗЫКА */
+      /* АНИМАЦИЯ СМЕНЫ ЯЗЫКА ОСТАВЛЕНА */
       opacity: 1; 
       transition: opacity 0.3s ease; 
     }
@@ -157,6 +157,7 @@
     .desc{font-size:13px;color:var(--muted);margin-bottom:6px}
     .price{font-weight:800;color:var(--accent); white-space: nowrap;}
     
+    /* ВОССТАНОВЛЕНА СТРУКТУРА ДЛЯ ВЫРАВНИВАНИЯ ЦЕНЫ СПРАВА */
     .item-content {
         display: flex;
         justify-content: space-between;
@@ -379,7 +380,6 @@
         padding-top: 10px;
         padding-bottom: 10px;
         border-top: 1px solid rgba(0,0,0,0.05); 
-        /* Удалены стили, которые обеспечивали плавную анимацию */
     }
     /* --- КОНЕЦ СТИЛЕЙ СПИСКА --- */
 
@@ -594,7 +594,7 @@
         title:{en:'Sashimi (9 pc)', pl:'Sashimi (9 szt.)'},
         introPhoto: 'images/sashimi.jpg', 
         introDescEN: 'Thinly sliced raw fish and seafood, served without rice.',
-        introDescPL: 'Cienko krojone plastry surowej ryby i owoców morza, podawane bez ryżu.',
+        introDescPL: 'Cienko krojone plastry surowej ryby и owoców morza, podawane bez ryżu.',
         items:[
           {enName:'Mizu', plName:'Mizu', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plaster surowej ryby — łosoсь, tuńczyk, maślana', price:'45 zł'}
         ]
@@ -625,6 +625,7 @@
             const div = document.createElement('div');
             div.className='item';
 
+            // ВОССТАНОВЛЕНА ОБЕРТКА ДЛЯ ВЫРАВНИВАНИЯ
             const itemContent = document.createElement('div');
             itemContent.className = 'item-content';
 
@@ -637,17 +638,19 @@
             
             const desc = document.createElement('div');
             desc.className='desc';
-            desc.textContent = (LANG==='en'?it.descEN:it.plName);
+            // ВАЖНО: descEN/descPL используется для вывода описания
+            desc.textContent = (LANG==='en'?it.descEN:it.descPL) || '';
             
             const price = document.createElement('div');
             price.className='price';
             price.textContent = it.price || '';
 
             meta.appendChild(name);
-            if(desc.textContent) meta.appendChild(desc);
+            // ОПИСАНИЕ ВОССТАНОВЛЕНО
+            if(desc.textContent) meta.appendChild(desc); 
 
             itemContent.appendChild(meta);
-            itemContent.appendChild(price);
+            itemContent.appendChild(price); // Цена отделена от мета-блока
 
             div.appendChild(itemContent);
             container.appendChild(div);
@@ -766,8 +769,7 @@
             details.appendChild(container);
             s.appendChild(details); 
             
-            // *** УДАЛЕНА ЛОГИКА ПЛАВНОЙ АНИМАЦИИ ОТКРЫТИЯ СПИСКА.
-            // *** Теперь используется стандартное мгновенное поведение details.
+            // Здесь НЕТ JS для анимации details, используется стандартное мгновенное поведение.
         } 
         
         menuArea.appendChild(s);
@@ -786,7 +788,7 @@
       
       const contacts = document.getElementById('contacts');
       
-      // КОНТАКТЫ (КЛИКАБЕЛЬНЫЕ)
+      // КОНТАКТЫ (КЛИКАБЕЛЬНЫЕ) с новой ссылкой на Google Maps
       const contactsContent = `
         📞 <a href="tel:+48502525544">+48 502 525 544</a><br>
         📸 <a href="https://www.instagram.com/ksiestwosushi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank">@ksiestwosushi</a><br>
@@ -837,8 +839,6 @@
         b.classList.add('active');
         const newLANG = b.dataset.lang;
         
-        const menuArea = document.getElementById('menu-area');
-        
         // 2. Плавное скрытие контента (opacity 1 -> 0)
         menuArea.style.opacity = '0'; // Запуск анимации fade-out
 
@@ -867,4 +867,3 @@
   </script>
 </body>
 </html>
-
