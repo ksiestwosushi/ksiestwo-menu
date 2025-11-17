@@ -130,9 +130,9 @@
     .left{
       flex:1.1;
       min-width:260px;
-      /* НОВЫЕ СТИЛИ ДЛЯ ПЛАВНОЙ СМЕНЫ ЯЗЫКА */
+      /* ВОССТАНОВИЛИ АНИМАЦИЮ СМЕНЫ ЯЗЫКА */
       opacity: 1; 
-      transition: opacity 0.3s ease; /* 0.3 секунды плавного перехода */
+      transition: opacity 0.3s ease; 
     }
     .right{
       width:320px;
@@ -374,20 +374,14 @@
         transform: translateY(-50%) rotate(180deg);
     }
     
-    /* --- СТИЛИ ДЛЯ ПЛАВНОЙ АНИМАЦИИ ОТКРЫТИЯ СПИСКА --- */
+    /* --- СТИЛИ ДЛЯ СПИСКА (без анимации) --- */
     details .items {
         padding-top: 10px;
         padding-bottom: 10px;
         border-top: 1px solid rgba(0,0,0,0.05); 
-        
-        overflow: hidden;
-        max-height: 0; /* Изначально скрыто */
-        opacity: 0; /* Изначально прозрачно */
-        will-change: max-height, opacity; 
-        /* Плавный переход: 0.3s для высоты и прозрачности */
-        transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; 
+        /* Удалены стили, которые обеспечивали плавную анимацию */
     }
-    /* --- КОНЕЦ СТИЛЕЙ АНИМАЦИИ ОТКРЫТИЯ СПИСКА --- */
+    /* --- КОНЕЦ СТИЛЕЙ СПИСКА --- */
 
     /* --- СТИЛИ ДЛЯ 2-КОЛОНОЧНОГО МАКЕТА URAMAKI --- */
     #uramaki-combined .items {
@@ -566,7 +560,7 @@
           {enName:'Ohio Spice Sake', plName:'Ohio Spice Sake', descEN:'salmon wrapped in butterfish', descPL:'łosoś owijany opalaną maślaną', price:'42 zł'},
           {enName:'Maguro Spicy Ebi Ten', plName:'Maguro Spicy Ebi Ten', descEN:'shrimp tempura wrapped in tuna', descPL:'krewetka w tempurze owijana opalanym tuńczykiem', price:'45 zł'},
           {enName:'Kegon', plName:'Kegon', descEN:'salmon wrapped in grilled eel', descPL:'łosoś owijany grillowanym węgorzem', price:'45 zł'},
-          {enName:'Sake Aburi', plName:'Sake Aburi', descEN:'salmon wrapped in seared salmon', descPL:'łosoś owijany opalanym pikantnym łososiem', price:'45 zł'},
+          {enName:'Sake Aburi', plName:'Sake Aburi', descEN:'salmon wrapped in seared salmon', descPL:'łosoсь owijany opalanym pikantnym łososiem', price:'45 zł'},
           {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish in tempura coated with caviar', descPL:'maślana w tempurze obtoczona kawiorem z latającej ryby', price:'48 zł'},
           {enName:'Nashi Sake', plName:'Nashi Sake', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką', price:'45 zł'},
           {enName:'Sake Tataki Ebiten', plName:'Sake Tataki Ebiten', descEN:'shrimp tempura wrapped in salmon tartare', descPL:'krewetka w tempurze obtoczona tatarem z łososia', price:'48 zł'}
@@ -643,7 +637,7 @@
             
             const desc = document.createElement('div');
             desc.className='desc';
-            desc.textContent = (LANG==='en'?it.descEN:it.descPL) || '';
+            desc.textContent = (LANG==='en'?it.descEN:it.plName);
             
             const price = document.createElement('div');
             price.className='price';
@@ -772,43 +766,8 @@
             details.appendChild(container);
             s.appendChild(details); 
             
-            // --- ЛОГИКА ПЛАВНОЙ АНИМАЦИИ ОТКРЫТИЯ СПИСКА ---
-            summary.addEventListener('click', (e) => {
-                e.preventDefault(); // 1. Предотвращаем стандартное поведение
-                
-                const content = details.querySelector('.items');
-                const transitionDuration = 300; // 0.3s из CSS
-                
-                if (details.open) {
-                    // ЗАКРЫТИЕ
-                    details.open = false; 
-                    content.style.maxHeight = content.scrollHeight + 'px';
-                    content.offsetHeight; // Trigger reflow
-                    content.style.maxHeight = '0px';
-                    content.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        content.style.maxHeight = ''; 
-                    }, transitionDuration); 
-
-                } else {
-                    // ОТКРЫТИЕ
-                    details.open = true;
-                    content.style.maxHeight = content.scrollHeight + 'px';
-                    content.style.opacity = '1';
-                    
-                    const onTransitionEnd = () => {
-                        if (details.open) {
-                            content.style.maxHeight = '';
-                        }
-                        content.removeEventListener('transitionend', onTransitionEnd);
-                    };
-                    
-                    content.addEventListener('transitionend', onTransitionEnd, {once: true});
-                }
-            });
-            // --- КОНЕЦ ЛОГИКИ АНИМАЦИИ ОТКРЫТИЯ СПИСКА ---
-
+            // *** УДАЛЕНА ЛОГИКА ПЛАВНОЙ АНИМАЦИИ ОТКРЫТИЯ СПИСКА.
+            // *** Теперь используется стандартное мгновенное поведение details.
         } 
         
         menuArea.appendChild(s);
@@ -881,7 +840,7 @@
         const menuArea = document.getElementById('menu-area');
         
         // 2. Плавное скрытие контента (opacity 1 -> 0)
-        menuArea.style.opacity = '0';
+        menuArea.style.opacity = '0'; // Запуск анимации fade-out
 
         // 3. Ждем завершения анимации скрытия (300 мс)
         setTimeout(() => {
@@ -893,7 +852,7 @@
           updateTexts();
           
           // Важно: небольшая задержка для рендеринга перед началом fade-in
-          menuArea.offsetHeight; 
+          menuArea.offsetHeight; // Trigger reflow
           
           // 5. Плавное появление контента (opacity 0 -> 1)
           menuArea.style.opacity = '1';
