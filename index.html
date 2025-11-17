@@ -280,15 +280,37 @@
         border: 1px solid rgba(0,0,0,0.03);
         overflow: hidden; 
     }
-    .intro-card img {
-        display: block;
-        /* Убрали здесь border-radius, чтобы его контролировал .slider-image-wrapper */
-        border-radius: 0; 
-        margin-bottom: 0;
-        width: 100%;
-        height: auto;
-        cursor: pointer;
+    
+    /* СТИЛИ ДЛЯ СТЕКА ИЗОБРАЖЕНИЙ (STARTERS) */
+    .intro-image-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* Отступ между фото */
+        padding: 10px; 
     }
+    
+    .intro-image-stack img {
+        width: 100%;
+        height: 150px; /* Фиксированная высота для единообразия */
+        object-fit: cover;
+        border-radius: var(--radius);
+        display: block;
+        cursor: pointer;
+        /* Убираем нижний border-radius у последнего фото в стеке, если оно есть */
+        margin-bottom: 0 !important;
+    }
+
+    /* СТИЛИ ДЛЯ ОДИНОЧНОГО ИЗОБРАЖЕНИЯ (ВСЕ ДРУГИЕ СЕКЦИИ) */
+    .intro-card > img {
+        display: block;
+        width: 100%;
+        height: 250px; /* Более высокая фиксированная высота */
+        object-fit: cover;
+        border-radius: var(--radius) var(--radius) 0 0; /* Только верхние углы */
+        cursor: pointer;
+        margin-bottom: 0;
+    }
+    
     .intro-card p {
         padding: 14px; 
         margin: 0;
@@ -393,114 +415,7 @@
     }
     /* ------------------------------------------- */
 
-
-    /* --- СТИЛИ ДЛЯ СЛАЙДЕРА (carousel) --- */
-    .slider-container {
-        position: relative;
-        overflow: hidden;
-        width: 100%;
-    }
-
-    /* ВРАППЕР ДЛЯ ФИКСАЦИИ ВЫСОТЫ (УБРАЛИ 4:3) */
-    .slider-image-wrapper {
-        position: relative; 
-        width: 100%;
-        height: 250px; /* Фиксированная высота для чистого макета */
-        overflow: hidden;
-        border-radius: var(--radius) var(--radius) 0 0;
-    }
-
-    .slider-track {
-        display: flex;
-        transition: transform 0.3s ease-in-out;
-        height: 100%; 
-        position: absolute; 
-        top: 0;
-        left: 0;
-        width: 100%;
-    }
-    .slider-slide {
-        min-width: 100%;
-        position: relative;
-    }
-
-    .slider-slide img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%; 
-        object-fit: cover; /* КЛЮЧ: заполняет область без искажений */
-        cursor: pointer;
-    }
-
-    /* Заголовок слайда */
-    .slide-caption {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0, 0, 0, 0.6);
-        color: white;
-        padding: 8px 14px;
-        font-size: 14px;
-        font-weight: 600;
-        text-align: center;
-        pointer-events: none; 
-        z-index: 5;
-    }
-
-    /* Кнопки навигации */
-    .slider-nav-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0, 0, 0, 0.4);
-        color: white;
-        border: none;
-        padding: 10px 12px;
-        cursor: pointer;
-        z-index: 10;
-        font-size: 20px;
-        line-height: 1;
-        transition: background 0.2s;
-    }
-    .slider-nav-btn:hover {
-        background: rgba(0, 0, 0, 0.7);
-    }
-    .slider-nav-left {
-        left: 0;
-        border-radius: 0 var(--radius) var(--radius) 0;
-    }
-    .slider-nav-right {
-        right: 0;
-        border-radius: var(--radius) 0 0 var(--radius);
-    }
-    /* Индикаторы слайдов (точки) */
-    .slider-dots {
-        position: absolute;
-        bottom: 5px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 6px;
-        z-index: 10;
-        padding: 5px;
-        background: rgba(0, 0, 0, 0.2);
-        border-radius: 999px;
-    }
-    .dot {
-        width: 8px;
-        height: 8px;
-        background: rgba(255, 255, 255, 0.5);
-        border-radius: 50%;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
-    .dot.active {
-        background: var(--accent);
-    }
-    /* -------------------------------------- */
+    /* Удалили все стили, связанные со слайдером/каруселью */
 
   </style>
 </head>
@@ -563,8 +478,8 @@
         title:{en:'Starters', pl:'Przystawki'},
         introDescEN: 'A selection of light and fresh starters to begin your sushi experience.',
         introDescPL: 'Wybór lekkich i świeżych przystawek na rozpoczęcie przygody z sushi.',
-        // СТАНДАРТИЗИРОВАННЫЕ ИМЕНА ФАЙЛОВ
-        sliderPhotos: [
+        // НОВЫЙ КЛЮЧ: introPhotos для нескольких фото в стеке
+        introPhotos: [ 
             {src: 'images/wakame.jpg', nameEN: 'Goma Wakame', namePL: 'Goma Wakame'},
             {src: 'images/ebiten.jpg', nameEN: 'Ebiten (3 pcs)', namePL: 'Ebiten (3 szt.)'},
             {src: 'images/sake-tataki.jpg', nameEN: 'Sake Tataki', namePL: 'Sake Tataki'},
@@ -593,7 +508,7 @@
       {
         id:'nigiri',
         title:{en:'Nigiri (2 pc)', pl:'Nigiri (2 szt.)'},
-        introPhoto: 'images/nigiri1.jpg', // <-- ОСТАВЛЕНО ПО ЗАПРОСУ
+        introPhoto: 'images/nigiri1.jpg', 
         introDescEN: 'Hand-pressed rice topped with fresh fish or seafood.',
         introDescPL: 'Ręcznie formowany ryż z plastrem świeżej ryby lub owoców morza.',
         items:[
@@ -689,160 +604,11 @@
     // helper to render
     const nav = document.getElementById('nav');
     const menuArea = document.getElementById('menu-area');
-    // Получаем кнопки из нового плавающего контейнера
     const langBtns = document.querySelectorAll('#lang-switch-fixed .lang-btn'); 
     let LANG = 'pl'; 
 
-    // SLIDER LOGIC - Хранение текущего индекса слайда для каждой секции
-    const currentSlideMap = {}; 
+    // УДАЛЕНА вся логика SLIDER/CAROUSEL (updateSlide, createSliderStructure, currentSlideMap, autoCycleInterval, carouselIntervals)
     
-    // УДАЛИЛИ autoCycleInterval и carouselIntervals
-
-    function updateSlide(sectionId, newIndex) {
-        const section = document.getElementById(sectionId);
-        if (!section) return;
-
-        const track = section.querySelector('.slider-track');
-        if (!track) return;
-        
-        const slides = section.querySelectorAll('.slider-slide');
-        const dots = section.querySelectorAll('.dot');
-        const totalSlides = slides.length;
-
-        if (totalSlides === 0) return;
-
-        let index = newIndex;
-        // Logic for infinite loop (wrap around)
-        if (index >= totalSlides) {
-            index = 0; 
-        } else if (index < 0) {
-            index = totalSlides - 1; 
-        }
-
-        currentSlideMap[sectionId] = index;
-
-        // Move the track
-        const offset = -index * 100;
-        track.style.transform = `translateX(${offset}%)`;
-
-        // Update captions
-        slides.forEach((slide, i) => {
-            const caption = slide.querySelector('.slide-caption');
-            if (caption) {
-                // Находим данные по ID секции и индексу слайда
-                const sectionData = MENU.find(s => s.id === sectionId);
-                const photoData = sectionData ? sectionData.sliderPhotos[i] : null;
-
-                if (photoData) {
-                    caption.textContent = (LANG === 'en' ? photoData.nameEN : photoData.namePL);
-                }
-            }
-        });
-
-        // Update dots (точки теперь видны для всех слайдеров)
-        if (dots.length > 0) {
-            dots.forEach((dot, i) => {
-                dot.classList.remove('active');
-                if (i === index) {
-                    dot.classList.add('active');
-                }
-            });
-        }
-    }
-
-    function createSliderStructure(sec) {
-        const sliderContainer = document.createElement('div');
-        sliderContainer.className = 'intro-card'; 
-        
-        const totalSlides = sec.sliderPhotos.length;
-        // Кнопки и точки теперь всегда отображаются, если слайдов > 1
-        const showControls = totalSlides > 1; 
-
-        // Враппер для фиксации размера (теперь фиксированная высота 250px)
-        const imageWrapper = document.createElement('div');
-        imageWrapper.className = 'slider-container';
-
-        // Трек, который будет двигаться
-        const track = document.createElement('div');
-        track.className = 'slider-track';
-
-        sec.sliderPhotos.forEach((photo, index) => {
-            const slide = document.createElement('div');
-            slide.className = 'slider-slide';
-
-            // ВРАППЕР ДЛЯ ФИКСАЦИИ РАЗМЕРА (250px)
-            const imgWrapper = document.createElement('div');
-            imgWrapper.className = 'slider-image-wrapper';
-
-            const img = document.createElement('img');
-            img.src = photo.src;
-            img.alt = photo.namePL;
-            // При клике открываем лайтбокс
-            img.onclick = () => { openLightbox(photo.src); };
-            
-            // Caption (название блюда)
-            const caption = document.createElement('div');
-            caption.className = 'slide-caption';
-            caption.textContent = (LANG === 'en' ? photo.nameEN : photo.namePL);
-
-            // Собираем слайд
-            imgWrapper.appendChild(img);
-            imgWrapper.appendChild(caption);
-            slide.appendChild(imgWrapper);
-            track.appendChild(slide);
-        });
-
-        imageWrapper.appendChild(track);
-
-        // Navigation Buttons (Left/Right) - ВСЕГДА ВИДНЫ, если слайдов > 1
-        if (showControls) {
-            const navLeft = document.createElement('button');
-            navLeft.className = 'slider-nav-btn slider-nav-left';
-            navLeft.innerHTML = '◀'; // Стрелка влево
-            navLeft.onclick = () => {
-                const currentIndex = currentSlideMap[sec.id] || 0;
-                updateSlide(sec.id, currentIndex - 1);
-            };
-            
-            const navRight = document.createElement('button');
-            navRight.className = 'slider-nav-btn slider-nav-right';
-            navRight.innerHTML = '▶'; // Стрелка вправо
-            navRight.onclick = () => {
-                const currentIndex = currentSlideMap[sec.id] || 0;
-                updateSlide(sec.id, currentIndex + 1);
-            };
-
-            // Dots (Индикаторы слайдов)
-            const dotsContainer = document.createElement('div');
-            dotsContainer.className = 'slider-dots';
-            sec.sliderPhotos.forEach((_, index) => {
-                const dot = document.createElement('span');
-                dot.className = 'dot';
-                dot.onclick = () => {
-                    updateSlide(sec.id, index);
-                };
-                dotsContainer.appendChild(dot);
-            });
-            
-            imageWrapper.appendChild(navLeft);
-            imageWrapper.appendChild(navRight);
-            imageWrapper.appendChild(dotsContainer);
-        }
-
-        // Обертка-карточка
-        sliderContainer.appendChild(imageWrapper);
-
-        // Основное описание под слайдером
-        const p = document.createElement('p');
-        p.textContent = (LANG === 'en' ? sec.introDescEN : sec.introDescPL);
-        sliderContainer.appendChild(p);
-        
-        return sliderContainer;
-    }
-    // END SLIDER LOGIC
-    
-    // УДАЛЕНИЕ: УДАЛЕНА ФУНКЦИЯ initAutoCarousel
-
     function createNav(){
       nav.innerHTML = '';
       MENU.forEach(sec=>{
@@ -906,11 +672,33 @@
         // 1. Создание карточки с общим фото/слайдером и описанием
         let introCard = null;
         
-        if (sec.sliderPhotos && sec.sliderPhotos.length > 0) {
-            // Если есть слайдер-фото (Starters)
-            introCard = createSliderStructure(sec);
+        // --- ЛОГИКА ДЛЯ НЕСКОЛЬКИХ ФОТО (СТЕК) ---
+        if (sec.introPhotos && sec.introPhotos.length > 0) {
+            introCard = document.createElement('div');
+            introCard.className = 'intro-card'; 
+            
+            const stack = document.createElement('div');
+            stack.className = 'intro-image-stack';
+            
+            sec.introPhotos.forEach(photo => {
+                const img = document.createElement('img');
+                img.src = photo.src;
+                // Alt text now combines name and description
+                img.alt = (LANG === 'en' ? photo.nameEN : photo.namePL);
+                img.onclick = () => { openLightbox(photo.src); }; 
+                
+                stack.appendChild(img);
+            });
+
+            introCard.appendChild(stack);
+
+            // Основное описание под стеком
+            const p = document.createElement('p');
+            p.textContent = (LANG === 'en' ? sec.introDescEN : sec.introDescPL);
+            introCard.appendChild(p);
+            
+        // --- ЛОГИКА ДЛЯ ОДИНОЧНОГО ФОТО ---
         } else if (sec.introPhoto) {
-            // Если есть одиночное фото (Nigiri, Soups, etc.)
             introCard = document.createElement('div');
             introCard.className = 'intro-card'; 
             
@@ -981,12 +769,8 @@
         } 
         
         menuArea.appendChild(s);
-
-        // --- ИНИЦИАЛИЗАЦИЯ СЛАЙДЕРА ПОСЛЕ ДОБАВЛЕНИЯ В DOM ---
-        if (sec.sliderPhotos && sec.sliderPhotos.length > 0) {
-            // Инициализируем слайдер на текущем или нулевом слайде
-            updateSlide(sec.id, currentSlideMap[sec.id] || 0); 
-        }
+        
+        // Удалена вся логика инициализации слайдера
 
       });
     }
@@ -1017,8 +801,7 @@
         ? 'We kindly inform you that we add a waiter service of 10% to the final bill.' 
         : 'Uprzejmie informujemy, że do rachunku końcowego doliczamy opłatę za obsługę kelnerską w wysokości 10%.';
 
-      // Обновляем подписи под слайдами (для starters)
-      updateSlide('starters', currentSlideMap['starters'] || 0); 
+      // Удалена логика обновления слайдов
     }
 
 
@@ -1028,8 +811,7 @@
     const closeBtn = document.querySelector('.lightbox-close');
 
     function openLightbox(imgPath) {
-      // Игнорируем плейсхолдеры, если они есть
-      if (imgPath && imgPath.includes('placeholder')) { 
+      if (!imgPath) {
         return; 
       }
       lightbox.classList.add('open');
@@ -1058,8 +840,6 @@
         b.classList.add('active');
         LANG = b.dataset.lang;
         
-        // Удалены clearInterval, так как авто-карусели больше нет
-        
         createNav();
         renderMenu(); 
         updateTexts();
@@ -1070,7 +850,6 @@
     createNav();
     renderMenu();
     updateTexts();
-    // Удален initAutoCarousel, так как авто-карусели больше нет
   </script>
 </body>
 </html>
