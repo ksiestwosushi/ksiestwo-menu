@@ -174,6 +174,16 @@
     }
     /* Конец разделителя */
 
+    /* Стили для ссылок в контактах */
+    .small a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .small a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
     footer{
       margin-top:18px;
       display:flex;
@@ -431,7 +441,7 @@
   </div>
   
   <div id="myLightbox" class="lightbox">
-    <span class="lightbox-close">&times;</span>
+    <span class="lightbox-close">×</span>
     <img class="lightbox-content" id="lightbox-img">
   </div>
   <script>
@@ -520,7 +530,7 @@
           {enName:'Maguro Spicy Ebi Ten', plName:'Maguro Spicy Ebi Ten', descEN:'shrimp tempura wrapped in tuna', descPL:'krewetka w tempurze owijana opalanym tuńczykiem', price:'45 zł'},
           {enName:'Kegon', plName:'Kegon', descEN:'salmon wrapped in grilled eel', descPL:'łosoś owijany grillowanym węgorzem', price:'45 zł'},
           {enName:'Sake Aburi', plName:'Sake Aburi', descEN:'salmon wrapped in seared salmon', descPL:'łosoś owijany opalanym pikantnym łososiem', price:'45 zł'},
-          {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish in tempura coated with caviar', descPL:'maślana w tempurze obtoczona latającą rybą', price:'48 zł'}, // Примечание: "kawior z latającej ryby"
+          {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish in tempura coated with caviar', descPL:'maślana w tempurze obtoczona kawiorem z latającej ryby', price:'48 zł'},
           {enName:'Nashi Sake', plName:'Nashi Sake', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką', price:'45 zł'},
           {enName:'Sake Tataki Ebiten', plName:'Sake Tataki Ebiten', descEN:'shrimp tempura wrapped in salmon tartare', descPL:'krewetka w tempurze obtoczona tatarem z łososia', price:'48 zł'}
         ],
@@ -551,11 +561,13 @@
       {
         id:'sashimi',
         title:{en:'Sashimi (9 pc)', pl:'Sashimi (9 szt.)'},
-        introPhoto: 'images/sashimi_main_photo_placeholder.jpg', 
+        // *** ИЗМЕНЕНИЕ: Путь к фото обновлен на SASHIMI.jpg ***
+        introPhoto: 'images/SASHIMI.jpg', 
+        // ********************************************************
         introDescEN: 'Thinly sliced raw fish and seafood, served without rice.',
         introDescPL: 'Cienko krojone plastry surowej ryby i owoców morza, podawane bez ryżu.',
         items:[
-          {enName:'Mizu', plName:'Mizu', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plaster surowej ryby — łosoś, tuńczyk, maślana', price:'45 zł'} // Цена обновлена с 95 до 45
+          {enName:'Mizu', plName:'Mizu', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plaster surowej ryby — łosoś, tuńczyk, maślana', price:'45 zł'}
         ]
       }
     ];
@@ -635,6 +647,7 @@
             const img = document.createElement('img');
             img.src = sec.introPhoto;
             img.alt = sec.title[LANG];
+            // Добавлена логика проверки на placeholder в openLightbox, чтобы избежать ошибок.
             img.onclick = () => { openLightbox(sec.introPhoto); }; 
             
             // Основное описание
@@ -723,9 +736,15 @@
       document.getElementById('footer-right').textContent = (LANG==='en') ? 'Menu — web version' : 'Menu — wersja online';
       
       const contacts = document.getElementById('contacts');
-      contacts.innerHTML = (LANG==='en')
-        ? '📞 +48 123 456 789<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warsaw'
-        : '📞 +48 123 456 789<br>📸 @ksiestwosushi<br>📍 ul. Example 12, Warszawa';
+      
+      // КОНТАКТЫ (КЛИКАБЕЛЬНЫЕ)
+      const contactsContent = `
+        📞 <a href="tel:+48502525544">+48 502 525 544</a><br>
+        📸 <a href="https://www.instagram.com/ksiestwosushi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank">@ksiestwosushi</a><br>
+        📍 <a href="https://www.google.com/maps/search/?api=1&query=Krupówki+38A,+Zakopane+34-500" target="_blank">Krupówki 38A, Zakopane 34-500</a>
+      `;
+      
+      contacts.innerHTML = contactsContent;
       
       const notice = document.querySelector('.right .section:nth-child(2) .small');
       notice.textContent = (LANG==='en') 
@@ -740,6 +759,7 @@
     const closeBtn = document.querySelector('.lightbox-close');
 
     function openLightbox(imgPath) {
+      // Это предотвращает открытие лайтбокса для плейсхолдеров
       if (imgPath.includes('placeholder')) {
         return; 
       }
