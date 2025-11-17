@@ -399,14 +399,13 @@
         position: relative;
         overflow: hidden;
         width: 100%;
-        /* Убрали border-radius, чтобы его контролировал .slider-image-wrapper */
     }
 
-    /* ВРАППЕР ДЛЯ ФИКСАЦИИ СООТНОШЕНИЯ СТОРОН (4:3) */
+    /* ВРАППЕР ДЛЯ ФИКСАЦИИ ВЫСОТЫ (УБРАЛИ 4:3) */
     .slider-image-wrapper {
         position: relative; 
         width: 100%;
-        padding-top: 75%; /* 75% высоты = 4/3 аспект */
+        height: 250px; /* Фиксированная высота для чистого макета */
         overflow: hidden;
         border-radius: var(--radius) var(--radius) 0 0;
     }
@@ -414,9 +413,8 @@
     .slider-track {
         display: flex;
         transition: transform 0.3s ease-in-out;
-        /* track должен иметь высоту wrapper'а для корректного сдвига */
         height: 100%; 
-        position: absolute; /* Позиционируем относительно container */
+        position: absolute; 
         top: 0;
         left: 0;
         width: 100%;
@@ -431,7 +429,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 100%; 
         object-fit: cover; /* КЛЮЧ: заполняет область без искажений */
         cursor: pointer;
     }
@@ -565,7 +563,7 @@
         title:{en:'Starters', pl:'Przystawki'},
         introDescEN: 'A selection of light and fresh starters to begin your sushi experience.',
         introDescPL: 'Wybór lekkich i świeżych przystawek na rozpoczęcie przygody z sushi.',
-        // ОБНОВЛЕННЫЕ ИМЕНА ФАЙЛОВ
+        // СТАНДАРТИЗИРОВАННЫЕ ИМЕНА ФАЙЛОВ
         sliderPhotos: [
             {src: 'images/wakame.jpg', nameEN: 'Goma Wakame', namePL: 'Goma Wakame'},
             {src: 'images/ebiten.jpg', nameEN: 'Ebiten (3 pcs)', namePL: 'Ebiten (3 szt.)'},
@@ -581,7 +579,6 @@
       {
         id:'soups',
         title:{en:'Soups', pl:'Zupy'},
-        // ОБНОВЛЕННОЕ ИМЯ ФАЙЛА
         introPhoto: 'images/ramen-zupa.jpg', 
         introDescEN: 'Traditional Japanese soups, including rich Ramen bowls with various fillings.',
         introDescPL: 'Tradycyjne japońskie zupy, w tym bogate miski Ramenu z różnymi dodatkami.',
@@ -596,7 +593,7 @@
       {
         id:'nigiri',
         title:{en:'Nigiri (2 pc)', pl:'Nigiri (2 szt.)'},
-        introPhoto: 'images/nigiri1.jpg', 
+        introPhoto: 'images/nigiri1.jpg', // <-- ОСТАВЛЕНО ПО ЗАПРОСУ
         introDescEN: 'Hand-pressed rice topped with fresh fish or seafood.',
         introDescPL: 'Ręcznie formowany ryż z plastrem świeżej ryby lub owoców morza.',
         items:[
@@ -614,7 +611,7 @@
       {
         id:'futomaki',
         title:{en:'Futomaki (4 pc)', pl:'Futomaki (4 szt.)'},
-        introPhoto: 'images/futomaki.jpg', // ОБНОВЛЕННОЕ ИМЯ ФАЙЛА
+        introPhoto: 'images/futomaki.jpg', 
         introDescEN: 'Thick, traditional rolls with the seaweed on the outside.',
         introDescPL: 'Grube, tradycyjne rolki z wodorostem na zewnątrz.',
         items:[
@@ -667,7 +664,7 @@
       {
         id:'oyakomaki',
         title:{en:'Oyakomaki (2 pc)', pl:'Oyakomaki (2 szt.)'},
-        introPhoto: 'images/oyakomaki.jpg', // ОБНОВЛЕННОЕ ИМЯ ФАЙЛА
+        introPhoto: 'images/oyakomaki.jpg', 
         introDescEN: 'Our specialty rolls, often wrapped in fish or avocado instead of nori.',
         introDescPL: 'Nasze specjalne rolki, często zawijane w rybę lub awokado zamiast nori.',
         items:[
@@ -680,7 +677,7 @@
       {
         id:'sashimi',
         title:{en:'Sashimi (9 pc)', pl:'Sashimi (9 szt.)'},
-        introPhoto: 'images/sashimi.jpg', // ОБНОВЛЕННОЕ ИМЯ ФАЙЛА
+        introPhoto: 'images/sashimi.jpg', 
         introDescEN: 'Thinly sliced raw fish and seafood, served without rice.',
         introDescPL: 'Cienko krojone plastry surowej ryby i owoców morza, podawane bez ryżu.',
         items:[
@@ -698,15 +695,14 @@
 
     // SLIDER LOGIC - Хранение текущего индекса слайда для каждой секции
     const currentSlideMap = {}; 
-    const autoCycleInterval = 5000; // 5 секунд
-    const carouselIntervals = {};
+    
+    // УДАЛИЛИ autoCycleInterval и carouselIntervals
 
     function updateSlide(sectionId, newIndex) {
         const section = document.getElementById(sectionId);
         if (!section) return;
 
         const track = section.querySelector('.slider-track');
-        // Проверяем, есть ли трек (т.е., это секция со слайдером/каруселью)
         if (!track) return;
         
         const slides = section.querySelectorAll('.slider-slide');
@@ -733,13 +729,18 @@
         slides.forEach((slide, i) => {
             const caption = slide.querySelector('.slide-caption');
             if (caption) {
-                const photoData = MENU.find(s => s.id === sectionId).sliderPhotos[i];
-                caption.textContent = (LANG === 'en' ? photoData.nameEN : photoData.namePL);
+                // Находим данные по ID секции и индексу слайда
+                const sectionData = MENU.find(s => s.id === sectionId);
+                const photoData = sectionData ? sectionData.sliderPhotos[i] : null;
+
+                if (photoData) {
+                    caption.textContent = (LANG === 'en' ? photoData.nameEN : photoData.namePL);
+                }
             }
         });
 
-        // Update dots (точки видны только если не 'starters')
-        if (sectionId !== 'starters') {
+        // Update dots (точки теперь видны для всех слайдеров)
+        if (dots.length > 0) {
             dots.forEach((dot, i) => {
                 dot.classList.remove('active');
                 if (i === index) {
@@ -753,11 +754,11 @@
         const sliderContainer = document.createElement('div');
         sliderContainer.className = 'intro-card'; 
         
-        const isAutoCarousel = sec.id === 'starters';
         const totalSlides = sec.sliderPhotos.length;
-        const showControls = totalSlides > 1 && !isAutoCarousel;
+        // Кнопки и точки теперь всегда отображаются, если слайдов > 1
+        const showControls = totalSlides > 1; 
 
-        // Враппер для фиксации размера 4:3
+        // Враппер для фиксации размера (теперь фиксированная высота 250px)
         const imageWrapper = document.createElement('div');
         imageWrapper.className = 'slider-container';
 
@@ -769,7 +770,7 @@
             const slide = document.createElement('div');
             slide.className = 'slider-slide';
 
-            // ВРАППЕР ДЛЯ ФИКСАЦИИ РАЗМЕРА 4:3
+            // ВРАППЕР ДЛЯ ФИКСАЦИИ РАЗМЕРА (250px)
             const imgWrapper = document.createElement('div');
             imgWrapper.className = 'slider-image-wrapper';
 
@@ -793,7 +794,7 @@
 
         imageWrapper.appendChild(track);
 
-        // Navigation Buttons (Left/Right) - СКРЫТЫ ДЛЯ STARTERS
+        // Navigation Buttons (Left/Right) - ВСЕГДА ВИДНЫ, если слайдов > 1
         if (showControls) {
             const navLeft = document.createElement('button');
             navLeft.className = 'slider-nav-btn slider-nav-left';
@@ -840,26 +841,7 @@
     }
     // END SLIDER LOGIC
     
-    // NEW FUNCTION: Auto-cycling for starters
-    function initAutoCarousel() {
-        const starterId = 'starters';
-        const section = document.getElementById(starterId);
-
-        // Clear previous interval if it exists
-        if (carouselIntervals[starterId]) {
-            clearInterval(carouselIntervals[starterId]);
-        }
-
-        const slides = section ? section.querySelectorAll('.slider-slide') : [];
-        if (slides.length > 1) {
-            // Start new interval
-            carouselIntervals[starterId] = setInterval(() => {
-                const currentIndex = currentSlideMap[starterId] || 0;
-                updateSlide(starterId, currentIndex + 1);
-            }, autoCycleInterval);
-        }
-    }
-
+    // УДАЛЕНИЕ: УДАЛЕНА ФУНКЦИЯ initAutoCarousel
 
     function createNav(){
       nav.innerHTML = '';
@@ -1046,7 +1028,8 @@
     const closeBtn = document.querySelector('.lightbox-close');
 
     function openLightbox(imgPath) {
-      if (imgPath.includes('placeholder')) {
+      // Игнорируем плейсхолдеры, если они есть
+      if (imgPath && imgPath.includes('placeholder')) { 
         return; 
       }
       lightbox.classList.add('open');
@@ -1075,15 +1058,11 @@
         b.classList.add('active');
         LANG = b.dataset.lang;
         
-        // Сброс интервалов при смене языка
-        if (carouselIntervals['starters']) {
-            clearInterval(carouselIntervals['starters']);
-        }
+        // Удалены clearInterval, так как авто-карусели больше нет
         
         createNav();
         renderMenu(); 
         updateTexts();
-        initAutoCarousel(); // Перезапуск авто-карусели
       });
     });
 
@@ -1091,7 +1070,7 @@
     createNav();
     renderMenu();
     updateTexts();
-    initAutoCarousel(); // Запуск авто-карусели при первой загрузке
+    // Удален initAutoCarousel, так как авто-карусели больше нет
   </script>
 </body>
 </html>
