@@ -402,7 +402,7 @@
         /* Убрали border-radius, чтобы его контролировал .slider-image-wrapper */
     }
 
-    /* НОВЫЙ ВРАППЕР ДЛЯ ФИКСАЦИИ СООТНОШЕНИЯ СТОРОН (4:3) */
+    /* ВРАППЕР ДЛЯ ФИКСАЦИИ СООТНОШЕНИЯ СТОРОН (4:3) */
     .slider-image-wrapper {
         position: relative; 
         width: 100%;
@@ -734,8 +734,12 @@
 
     function createSliderStructure(sec) {
         const sliderContainer = document.createElement('div');
-        sliderContainer.className = 'slider-container';
+        sliderContainer.className = 'intro-card'; // Используем intro-card как внешний контейнер
         
+        // Враппер для фиксации размера 4:3
+        const imageWrapper = document.createElement('div');
+        imageWrapper.className = 'slider-container';
+
         // Трек, который будет двигаться
         const track = document.createElement('div');
         track.className = 'slider-track';
@@ -744,7 +748,7 @@
             const slide = document.createElement('div');
             slide.className = 'slider-slide';
 
-            // НОВЫЙ ВРАППЕР ДЛЯ ФИКСАЦИИ РАЗМЕРА 4:3
+            // ВРАППЕР ДЛЯ ФИКСАЦИИ РАЗМЕРА 4:3
             const imgWrapper = document.createElement('div');
             imgWrapper.className = 'slider-image-wrapper';
 
@@ -796,22 +800,20 @@
         });
 
         // Собираем контейнер слайдера
-        sliderContainer.appendChild(track);
-        sliderContainer.appendChild(navLeft);
-        sliderContainer.appendChild(navRight);
-        sliderContainer.appendChild(dotsContainer);
+        imageWrapper.appendChild(track);
+        imageWrapper.appendChild(navLeft);
+        imageWrapper.appendChild(navRight);
+        imageWrapper.appendChild(dotsContainer);
         
         // Обертка-карточка
-        const introCard = document.createElement('div');
-        introCard.className = 'intro-card'; 
-        introCard.appendChild(sliderContainer);
+        sliderContainer.appendChild(imageWrapper);
 
         // Основное описание под слайдером
         const p = document.createElement('p');
         p.textContent = (LANG === 'en' ? sec.introDescEN : sec.introDescPL);
-        introCard.appendChild(p);
+        sliderContainer.appendChild(p);
         
-        return introCard;
+        return sliderContainer;
     }
     // END SLIDER LOGIC
 
