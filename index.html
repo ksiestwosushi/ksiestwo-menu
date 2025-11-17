@@ -130,6 +130,9 @@
     .left{
       flex:1.1;
       min-width:260px;
+      /* НОВЫЕ СТИЛИ ДЛЯ ПЛАВНОЙ СМЕНЫ ЯЗЫКА */
+      opacity: 1; 
+      transition: opacity 0.3s ease; /* 0.3 секунды плавного перехода */
     }
     .right{
       width:320px;
@@ -370,12 +373,21 @@
     details[open] summary .summary-text::after {
         transform: translateY(-50%) rotate(180deg);
     }
-    /* Стили для контейнера с роллами внутри details */
+    
+    /* --- СТИЛИ ДЛЯ ПЛАВНОЙ АНИМАЦИИ ОТКРЫТИЯ СПИСКА --- */
     details .items {
         padding-top: 10px;
         padding-bottom: 10px;
         border-top: 1px solid rgba(0,0,0,0.05); 
+        
+        overflow: hidden;
+        max-height: 0; /* Изначально скрыто */
+        opacity: 0; /* Изначально прозрачно */
+        will-change: max-height, opacity; 
+        /* Плавный переход: 0.3s для высоты и прозрачности */
+        transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; 
     }
+    /* --- КОНЕЦ СТИЛЕЙ АНИМАЦИИ ОТКРЫТИЯ СПИСКА --- */
 
     /* --- СТИЛИ ДЛЯ 2-КОЛОНОЧНОГО МАКЕТА URAMAKI --- */
     #uramaki-combined .items {
@@ -759,6 +771,44 @@
             
             details.appendChild(container);
             s.appendChild(details); 
+            
+            // --- ЛОГИКА ПЛАВНОЙ АНИМАЦИИ ОТКРЫТИЯ СПИСКА ---
+            summary.addEventListener('click', (e) => {
+                e.preventDefault(); // 1. Предотвращаем стандартное поведение
+                
+                const content = details.querySelector('.items');
+                const transitionDuration = 300; // 0.3s из CSS
+                
+                if (details.open) {
+                    // ЗАКРЫТИЕ
+                    details.open = false; 
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    content.offsetHeight; // Trigger reflow
+                    content.style.maxHeight = '0px';
+                    content.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        content.style.maxHeight = ''; 
+                    }, transitionDuration); 
+
+                } else {
+                    // ОТКРЫТИЕ
+                    details.open = true;
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    content.style.opacity = '1';
+                    
+                    const onTransitionEnd = () => {
+                        if (details.open) {
+                            content.style.maxHeight = '';
+                        }
+                        content.removeEventListener('transitionend', onTransitionEnd);
+                    };
+                    
+                    content.addEventListener('transitionend', onTransitionEnd, {once: true});
+                }
+            });
+            // --- КОНЕЦ ЛОГИКИ АНИМАЦИИ ОТКРЫТИЯ СПИСКА ---
+
         } 
         
         menuArea.appendChild(s);
@@ -772,7 +822,6 @@
       document.getElementById('title').textContent = 'Księstwo Sushi';
       document.getElementById('subtitle').textContent = (LANG==='en') ? 'Fine sushi — Menu' : 'Wyborne sushi — Menu';
       document.getElementById('hours-title').textContent = (LANG==='en') ? 'Contacts' : 'Kontakt';
-      // УДАЛЕНА строка для notice-title
       document.getElementById('footer-left').textContent = 'Księstwo Sushi';
       document.getElementById('footer-right').textContent = (LANG==='en') ? 'Menu — web version' : 'Menu — wersja online';
       
@@ -787,7 +836,6 @@
       
       contacts.innerHTML = contactsContent;
       
-      // УДАЛЕНА логика для "NOTICE"
     }
 
 
@@ -822,13 +870,34 @@
     // language buttons
     langBtns.forEach(b=>{
       b.addEventListener('click', ()=>{
+        // Игнорируем клик, если язык уже активен
+        if (b.classList.contains('active')) return;
+        
+        // 1. Установка нового языка
         langBtns.forEach(x=>x.classList.remove('active'));
         b.classList.add('active');
-        LANG = b.dataset.lang;
+        const newLANG = b.dataset.lang;
         
-        createNav();
-        renderMenu(); 
-        updateTexts();
+        const menuArea = document.getElementById('menu-area');
+        
+        // 2. Плавное скрытие контента (opacity 1 -> 0)
+        menuArea.style.opacity = '0';
+
+        // 3. Ждем завершения анимации скрытия (300 мс)
+        setTimeout(() => {
+          LANG = newLANG;
+          
+          // 4. Обновление содержимого (это происходит, пока контент не виден)
+          createNav();
+          renderMenu(); 
+          updateTexts();
+          
+          // Важно: небольшая задержка для рендеринга перед началом fade-in
+          menuArea.offsetHeight; 
+          
+          // 5. Плавное появление контента (opacity 0 -> 1)
+          menuArea.style.opacity = '1';
+        }, 300); // Совпадает с transition: 0.3s
       });
     });
 
