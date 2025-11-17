@@ -534,9 +534,9 @@
         <div class="section">
           <h2 id="hours-title">Contacts</h2>
           <div class="small" id="contacts">
-            📞 +48 123 456 789<br>
+            📞 +48 502 525 544<br>
             📸 @ksiestwosushi<br>
-            📍 ul. Example 12, Warsaw
+            📍 Krupówki 38A, Zakopane
           </div>
         </div>
 
@@ -565,6 +565,7 @@
         title:{en:'Starters', pl:'Przystawki'},
         introDescEN: 'A selection of light and fresh starters to begin your sushi experience.',
         introDescPL: 'Wybór lekkich i świeżych przystawek na rozpoczęcie przygody z sushi.',
+        // ЭТОТ МАССИВ БУДЕТ АВТОМАТИЧЕСКИ РОТИРОВАТЬСЯ БЕЗ СТРЕЛОК И ТОЧЕК
         sliderPhotos: [
             {src: 'images/VAKAME.jpg', nameEN: 'Goma Wakame', namePL: 'Goma Wakame'},
             {src: 'images/EBITEN.jpg', nameEN: 'Ebiten (3 pcs)', namePL: 'Ebiten (3 szt.)'},
@@ -594,7 +595,7 @@
       {
         id:'nigiri',
         title:{en:'Nigiri (2 pc)', pl:'Nigiri (2 szt.)'},
-        introPhoto: 'images/NIGIRI#2.jpg', 
+        introPhoto: 'images/nigiri1.jpg', // <-- ИЗМЕНЕНО ПО ЗАПРОСУ
         introDescEN: 'Hand-pressed rice topped with fresh fish or seafood.',
         introDescPL: 'Ręcznie formowany ryż z plastrem świeżej ryby lub owoców morza.',
         items:[
@@ -696,12 +697,17 @@
 
     // SLIDER LOGIC - Хранение текущего индекса слайда для каждой секции
     const currentSlideMap = {}; 
+    const autoCycleInterval = 5000; // 5 секунд
+    const carouselIntervals = {};
 
     function updateSlide(sectionId, newIndex) {
         const section = document.getElementById(sectionId);
         if (!section) return;
 
         const track = section.querySelector('.slider-track');
+        // Проверяем, есть ли трек (т.е., это секция со слайдером/каруселью)
+        if (!track) return;
+        
         const slides = section.querySelectorAll('.slider-slide');
         const dots = section.querySelectorAll('.dot');
         const totalSlides = slides.length;
@@ -719,23 +725,37 @@
         currentSlideMap[sectionId] = index;
 
         // Move the track
-        // Слайдер теперь смещает весь трек, а слайды имеют 100% ширины
         const offset = -index * 100;
         track.style.transform = `translateX(${offset}%)`;
 
-        // Update dots
-        dots.forEach((dot, i) => {
-            dot.classList.remove('active');
-            if (i === index) {
-                dot.classList.add('active');
+        // Update captions
+        slides.forEach((slide, i) => {
+            const caption = slide.querySelector('.slide-caption');
+            if (caption) {
+                const photoData = MENU.find(s => s.id === sectionId).sliderPhotos[i];
+                caption.textContent = (LANG === 'en' ? photoData.nameEN : photoData.namePL);
             }
         });
+
+        // Update dots (точки видны только если не 'starters')
+        if (sectionId !== 'starters') {
+            dots.forEach((dot, i) => {
+                dot.classList.remove('active');
+                if (i === index) {
+                    dot.classList.add('active');
+                }
+            });
+        }
     }
 
     function createSliderStructure(sec) {
         const sliderContainer = document.createElement('div');
-        sliderContainer.className = 'intro-card'; // Используем intro-card как внешний контейнер
+        sliderContainer.className = 'intro-card'; 
         
+        const isAutoCarousel = sec.id === 'starters';
+        const totalSlides = sec.sliderPhotos.length;
+        const showControls = totalSlides > 1 && !isAutoCarousel;
+
         // Враппер для фиксации размера 4:3
         const imageWrapper = document.createElement('div');
         imageWrapper.className = 'slider-container';
@@ -770,41 +790,43 @@
             track.appendChild(slide);
         });
 
-        // Navigation Buttons (Left/Right)
-        const navLeft = document.createElement('button');
-        navLeft.className = 'slider-nav-btn slider-nav-left';
-        navLeft.innerHTML = '◀'; // Стрелка влево
-        navLeft.onclick = () => {
-            const currentIndex = currentSlideMap[sec.id] || 0;
-            updateSlide(sec.id, currentIndex - 1);
-        };
-        
-        const navRight = document.createElement('button');
-        navRight.className = 'slider-nav-btn slider-nav-right';
-        navRight.innerHTML = '▶'; // Стрелка вправо
-        navRight.onclick = () => {
-            const currentIndex = currentSlideMap[sec.id] || 0;
-            updateSlide(sec.id, currentIndex + 1);
-        };
-
-        // Dots (Индикаторы слайдов)
-        const dotsContainer = document.createElement('div');
-        dotsContainer.className = 'slider-dots';
-        sec.sliderPhotos.forEach((_, index) => {
-            const dot = document.createElement('span');
-            dot.className = 'dot';
-            dot.onclick = () => {
-                updateSlide(sec.id, index);
-            };
-            dotsContainer.appendChild(dot);
-        });
-
-        // Собираем контейнер слайдера
         imageWrapper.appendChild(track);
-        imageWrapper.appendChild(navLeft);
-        imageWrapper.appendChild(navRight);
-        imageWrapper.appendChild(dotsContainer);
-        
+
+        // Navigation Buttons (Left/Right) - СКРЫТЫ ДЛЯ STARTERS
+        if (showControls) {
+            const navLeft = document.createElement('button');
+            navLeft.className = 'slider-nav-btn slider-nav-left';
+            navLeft.innerHTML = '◀'; // Стрелка влево
+            navLeft.onclick = () => {
+                const currentIndex = currentSlideMap[sec.id] || 0;
+                updateSlide(sec.id, currentIndex - 1);
+            };
+            
+            const navRight = document.createElement('button');
+            navRight.className = 'slider-nav-btn slider-nav-right';
+            navRight.innerHTML = '▶'; // Стрелка вправо
+            navRight.onclick = () => {
+                const currentIndex = currentSlideMap[sec.id] || 0;
+                updateSlide(sec.id, currentIndex + 1);
+            };
+
+            // Dots (Индикаторы слайдов)
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = 'slider-dots';
+            sec.sliderPhotos.forEach((_, index) => {
+                const dot = document.createElement('span');
+                dot.className = 'dot';
+                dot.onclick = () => {
+                    updateSlide(sec.id, index);
+                };
+                dotsContainer.appendChild(dot);
+            });
+            
+            imageWrapper.appendChild(navLeft);
+            imageWrapper.appendChild(navRight);
+            imageWrapper.appendChild(dotsContainer);
+        }
+
         // Обертка-карточка
         sliderContainer.appendChild(imageWrapper);
 
@@ -816,6 +838,26 @@
         return sliderContainer;
     }
     // END SLIDER LOGIC
+    
+    // NEW FUNCTION: Auto-cycling for starters
+    function initAutoCarousel() {
+        const starterId = 'starters';
+        const section = document.getElementById(starterId);
+
+        // Clear previous interval if it exists
+        if (carouselIntervals[starterId]) {
+            clearInterval(carouselIntervals[starterId]);
+        }
+
+        const slides = section ? section.querySelectorAll('.slider-slide') : [];
+        if (slides.length > 1) {
+            // Start new interval
+            carouselIntervals[starterId] = setInterval(() => {
+                const currentIndex = currentSlideMap[starterId] || 0;
+                updateSlide(starterId, currentIndex + 1);
+            }, autoCycleInterval);
+        }
+    }
 
 
     function createNav(){
@@ -882,10 +924,10 @@
         let introCard = null;
         
         if (sec.sliderPhotos && sec.sliderPhotos.length > 0) {
-            // Если есть слайдер-фото
+            // Если есть слайдер-фото (Starters)
             introCard = createSliderStructure(sec);
         } else if (sec.introPhoto) {
-            // Если есть одиночное фото
+            // Если есть одиночное фото (Nigiri, Soups, etc.)
             introCard = document.createElement('div');
             introCard.className = 'intro-card'; 
             
@@ -982,7 +1024,7 @@
       const contactsContent = `
         📞 <a href="tel:+48502525544">+48 502 525 544</a><br>
         📸 <a href="https://www.instagram.com/ksiestwosushi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank">@ksiestwosushi</a><br>
-        📍 <a href="https://www.google.com/maps/search/?api=1&query=Krupówki+38A,+Zakopane+34-500" target="_blank">Krupówki 38A, Zakopane 34-500</a>
+        📍 <a href="http://maps.google.com/?q=Krupówki 38A, Zakopane" target="_blank">Krupówki 38A, Zakopane 34-500</a>
       `;
       
       contacts.innerHTML = contactsContent;
@@ -991,6 +1033,9 @@
       notice.textContent = (LANG==='en') 
         ? 'We kindly inform you that we add a waiter service of 10% to the final bill.' 
         : 'Uprzejmie informujemy, że do rachunku końcowego doliczamy opłatę za obsługę kelnerską w wysokości 10%.';
+
+      // Обновляем подписи под слайдами (для starters)
+      updateSlide('starters', currentSlideMap['starters'] || 0); 
     }
 
 
@@ -1028,9 +1073,16 @@
         langBtns.forEach(x=>x.classList.remove('active'));
         b.classList.add('active');
         LANG = b.dataset.lang;
+        
+        // Сброс интервалов при смене языка
+        if (carouselIntervals['starters']) {
+            clearInterval(carouselIntervals['starters']);
+        }
+        
         createNav();
         renderMenu(); 
         updateTexts();
+        initAutoCarousel(); // Перезапуск авто-карусели
       });
     });
 
@@ -1038,6 +1090,7 @@
     createNav();
     renderMenu();
     updateTexts();
+    initAutoCarousel(); // Запуск авто-карусели при первой загрузке
   </script>
 </body>
 </html>
