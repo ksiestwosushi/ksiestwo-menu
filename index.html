@@ -10,6 +10,7 @@
       --muted:#7b7b7b;
       --accent:#d88b6a;
       --text:#111;
+      --dark-btn:#222; /* Цвет для новых кнопок контактов */
       --maxw:1000px;
       --radius:12px;
     }
@@ -177,15 +178,44 @@
     }
     /* Конец разделителя */
 
-    /* Стили для ссылок в контактах */
-    .small a {
-      color: var(--muted);
+    /* --- НОВЫЕ СТИЛИ ДЛЯ КОНТАКТОВ (КНОПКИ-ТАБЛЕТКИ) --- */
+    #contacts {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Центровка текста */
+      gap: 10px;
+      padding: 12px 20px;
+      background-color: var(--dark-btn); /* Темный фон как на фото */
+      color: #fff !important; /* Белый текст */
+      text-decoration: none;
+      border-radius: 999px; /* Форма таблетки */
+      font-weight: 600;
+      font-size: 14px;
+      transition: transform 0.2s, opacity 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .contact-btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+      color: #fff;
       text-decoration: none;
     }
-    .small a:hover {
-      color: var(--accent);
-      text-decoration: underline;
+
+    /* Увеличение кнопок на мобильных устройствах */
+    @media (max-width: 600px) {
+      .contact-btn {
+        padding: 16px 24px; /* Больше отступы */
+        font-size: 16px; /* Больше шрифт */
+      }
     }
+    /* ---------------------------------------------------- */
 
     footer{
       margin-top:18px;
@@ -299,7 +329,6 @@
         border-radius: var(--radius);
         display: block;
         cursor: pointer;
-        /* Убираем нижний border-radius у последнего фото в стеке, если оно есть */
         margin-bottom: 0 !important;
     }
 
@@ -374,20 +403,32 @@
         transform: translateY(-50%) rotate(180deg);
     }
     
-    /* --- СТИЛИ ДЛЯ ПЛАВНОЙ АНИМАЦИИ СПИСКА --- */
+    /* --- ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ ПЛАВНОЙ АНИМАЦИИ --- */
     details .items {
+        /* Важно: анимируем padding вместе с высотой, иначе будет прыжок */
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        border-top: none;
+        
+        will-change: max-height, opacity, padding;
+        transition: 
+            max-height 0.3s ease-in-out, 
+            opacity 0.3s ease-in-out,
+            padding 0.3s ease-in-out;
+    }
+
+    /* Класс, который мы добавим JS-ом при открытии */
+    details[open] .items.open-animation {
+        /* Значения высоты поставим через JS, но паддинги возвращаем */
         padding-top: 10px;
         padding-bottom: 10px;
         border-top: 1px solid rgba(0,0,0,0.05); 
-        
-        /* Начальное состояние: скрыто */
-        overflow: hidden;
-        height: 0; 
-        opacity: 0;
-        /* Плавный переход */
-        transition: height 0.3s ease, opacity 0.3s ease;
+        opacity: 1;
     }
-    /* --- КОНЕЦ СТИЛЕЙ СПИСКА --- */
+    /* --- КОНЕЦ СТИЛЕЙ АНИМАЦИИ --- */
 
     /* --- СТИЛИ ДЛЯ 2-КОЛОНОЧНОГО МАКЕТА URAMAKI --- */
     #uramaki-combined .items {
@@ -457,10 +498,7 @@
         <div class="section">
           <h2 id="hours-title">Contacts</h2>
           <div class="small" id="contacts">
-            📞 +48 502 525 544<br>
-            📸 @ksiestwosushi<br>
-            📍 Krupówki 38A, Zakopane
-          </div>
+            </div>
         </div>
 
         </aside>
@@ -602,7 +640,7 @@
         introDescEN: 'Thinly sliced raw fish and seafood, served without rice.',
         introDescPL: 'Cienko krojone plastry surowej ryby i owoców morza, podawane bez ryżu.',
         items:[
-          {enName:'Mizu', plName:'Mizu', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plastry surowej ryby — łosoś, tuńczyk, maślana', price:'45 zł'}
+          {enName:'Mizu', plName:'Mizu', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plastry surowej ryby — łosoś, tuńczyk, maślana', price:'95 zł'} // ЦЕНА ИСПРАВЛЕНА НА 95
         ]
       }
     ];
@@ -644,7 +682,6 @@
             
             const desc = document.createElement('div');
             desc.className='desc';
-            // ВАЖНО: descEN/descPL используется для вывода описания
             desc.textContent = (LANG==='en'?it.descEN:it.descPL) || '';
             
             const price = document.createElement('div');
@@ -652,11 +689,10 @@
             price.textContent = it.price || '';
 
             meta.appendChild(name);
-            // ОПИСАНИЕ ВОССТАНОВЛЕНО
             if(desc.textContent) meta.appendChild(desc); 
 
             itemContent.appendChild(meta);
-            itemContent.appendChild(price); // Цена отделена от мета-блока
+            itemContent.appendChild(price); 
 
             div.appendChild(itemContent);
             container.appendChild(div);
@@ -691,7 +727,6 @@
             sec.introPhotos.forEach(photo => {
                 const img = document.createElement('img');
                 img.src = photo.src;
-                // Alt text now combines name and description
                 img.alt = (LANG === 'en' ? photo.nameEN : photo.namePL);
                 img.onclick = () => { openLightbox(photo.src); }; 
                 
@@ -700,7 +735,6 @@
 
             introCard.appendChild(stack);
 
-            // Основное описание под стеком
             const p = document.createElement('p');
             p.textContent = (LANG === 'en' ? sec.introDescEN : sec.introDescPL);
             introCard.appendChild(p);
@@ -713,10 +747,8 @@
             const img = document.createElement('img');
             img.src = sec.introPhoto;
             img.alt = sec.title[LANG];
-            // Поскольку это одно фото, его можно сразу открыть в лайтбоксе
             img.onclick = () => { openLightbox(sec.introPhoto); }; 
             
-            // Основное описание
             const p = document.createElement('p');
             p.textContent = (LANG === 'en' ? sec.introDescEN : sec.introDescPL);
             
@@ -749,7 +781,6 @@
 
             // --- СПЕЦИАЛЬНАЯ ЛОГИКА ДЛЯ ДВУХ КОЛОНОК (Uramaki) ---
             if (sec.id === 'uramaki-combined') {
-                // Создаем левую колонку
                 const colLeft = document.createElement('div');
                 colLeft.className = 'item-column';
                 const h3Left = document.createElement('h3');
@@ -758,7 +789,6 @@
                 renderItems(colLeft, sec.items_uramaki); 
                 container.appendChild(colLeft);
 
-                // Создаем правую колонку
                 const colRight = document.createElement('div');
                 colRight.className = 'item-column';
                 const h3Right = document.createElement('h3');
@@ -775,54 +805,76 @@
             details.appendChild(container);
             s.appendChild(details); 
             
-            // --- ЛОГИКА ПЛАВНОЙ АНИМАЦИИ ОТКРЫТИЯ СПИСКА ---
+            // --- ИСПРАВЛЕННАЯ ЛОГИКА ПЛАВНОЙ АНИМАЦИИ ---
             summary.addEventListener('click', (e) => {
-                e.preventDefault(); // 1. Предотвращаем стандартное поведение
+                e.preventDefault(); // Отменяем стандартное поведение
                 
                 const content = details.querySelector('.items');
-                const transitionDuration = 300; // 0.3s из CSS
                 
                 if (details.open) {
                     // ЗАКРЫТИЕ
-                    // 1. Задаем точную высоту (чтобы анимация сработала от X до 0)
-                    content.style.height = content.scrollHeight + 'px';
-                    
+                    // 1. Сначала ставим точную высоту
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    content.style.opacity = '1';
+                    content.style.paddingTop = '10px';
+                    content.style.paddingBottom = '10px';
+                    content.classList.add('open-animation'); // Убедимся, что класс есть
+
                     // 2. Форсируем перерисовку (requestAnimationFrame)
                     requestAnimationFrame(() => {
-                        content.style.height = '0px';
+                        // 3. Запускаем переход к 0
+                        content.style.maxHeight = '0px';
                         content.style.opacity = '0';
+                        content.style.paddingTop = '0px';
+                        content.style.paddingBottom = '0px';
+                        content.classList.remove('open-animation');
                     });
 
-                    // 3. Ждем окончания анимации перед удалением атрибута open
+                    // 4. После завершения CSS-транзишена (0.3s) убираем атрибут open
                     setTimeout(() => {
                         details.open = false;
-                        // Убираем inline стили, чтобы не мешать следующему открытию
-                        content.style.height = ''; 
+                        // Очищаем инлайн-стили, чтобы не мешать следующему открытию
+                        content.style.maxHeight = ''; 
                         content.style.opacity = '';
-                    }, transitionDuration);
+                        content.style.paddingTop = '';
+                        content.style.paddingBottom = '';
+                    }, 300); 
 
                 } else {
                     // ОТКРЫТИЕ
                     details.open = true;
                     
-                    // 1. Начальное состояние
-                    content.style.height = '0px';
-                    content.style.opacity = '0';
+                    // 1. Сразу добавляем класс, чтобы вернулись бордеры/паддинги (но пока скрыто)
+                    content.classList.add('open-animation');
                     
-                    // 2. Форсируем перерисовку
+                    // 2. Вычисляем высоту (с учетом паддингов из класса)
+                    const targetHeight = content.scrollHeight; 
+                    
+                    // 3. Ставим начальные точки для анимации
+                    content.style.maxHeight = '0px';
+                    content.style.opacity = '0';
+                    content.style.paddingTop = '0px';
+                    content.style.paddingBottom = '0px';
+
+                    // 4. Форсируем перерисовку
                     requestAnimationFrame(() => {
-                         content.style.height = content.scrollHeight + 'px';
+                         content.style.maxHeight = targetHeight + 'px';
                          content.style.opacity = '1';
+                         // Возвращаем паддинги, чтобы они тоже анимировались
+                         content.style.paddingTop = '10px';
+                         content.style.paddingBottom = '10px';
                     });
                     
-                    // 3. После завершения анимации сбрасываем height в auto
+                    // 5. После завершения анимации сбрасываем max-height, чтобы контент был резиновым
                     setTimeout(() => {
-                        content.style.height = 'auto';
-                    }, transitionDuration);
+                        content.style.maxHeight = 'none'; // или ''
+                        // Чистим инлайн стили паддингов, оставляя их из класса
+                        content.style.paddingTop = '';
+                        content.style.paddingBottom = '';
+                    }, 300);
                 }
             });
-            // --- КОНЕЦ ЛОГИКИ АНИМАЦИИ ---
-
+            // --- КОНЕЦ ИСПРАВЛЕННОЙ ЛОГИКИ АНИМАЦИИ ---
         } 
         
         menuArea.appendChild(s);
@@ -841,15 +893,20 @@
       
       const contacts = document.getElementById('contacts');
       
-      // КОНТАКТЫ (КЛИКАБЕЛЬНЫЕ) с новой ссылкой на Google Maps
+      // КОНТАКТЫ (КНОПКИ-ТАБЛЕТКИ)
       const contactsContent = `
-        📞 <a href="tel:+48502525544">+48 502 525 544</a><br>
-        📸 <a href="https://www.instagram.com/ksiestwosushi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank">@ksiestwosushi</a><br>
-        📍 <a href="https://maps.app.goo.gl/1WmFXGEPnDcBiz3p9" target="_blank">Krupówki 38A, Zakopane 34-500</a>
+        <a href="tel:+48502525544" class="contact-btn">
+          <span>📞</span> +48 502 525 544
+        </a>
+        <a href="https://www.instagram.com/ksiestwosushi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="contact-btn">
+          <span>📸</span> @ksiestwosushi
+        </a>
+        <a href="https://maps.app.goo.gl/1WmFXGEPnDcBiz3p9" target="_blank" class="contact-btn">
+          <span>📍</span> Krupówki 38A, Zakopane
+        </a>
       `;
       
       contacts.innerHTML = contactsContent;
-      
     }
 
 
