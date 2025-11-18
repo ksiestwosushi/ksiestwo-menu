@@ -65,16 +65,14 @@
     h1{margin:0;font-size:20px;letter-spacing:0.6px}
     .sub{color:var(--muted); font-size:13px}
 
-    /* --- ФИКСИРОВАННЫЙ ВИДЖЕТ (ЯЗЫК + ИКОНКИ В СТОЛБИК) --- */
+    /* --- ФИКСИРОВАННЫЙ ВИДЖЕТ (ТОЛЬКО ЯЗЫК) --- */
     .fixed-widget {
       position: fixed;
       top: 24px;
       right: 24px;
       z-index: 200;
-      display: flex;
-      flex-direction: column; /* Вертикальный стек */
-      align-items: flex-end;  /* Выравнивание по правому краю */
-      gap: 12px; /* Расстояние между блоком языка и иконками */
+      /* Убираем flex-direction: column, чтобы не было лишнего отступа сверху */
+      display: block; 
     }
 
     /* Блок переключения языка */
@@ -102,50 +100,18 @@
       color: white;
       border-color: transparent;
     }
-
-    /* Контейнер для иконок (столбик) */
-    .icons-column {
-      display: flex;
-      flex-direction: column;
-      gap: 12px; /* Расстояние между иконками */
-      align-items: center;
-    }
-
-    /* Стили самих иконок-ссылок */
-    .icon-link {
-      display: block;
-      transition: transform 0.2s;
-      line-height: 0; /* Убирает лишние отступы у картинки */
-    }
-
-    .icon-link img {
-      width: 44px; /* Размер иконок */
-      height: 44px;
-      object-fit: contain;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15)); /* Тень для красоты */
-      border-radius: 50%; /* Если иконки круглые, это поможет */
-      background: white; /* Белый фон, если иконки прозрачные */
-      padding: 4px; /* Отступ внутри круга */
-    }
-
-    .icon-link:hover {
-      transform: scale(1.1); /* Увеличение при наведении */
-    }
+    
+    /* УДАЛЕНЫ СТИЛИ ДЛЯ .icons-column и .icon-link */
 
     /* Адаптация для мобильных */
     @media (max-width: 500px) {
       .fixed-widget {
         top: 15px;
         right: 15px;
-        gap: 10px;
       }
       .wrap {
         padding: 15px;
         padding-top: 85px; 
-      }
-      .icon-link img {
-        width: 40px;
-        height: 40px;
       }
     }
     /* --- КОНЕЦ ФИКСИРОВАННОГО БЛОКА --- */
@@ -223,7 +189,7 @@
     }
     /* Конец разделителя */
 
-    /* Стили для кнопок-контактов внизу (оставляем как альтернативу) */
+    /* Стили для кнопок-контактов внизу */
     #contacts {
       display: flex;
       flex-direction: column;
@@ -524,18 +490,7 @@
         <button class="lang-btn active" data-lang="pl">PL</button>
         <button class="lang-btn" data-lang="en">EN</button>
       </div>
-      <div class="icons-column">
-        <a href="tel:+48502525544" class="icon-link">
-          <img src="images/phone.png" alt="Phone">
-        </a>
-        <a href="https://www.instagram.com/ksiestwosushi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="icon-link">
-          <img src="images/instagram.png" alt="Instagram">
-        </a>
-        <a href="https://maps.app.goo.gl/1WmFXGEPnDcBiz3p9" target="_blank" class="icon-link">
-          <img src="images/google_maps.png" alt="Map">
-        </a>
       </div>
-    </div>
 
     <header>
       <div class="brand">
@@ -592,7 +547,7 @@
           {enName:'Goma Wakame', plName:'Goma Wakame', descEN:'wakame salad', descPL:'sałatka wakame', price:'20 zł'},
           {enName:'Ebiten (3 pcs)', plName:'Ebiten (3 szt.)', descEN:'shrimp tempura served with ponzu sauce', descPL:'krewetka tempura z sosem ponzu', price:'30 zł'},
           {enName:'Sake Tataki', plName:'Sake Tataki', descEN:'salmon tartare', descPL:'tatar z łososia', price:'50 zł'},
-          {enName:'Maguro Tataki', plName:'Maguro Tataki', descEN:'tuna tartare', descPL:'tatar z tuńczyka', price:'55 zł'}
+          {enName:'Maguro Tataki', plName:'Maguro Tataki', descEN:'tuna tartare', descPL:'tatar z tuńczyка', price:'55 zł'}
         ]
       },
       {
