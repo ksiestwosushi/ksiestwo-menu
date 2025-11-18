@@ -374,17 +374,17 @@
         transform: translateY(-50%) rotate(180deg);
     }
     
-    /* --- СТИЛИ ДЛЯ ПЛАВНОЙ АНИМАЦИИ ОТКРЫТИЯ СПИСКА --- */
+    /* --- СТИЛИ ДЛЯ ПЛАВНОЙ АНИМАЦИИ СПИСКА --- */
     details .items {
         padding-top: 10px;
         padding-bottom: 10px;
         border-top: 1px solid rgba(0,0,0,0.05); 
         
-        /* Настройки анимации */
+        /* Ключевые стили для анимации */
         overflow: hidden;
         max-height: 0;
         opacity: 0;
-        transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+        transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
     }
     /* --- КОНЕЦ СТИЛЕЙ АНИМАЦИИ --- */
 
@@ -774,54 +774,49 @@
             details.appendChild(container);
             s.appendChild(details); 
             
-            // --- ЛОГИКА ПЛАВНОЙ АНИМАЦИИ ОТКРЫТИЯ СПИСКА ---
+            // --- ЛОГИКА ПЛАВНОЙ АНИМАЦИИ ---
             summary.addEventListener('click', (e) => {
-                e.preventDefault(); // 1. Предотвращаем стандартное поведение
+                e.preventDefault(); 
                 
                 const content = details.querySelector('.items');
-                const transitionDuration = 300; // 0.3s из CSS
+                // Убеждаемся, что элемент найден (особенно для вложенных структур)
+                if (!content) return;
+                
+                const transitionDuration = 300; 
                 
                 if (details.open) {
                     // ЗАКРЫТИЕ
+                    details.open = false; // Сразу меняем состояние стрелки
                     
-                    // 1. Устанавливаем details.open = false для поворота стрелочки
-                    details.open = false; 
-                    
-                    // 2. Задаем текущую высоту перед началом перехода к 0
+                    // Фиксируем текущую высоту
                     content.style.maxHeight = content.scrollHeight + 'px';
+                    content.offsetHeight; // Reflow
                     
-                    // 3. Вызываем 'reflow' (перерисовку) для сброса состояния
-                    content.offsetHeight; 
-                    
-                    // 4. Запускаем переход к закрытому состоянию
+                    // Анимируем к 0
                     content.style.maxHeight = '0px';
                     content.style.opacity = '0';
                     
-                    // 5. После завершения анимации удаляем инлайн-стиль
+                    // Удаляем инлайн стили после анимации
                     setTimeout(() => {
                         content.style.maxHeight = ''; 
                     }, transitionDuration); 
 
                 } else {
                     // ОТКРЫТИЕ
+                    details.open = true; // Сразу меняем состояние стрелки
                     
-                    // 1. Устанавливаем details.open = true для поворота стрелочки
-                    details.open = true;
-                    
-                    // 2. Запускаем переход к открытому состоянию, используя scrollHeight
+                    // Анимируем к полной высоте
                     content.style.maxHeight = content.scrollHeight + 'px';
                     content.style.opacity = '1';
                     
-                    // 3. Слушаем окончание анимации
+                    // После анимации убираем max-height, чтобы контент был адаптивным
                     const onTransitionEnd = () => {
-                        // Очищаем max-height, чтобы контент мог свободно менять высоту (респонсивность)
                         if (details.open) {
                             content.style.maxHeight = 'none';
                         }
                         content.removeEventListener('transitionend', onTransitionEnd);
                     };
                     
-                    // Добавляем слушатель, но делаем его одноразовым
                     content.addEventListener('transitionend', onTransitionEnd, {once: true});
                 }
             });
