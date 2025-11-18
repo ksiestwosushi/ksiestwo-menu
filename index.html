@@ -130,7 +130,7 @@
     .left{
       flex:1.1;
       min-width:260px;
-      /* АНИМАЦИЯ СМЕНЫ ЯЗЫКА ОСТАВЛЕНА */
+      /* Анимация смены языка */
       opacity: 1; 
       transition: opacity 0.3s ease; 
     }
@@ -374,11 +374,18 @@
         transform: translateY(-50%) rotate(180deg);
     }
     
-    /* --- СТИЛИ ДЛЯ СПИСКА (без анимации) --- */
+    /* --- СТИЛИ ДЛЯ ПЛАВНОЙ АНИМАЦИИ ОТКРЫТИЯ СПИСКА --- */
     details .items {
         padding-top: 10px;
         padding-bottom: 10px;
         border-top: 1px solid rgba(0,0,0,0.05); 
+        
+        /* Подготовка к анимации */
+        overflow: hidden;
+        max-height: 0; /* Скрыто */
+        opacity: 0; /* Прозрачно */
+        will-change: max-height, opacity;
+        transition: max-height 0.3s ease-out, opacity 0.3s ease-out; 
     }
     /* --- КОНЕЦ СТИЛЕЙ СПИСКА --- */
 
@@ -557,14 +564,11 @@
           {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owijane łososiem', price:'40 zł'},
           {enName:'Rainbow', plName:'Rainbow', descEN:'surimi wrapped in assorted fish', descPL:'surimi owijane wachlarzem ryb', price:'48 zł'},
           {enName:'Ohio Spice Sake', plName:'Ohio Spice Sake', descEN:'salmon wrapped in butterfish', descPL:'łosoś owijany opalaną maślaną', price:'42 zł'},
-          {enName:'Maguro Spicy Ebi Ten', plName:'Maguro Spicy Ebi Ten', descEN:'shrimp tempura wrapped in tuna', descPL:'krewetka w tempurze owijana opalanym tuńczykiem', price:'45 zł'},
+          {enName:'Maguro Spicy Ebi Ten', plName:'Maguro Spicy Ebi Ten', descEN:'shrimp tempura wrapped in seared tuna', descPL:'krewetka w tempurze owijana opalanym tuńczykiem', price:'45 zł'},
           {enName:'Kegon', plName:'Kegon', descEN:'salmon wrapped in grilled eel', descPL:'łosoś owijany grillowanym węgorzem', price:'45 zł'},
-          // ИСПРАВЛЕНО: łosoсь -> łosoś
           {enName:'Sake Aburi', plName:'Sake Aburi', descEN:'salmon wrapped in seared spicy salmon', descPL:'łosoś owijany opalanym pikantnym łososiem', price:'45 zł'},
           {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish in tempura coated with caviar', descPL:'maślana w tempurze obtoczona kawiorem z latającej ryby', price:'48 zł'},
-          // ИСПРАВЛЕНО: łosoсь -> łosoś
           {enName:'Nashi Sake', plName:'Nashi Sake', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką', price:'45 zł'},
-          // ИСПРАВЛЕНО: łosoсь -> łosoś
           {enName:'Sake Tataki Ebiten', plName:'Sake Tataki Ebiten', descEN:'shrimp tempura wrapped in salmon tartare', descPL:'krewetka w tempurze obtoczona tatarem z łososia', price:'48 zł'}
         ],
 
@@ -585,11 +589,8 @@
         introDescEN: 'Our specialty rolls, often wrapped in fish or avocado instead of nori.',
         introDescPL: 'Nasze specjalne rolki, często zawijane w rybę lub awokado zamiast nori.',
         items:[
-          // ИСПРАВЛЕНО: łososia -> łososia (было łosośia)
           {enName:'Sake Ebi Tataki', plName:'Sake Ebi Tataki', descEN:'chopped shrimp wrapped in salmon', descPL:'siekana krewetka owijana w łososia', price:'36 zł'}, 
-          // ИСПРАВЛЕНО: łososia -> łososia (было łosośia)
           {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'caviar with salmon wrapped in tuna', descPL:'kawior z łososia owijany tuńczykiem', price:'42 zł'},
-          // ИСПРАВЛЕНО: łosoś -> łosoś (было łosoсь)
           {enName:'Maguro Sake Tataki', plName:'Maguro Sake Tataki', descEN:'chopped salmon wrapped in tuna', descPL:'siekany łosoś owijany tuńczykiem', price:'45 zł'} 
         ]
       },
@@ -599,11 +600,9 @@
         title:{en:'Sashimi (9 pc)', pl:'Sashimi (9 szt.)'},
         introPhoto: 'images/sashimi.jpg', 
         introDescEN: 'Thinly sliced raw fish and seafood, served without rice.',
-        // ИСПРАВЛЕНО: "и"
         introDescPL: 'Cienko krojone plastry surowej ryby i owoców morza, podawane bez ryżu.',
         items:[
-          // ИСПРАВЛЕНО: łosoсь -> łosoś
-          {enName:'Mizu', plName:'Mizu', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plastry surowej ryby — łosoś, tuńczyk, maślana', price:'95 zł'}
+          {enName:'Mizu', plName:'Mizu', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plastry surowej ryby — łosoś, tuńczyk, maślana', price:'45 zł'}
         ]
       }
     ];
@@ -776,7 +775,59 @@
             details.appendChild(container);
             s.appendChild(details); 
             
-            // Здесь НЕТ JS для анимации details, используется стандартное мгновенное поведение.
+            // --- ЛОГИКА ПЛАВНОЙ АНИМАЦИИ ---
+            summary.addEventListener('click', (e) => {
+                e.preventDefault(); // 1. Предотвращаем стандартное поведение
+                
+                const content = details.querySelector('.items');
+                const transitionDuration = 300; // 0.3s из CSS
+                
+                if (details.open) {
+                    // ЗАКРЫТИЕ
+                    
+                    // 1. Устанавливаем details.open = false для поворота стрелочки
+                    details.open = false; 
+                    
+                    // 2. Задаем текущую высоту перед началом перехода к 0
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    
+                    // 3. Вызываем 'reflow' (перерисовку) для сброса состояния
+                    content.offsetHeight; 
+                    
+                    // 4. Запускаем переход к закрытому состоянию
+                    content.style.maxHeight = '0px';
+                    content.style.opacity = '0';
+                    
+                    // 5. После завершения анимации удаляем инлайн-стиль
+                    setTimeout(() => {
+                        content.style.maxHeight = ''; 
+                    }, transitionDuration); 
+
+                } else {
+                    // ОТКРЫТИЕ
+                    
+                    // 1. Устанавливаем details.open = true для поворота стрелочки
+                    details.open = true;
+                    
+                    // 2. Запускаем переход к открытому состоянию, используя scrollHeight
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    content.style.opacity = '1';
+                    
+                    // 3. Слушаем окончание анимации
+                    const onTransitionEnd = () => {
+                        // Очищаем max-height, чтобы контент мог свободно менять высоту (респонсивность)
+                        if (details.open) {
+                            content.style.maxHeight = '';
+                        }
+                        content.removeEventListener('transitionend', onTransitionEnd);
+                    };
+                    
+                    // Добавляем слушатель, но делаем его одноразовым
+                    content.addEventListener('transitionend', onTransitionEnd, {once: true});
+                }
+            });
+            // --- КОНЕЦ ЛОГИКИ АНИМАЦИИ ---
+
         } 
         
         menuArea.appendChild(s);
@@ -874,4 +925,3 @@
   </script>
 </body>
 </html>
-
