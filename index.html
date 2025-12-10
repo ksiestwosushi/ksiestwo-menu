@@ -31,7 +31,8 @@
           },
           animation: {
             'fade-in': 'fadeIn 1.0s ease-out forwards',
-            'expand': 'expand 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'slide-up': 'slideUp 1.0s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'grow-line': 'growLine 1.0s ease-out forwards',
             'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
           },
           keyframes: {
@@ -39,9 +40,13 @@
               '0%': { opacity: '0' },
               '100%': { opacity: '1' },
             },
-            expand: {
-              '0%': { height: '0', opacity: '0' },
-              '100%': { height: 'auto', opacity: '1' },
+            slideUp: {
+              '0%': { transform: 'translateY(20px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' },
+            },
+            growLine: {
+              '0%': { width: '0' },
+              '100%': { width: '100px' },
             }
           }
         }
@@ -98,7 +103,7 @@
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef } = React;
 
     // --- UI TRANSLATIONS ---
     const UI_TEXT = {
@@ -352,13 +357,16 @@
       }, []);
 
       return (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
+        <div 
+          className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center"
+          onMouseEnter={() => setExpanded(true)}
+          onMouseLeave={() => setExpanded(false)}
+        >
           <div 
             className={`bg-ink/90 backdrop-blur-xl text-white shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] overflow-hidden flex flex-col ${
               expanded ? 'w-[90vw] max-w-[500px] rounded-[32px] p-6' : 'w-[140px] h-[44px] rounded-full cursor-pointer hover:w-[160px] hover:scale-105'
             }`}
             onClick={() => !expanded && setExpanded(true)}
-            onMouseLeave={() => setExpanded(false)}
           >
             {/* Collapsed */}
             {!expanded && (
@@ -418,6 +426,7 @@
     };
 
     // 2. Menu Components
+    // Accordion style for Sets
     const MenuItemRow = ({ item, lang, isOpen, onToggle }) => {
       // Logic for individual image display removed.
       return (
@@ -453,9 +462,28 @@
       );
     };
 
+    // Simple style for everything else
+    const MenuItemSimple = ({ item, lang }) => (
+      <div className="py-6 border-b border-gray-100 last:border-0 group hover:bg-gray-50/50 transition-colors px-4 -mx-4 rounded-xl">
+        <div className="flex justify-between items-baseline gap-4 mb-2">
+           <h3 className="font-cinzel text-xl text-ink font-semibold group-hover:text-gold-dark transition-colors">
+             {item.name[lang]}
+           </h3>
+           <span className="font-rajdhani font-bold text-gold-dark text-lg whitespace-nowrap">
+             {item.price}
+           </span>
+        </div>
+        <p className="font-rajdhani text-gray-500 text-base leading-relaxed max-w-3xl">
+          {item.desc[lang]}
+        </p>
+      </div>
+    );
+
     const MenuSection = ({ data, lang, index }) => {
       const [openItemId, setOpenItemId] = useState(null);
       const toggleItem = (idx) => setOpenItemId(openItemId === idx ? null : idx);
+      
+      const isSets = data.id === 'sets';
 
       return (
         <section id={data.id} className="mb-0 w-full bg-white relative">
@@ -489,13 +517,17 @@
                    <h3 className="text-center font-cinzel text-2xl text-gold mb-12 tracking-widest">{UI_TEXT.uramaki_title[lang]}</h3>
                    <div className="flex flex-col">
                      {data.items.map((item, i) => (
-                       <MenuItemRow 
-                         key={`l-${i}`} 
-                         item={item} 
-                         lang={lang} 
-                         isOpen={openItemId === i} 
-                         onToggle={() => toggleItem(i)} 
-                       />
+                       isSets ? (
+                         <MenuItemRow 
+                           key={`l-${i}`} 
+                           item={item} 
+                           lang={lang} 
+                           isOpen={openItemId === i} 
+                           onToggle={() => toggleItem(i)} 
+                         />
+                       ) : (
+                         <MenuItemSimple key={`l-${i}`} item={item} lang={lang} />
+                       )
                      ))}
                    </div>
                  </div>
@@ -504,7 +536,7 @@
                    <div className="flex flex-col">
                      {data.itemsRight?.map((item, i) => {
                        const idx = i + 1000;
-                       return (
+                       return isSets ? (
                         <MenuItemRow 
                           key={`r-${i}`} 
                           item={item} 
@@ -512,6 +544,8 @@
                           isOpen={openItemId === idx} 
                           onToggle={() => toggleItem(idx)} 
                         />
+                       ) : (
+                        <MenuItemSimple key={`r-${i}`} item={item} lang={lang} />
                        )
                      })}
                    </div>
@@ -520,13 +554,17 @@
              ) : (
                <div className="flex flex-col">
                   {data.items.map((item, i) => (
-                    <MenuItemRow 
-                      key={i} 
-                      item={item} 
-                      lang={lang} 
-                      isOpen={openItemId === i} 
-                      onToggle={() => toggleItem(i)} 
-                    />
+                    isSets ? (
+                      <MenuItemRow 
+                        key={i} 
+                        item={item} 
+                        lang={lang} 
+                        isOpen={openItemId === i} 
+                        onToggle={() => toggleItem(i)} 
+                      />
+                    ) : (
+                      <MenuItemSimple key={i} item={item} lang={lang} />
+                    )
                   ))}
                </div>
              )}
@@ -539,14 +577,18 @@
     const Intro = ({ onComplete }) => {
       const [opacity, setOpacity] = useState(1);
       const [mounted, setMounted] = useState(true);
+      const hasRun = useRef(false);
 
       useEffect(() => {
+        if (hasRun.current) return;
+        hasRun.current = true;
+
         const timer = setTimeout(() => {
           setOpacity(0);
           setTimeout(() => {
             setMounted(false);
             onComplete();
-          }, 1000); 
+          }, 800); 
         }, 1500);
         return () => clearTimeout(timer);
       }, [onComplete]);
@@ -558,12 +600,12 @@
           className="fixed inset-0 z-[9999] bg-ink flex flex-col items-center justify-center transition-opacity duration-1000"
           style={{ opacity }}
         >
-          <div className="relative text-center p-8">
-            <h1 className="font-cinzel text-6xl md:text-9xl text-white font-bold tracking-[0.2em] mb-4 scale-100 animate-[expand_1s_ease-out]">
+          <div className="relative text-center p-8 flex flex-col items-center">
+            <h1 className="font-cinzel text-6xl md:text-9xl text-white font-bold tracking-[0.2em] mb-6 animate-slide-up">
               KS
             </h1>
-            <div className="h-[2px] bg-gold w-0 animate-[width_1s_ease-out_forwards] mx-auto mb-4" style={{width: '100px'}}></div>
-            <div className="text-gold uppercase tracking-[0.5em] font-rajdhani text-sm animate-fade-in">
+            <div className="h-[2px] bg-gold mb-6 animate-grow-line"></div>
+            <div className="text-gold uppercase tracking-[0.5em] font-rajdhani text-sm animate-fade-in" style={{animationDelay: '0.4s', opacity: 0, animationFillMode: 'forwards'}}>
               CINEMATIC DINING
             </div>
           </div>
@@ -581,36 +623,30 @@
 
       const handleSelect = (l) => {
         setOpacity(0);
-        setTimeout(() => onSelect(l), 800);
+        setTimeout(() => onSelect(l), 500);
       };
 
       return (
         <div 
-          className="fixed inset-0 z-[9990] bg-ink flex flex-col items-center justify-center transition-opacity duration-1000"
+          className="fixed inset-0 z-[9990] bg-ink flex flex-col items-center justify-center transition-opacity duration-700"
           style={{ opacity }}
         >
-          <div className="relative z-10 text-center p-8 w-full max-w-lg">
-             <div className="w-16 h-16 border border-gold text-gold flex items-center justify-center font-cinzel text-xl mx-auto mb-12 animate-fade-in">KS</div>
+          <div className="relative z-10 text-center p-8 w-full max-w-lg flex flex-col items-center">
+             <div className="w-16 h-16 border border-gold text-gold flex items-center justify-center font-cinzel text-xl mx-auto mb-16 animate-fade-in">KS</div>
              
-             <h2 className="font-cinzel text-2xl md:text-3xl text-white tracking-[0.3em] mb-12 font-light">
-               SELECT LANGUAGE
-             </h2>
-
-             <div className="flex flex-col md:flex-row gap-6 justify-center w-full">
+             <div className="flex gap-8 justify-center w-full">
                <button 
                  onClick={() => handleSelect('pl')}
-                 className="flex-1 group relative overflow-hidden px-8 py-4 border border-white/20 hover:border-gold transition-all duration-500"
+                 className="w-40 h-14 border border-white/20 hover:border-gold hover:bg-gold/10 transition-all duration-500 flex items-center justify-center group"
                >
-                 <div className="absolute inset-0 bg-gold/0 group-hover:bg-gold/10 transition-colors duration-500"></div>
-                 <span className="font-rajdhani text-white text-lg tracking-[0.2em] group-hover:text-gold transition-colors relative z-10">POLSKI</span>
+                 <span className="font-rajdhani text-white text-xl tracking-[0.2em] group-hover:text-gold transition-colors">PL</span>
                </button>
 
                <button 
                  onClick={() => handleSelect('en')}
-                 className="flex-1 group relative overflow-hidden px-8 py-4 border border-white/20 hover:border-gold transition-all duration-500"
+                 className="w-40 h-14 border border-white/20 hover:border-gold hover:bg-gold/10 transition-all duration-500 flex items-center justify-center group"
                >
-                 <div className="absolute inset-0 bg-gold/0 group-hover:bg-gold/10 transition-colors duration-500"></div>
-                 <span className="font-rajdhani text-white text-lg tracking-[0.2em] group-hover:text-gold transition-colors relative z-10">ENGLISH</span>
+                 <span className="font-rajdhani text-white text-xl tracking-[0.2em] group-hover:text-gold transition-colors">EN</span>
                </button>
              </div>
           </div>
@@ -706,13 +742,15 @@
                       <div className="grid md:grid-cols-2 gap-12 mb-20 text-left md:text-center font-rajdhani text-gray-400">
                           <div>
                             <h5 className="text-white font-cinzel tracking-widest mb-4">{UI_TEXT.location_label[lang]}</h5>
-                            <p>Krupówki 38A, Zakopane</p>
-                            <p>{UI_TEXT.poland[lang]}</p>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Krupówki+38A,+Zakopane" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors block leading-relaxed">
+                              <p>Krupówki 38A, Zakopane</p>
+                              <p>{UI_TEXT.poland[lang]}</p>
+                            </a>
                           </div>
                           <div>
                             <h5 className="text-white font-cinzel tracking-widest mb-4">{UI_TEXT.contact_label[lang]}</h5>
-                            <p>+48 502 525 544</p>
-                            <p>@ksiestwosushi</p>
+                            <a href="tel:+48502525544" className="hover:text-gold transition-colors block mb-1">+48 502 525 544</a>
+                            <a href="https://instagram.com/ksiestwosushi" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors block">@ksiestwosushi</a>
                           </div>
                       </div>
 
