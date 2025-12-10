@@ -56,7 +56,7 @@
 
   <style>
     body {
-      background-color: #F0EFEA;
+      background-color: #0F0F0F; /* Default to dark to match intro/lang */
       color: #0F0F0F;
       overflow-x: hidden;
     }
@@ -84,6 +84,15 @@
     }
   </style>
 <link rel="stylesheet" href="/index.css">
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/"
+  }
+}
+</script>
 </head>
 <body>
   <div id="root"></div>
@@ -526,8 +535,8 @@
       );
     };
 
-    // 3. Intro & App
-    const Intro = ({ onComplete, lang }) => {
+    // 3. Intro & Selection
+    const Intro = ({ onComplete }) => {
       const [opacity, setOpacity] = useState(1);
       const [mounted, setMounted] = useState(true);
 
@@ -546,126 +555,200 @@
 
       return (
         <div 
-          className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-1000"
+          className="fixed inset-0 z-[9999] bg-ink flex flex-col items-center justify-center transition-opacity duration-1000"
           style={{ opacity }}
         >
           <div className="relative text-center p-8">
-            <h1 className="font-cinzel text-6xl md:text-9xl text-ink font-bold tracking-[0.2em] mb-4 scale-100 animate-[expand_1s_ease-out]">
+            <h1 className="font-cinzel text-6xl md:text-9xl text-white font-bold tracking-[0.2em] mb-4 scale-100 animate-[expand_1s_ease-out]">
               KS
             </h1>
             <div className="h-[2px] bg-gold w-0 animate-[width_1s_ease-out_forwards] mx-auto mb-4" style={{width: '100px'}}></div>
             <div className="text-gold uppercase tracking-[0.5em] font-rajdhani text-sm animate-fade-in">
-              {UI_TEXT.tagline[lang] || 'Cinematic Dining'}
+              CINEMATIC DINING
             </div>
           </div>
         </div>
       );
     };
 
+    const LanguageSelection = ({ onSelect }) => {
+      const [opacity, setOpacity] = useState(0);
+      
+      useEffect(() => {
+        // Fade in
+        setTimeout(() => setOpacity(1), 50);
+      }, []);
+
+      const handleSelect = (l) => {
+        setOpacity(0);
+        setTimeout(() => onSelect(l), 800);
+      };
+
+      return (
+        <div 
+          className="fixed inset-0 z-[9990] bg-ink flex flex-col items-center justify-center transition-opacity duration-1000"
+          style={{ opacity }}
+        >
+          <div className="relative z-10 text-center p-8 w-full max-w-lg">
+             <div className="w-16 h-16 border border-gold text-gold flex items-center justify-center font-cinzel text-xl mx-auto mb-12 animate-fade-in">KS</div>
+             
+             <h2 className="font-cinzel text-2xl md:text-3xl text-white tracking-[0.3em] mb-12 font-light">
+               SELECT LANGUAGE
+             </h2>
+
+             <div className="flex flex-col md:flex-row gap-6 justify-center w-full">
+               <button 
+                 onClick={() => handleSelect('pl')}
+                 className="flex-1 group relative overflow-hidden px-8 py-4 border border-white/20 hover:border-gold transition-all duration-500"
+               >
+                 <div className="absolute inset-0 bg-gold/0 group-hover:bg-gold/10 transition-colors duration-500"></div>
+                 <span className="font-rajdhani text-white text-lg tracking-[0.2em] group-hover:text-gold transition-colors relative z-10">POLSKI</span>
+               </button>
+
+               <button 
+                 onClick={() => handleSelect('en')}
+                 className="flex-1 group relative overflow-hidden px-8 py-4 border border-white/20 hover:border-gold transition-all duration-500"
+               >
+                 <div className="absolute inset-0 bg-gold/0 group-hover:bg-gold/10 transition-colors duration-500"></div>
+                 <span className="font-rajdhani text-white text-lg tracking-[0.2em] group-hover:text-gold transition-colors relative z-10">ENGLISH</span>
+               </button>
+             </div>
+          </div>
+        </div>
+      );
+    };
+
     const App = () => {
-      const [booted, setBooted] = useState(false);
+      // States: 'intro' -> 'lang' -> 'app'
+      const [phase, setPhase] = useState('intro');
       const [lang, setLang] = useState('pl');
       const [showInfo, setShowInfo] = useState(false);
 
+      useEffect(() => {
+        if (phase === 'app') {
+            document.body.style.backgroundColor = '#F0EFEA'; // Alabaster
+            document.documentElement.classList.remove('overflow-hidden');
+        } else {
+            document.body.style.backgroundColor = '#0F0F0F'; // Dark
+            document.documentElement.classList.add('overflow-hidden');
+        }
+      }, [phase]);
+
+      const handleIntroComplete = () => {
+          setPhase('lang');
+      };
+
+      const handleLangSelect = (l) => {
+          setLang(l);
+          setPhase('app');
+      };
+
       return (
         <React.Fragment>
-          <Intro onComplete={() => setBooted(true)} lang={lang} />
+          {phase === 'intro' && <Intro onComplete={handleIntroComplete} />}
           
-          <div className={`min-h-screen bg-alabaster transition-opacity duration-1000 ${booted ? 'opacity-100' : 'opacity-0'}`}>
+          {phase === 'lang' && <LanguageSelection onSelect={handleLangSelect} />}
+
+          {/* Main App Content */}
+          <div className={`min-h-screen bg-alabaster transition-opacity duration-1000 ${phase === 'app' ? 'opacity-100 relative' : 'opacity-0 fixed inset-0 pointer-events-none'}`}>
             
-            <DynamicIsland lang={lang} setLang={setLang} onOpenInfo={() => setShowInfo(true)} />
+            {phase === 'app' && (
+             <React.Fragment>
+                <DynamicIsland lang={lang} setLang={setLang} onOpenInfo={() => setShowInfo(true)} />
 
-            {/* HERO LANDING */}
-            <div className="h-screen w-full relative flex items-center justify-center overflow-hidden">
-               <div className="absolute inset-0 bg-ink">
-                  <img 
-                     src="images/zestawy.jpg" 
-                     className="w-full h-full object-cover opacity-40 mix-blend-overlay"
-                     alt="Hero"
-                  />
-               </div>
-               <div className="relative z-10 text-center px-6">
-                  <h1 className="font-cinzel text-4xl md:text-7xl text-white font-bold tracking-[0.15em] mb-6 drop-shadow-2xl">
-                     KSIĘSTWO
-                     <span className="block text-gold text-2xl md:text-4xl mt-4 tracking-[0.3em] font-normal border-t border-b border-gold/30 py-4 mx-auto max-w-2xl">
-                       SUSHI & RAMEN
-                     </span>
-                  </h1>
-                  <p className="font-rajdhani text-gray-300 tracking-widest uppercase text-sm md:text-base max-w-lg mx-auto leading-loose pt-6 whitespace-pre-line">
-                     {UI_TEXT.hero_subtitle[lang]}
-                  </p>
-                  <button 
-                     onClick={() => document.getElementById('sets')?.scrollIntoView({ behavior: 'smooth' })}
-                     className="mt-12 px-8 py-4 border border-gold text-gold font-cinzel hover:bg-gold hover:text-ink transition-all duration-500 uppercase tracking-widest text-sm"
-                  >
-                     {UI_TEXT.explore_btn[lang]}
-                  </button>
-               </div>
-               
-               <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-gold/50">
-                  ↓
-               </div>
-            </div>
-
-            <main className="relative z-10 w-full bg-white">
-                {DATA.map((section, idx) => (
-                  <MenuSection 
-                    key={section.id} 
-                    data={section} 
-                    lang={lang} 
-                    index={idx}
-                  />
-                ))}
-            </main>
-
-            <footer className="bg-ink text-white pt-32 pb-16 px-6">
-               <div className="max-w-4xl mx-auto text-center">
-                  <div className="w-16 h-16 border border-gold text-gold flex items-center justify-center font-cinzel text-2xl mx-auto mb-10">KS</div>
+                {/* HERO LANDING */}
+                <div className="h-screen w-full relative flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 bg-ink">
+                      <img 
+                        src="images/zestawy.jpg" 
+                        className="w-full h-full object-cover opacity-40 mix-blend-overlay"
+                        alt="Hero"
+                      />
+                  </div>
+                  <div className="relative z-10 text-center px-6">
+                      <h1 className="font-cinzel text-4xl md:text-7xl text-white font-bold tracking-[0.15em] mb-6 drop-shadow-2xl">
+                        KSIĘSTWO
+                        <span className="block text-gold text-2xl md:text-4xl mt-4 tracking-[0.3em] font-normal border-t border-b border-gold/30 py-4 mx-auto max-w-2xl">
+                          SUSHI & RAMEN
+                        </span>
+                      </h1>
+                      <p className="font-rajdhani text-gray-300 tracking-widest uppercase text-sm md:text-base max-w-lg mx-auto leading-loose pt-6 whitespace-pre-line">
+                        {UI_TEXT.hero_subtitle[lang]}
+                      </p>
+                      <button 
+                        onClick={() => document.getElementById('sets')?.scrollIntoView({ behavior: 'smooth' })}
+                        className="mt-12 px-8 py-4 border border-gold text-gold font-cinzel hover:bg-gold hover:text-ink transition-all duration-500 uppercase tracking-widest text-sm"
+                      >
+                        {UI_TEXT.explore_btn[lang]}
+                      </button>
+                  </div>
                   
-                  <div className="grid md:grid-cols-2 gap-12 mb-20 text-left md:text-center font-rajdhani text-gray-400">
-                      <div>
-                         <h5 className="text-white font-cinzel tracking-widest mb-4">{UI_TEXT.location_label[lang]}</h5>
-                         <p>Krupówki 38A, Zakopane</p>
-                         <p>{UI_TEXT.poland[lang]}</p>
-                      </div>
-                      <div>
-                         <h5 className="text-white font-cinzel tracking-widest mb-4">{UI_TEXT.contact_label[lang]}</h5>
-                         <p>+48 502 525 544</p>
-                         <p>@ksiestwosushi</p>
-                      </div>
-                  </div>
-
-                  <div className="text-[10px] text-gray-700 font-rajdhani tracking-[0.3em] uppercase border-t border-white/5 pt-10">
-                     © 2024 Księstwo Sushi & Ramen. {UI_TEXT.copyright[lang]}
-                  </div>
-               </div>
-            </footer>
-
-            {showInfo && (
-              <div 
-                className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex justify-center items-center p-6 transition-all"
-                onClick={() => setShowInfo(false)}
-              >
-                <div 
-                  className="bg-paper max-w-xl w-full p-12 relative shadow-2xl border border-gold/20"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <button 
-                    className="absolute top-6 right-6 text-3xl text-gray-300 hover:text-gold transition-colors leading-none"
-                    onClick={() => setShowInfo(false)}
-                  >
-                    &times;
-                  </button>
-
-                  <h2 className="font-cinzel text-3xl text-ink mb-8 text-center tracking-widest">{ALLERGIES.title[lang]}</h2>
-                  <div className="font-rajdhani text-gray-600 leading-8 text-lg mb-8 text-justify font-light">
-                     {ALLERGIES.text[lang]}
-                  </div>
-                  <div className="p-4 bg-alabaster text-center text-xs text-gold-dark font-bold uppercase tracking-[0.2em] border border-gold/10">
-                      {ALLERGIES.service[lang]}
+                  <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-gold/50">
+                      ↓
                   </div>
                 </div>
-              </div>
+
+                <main className="relative z-10 w-full bg-white">
+                    {DATA.map((section, idx) => (
+                      <MenuSection 
+                        key={section.id} 
+                        data={section} 
+                        lang={lang} 
+                        index={idx}
+                      />
+                    ))}
+                </main>
+
+                <footer className="bg-ink text-white pt-32 pb-16 px-6">
+                  <div className="max-w-4xl mx-auto text-center">
+                      <div className="w-16 h-16 border border-gold text-gold flex items-center justify-center font-cinzel text-2xl mx-auto mb-10">KS</div>
+                      
+                      <div className="grid md:grid-cols-2 gap-12 mb-20 text-left md:text-center font-rajdhani text-gray-400">
+                          <div>
+                            <h5 className="text-white font-cinzel tracking-widest mb-4">{UI_TEXT.location_label[lang]}</h5>
+                            <p>Krupówki 38A, Zakopane</p>
+                            <p>{UI_TEXT.poland[lang]}</p>
+                          </div>
+                          <div>
+                            <h5 className="text-white font-cinzel tracking-widest mb-4">{UI_TEXT.contact_label[lang]}</h5>
+                            <p>+48 502 525 544</p>
+                            <p>@ksiestwosushi</p>
+                          </div>
+                      </div>
+
+                      <div className="text-[10px] text-gray-700 font-rajdhani tracking-[0.3em] uppercase border-t border-white/5 pt-10">
+                        © 2024 Księstwo Sushi & Ramen. {UI_TEXT.copyright[lang]}
+                      </div>
+                  </div>
+                </footer>
+
+                {showInfo && (
+                  <div 
+                    className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex justify-center items-center p-6 transition-all"
+                    onClick={() => setShowInfo(false)}
+                  >
+                    <div 
+                      className="bg-paper max-w-xl w-full p-12 relative shadow-2xl border border-gold/20"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button 
+                        className="absolute top-6 right-6 text-3xl text-gray-300 hover:text-gold transition-colors leading-none"
+                        onClick={() => setShowInfo(false)}
+                      >
+                        &times;
+                      </button>
+
+                      <h2 className="font-cinzel text-3xl text-ink mb-8 text-center tracking-widest">{ALLERGIES.title[lang]}</h2>
+                      <div className="font-rajdhani text-gray-600 leading-8 text-lg mb-8 text-justify font-light">
+                        {ALLERGIES.text[lang]}
+                      </div>
+                      <div className="p-4 bg-alabaster text-center text-xs text-gold-dark font-bold uppercase tracking-[0.2em] border border-gold/10">
+                          {ALLERGIES.service[lang]}
+                      </div>
+                    </div>
+                  </div>
+                )}
+             </React.Fragment>
             )}
           </div>
         </React.Fragment>
