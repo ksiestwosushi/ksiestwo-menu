@@ -201,6 +201,7 @@
                 <button onclick="switchLang('pl')" class="lang-btn-pl px-4 py-1.5 rounded-full text-[10px] font-bold transition-all uppercase tracking-wider text-white/60 cursor-pointer">PL</button>
                 <button onclick="switchLang('en')" class="lang-btn-en px-4 py-1.5 rounded-full text-[10px] font-bold transition-all uppercase tracking-wider text-white/60 cursor-pointer">EN</button>
              </div>
+             <!-- Info modal button kept for accessibility, though content is now also at bottom -->
              <button onclick="openInfoModal()" class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-gold hover:bg-gold hover:text-ink transition-colors cursor-pointer">!</button>
           </div>
         </div>
@@ -524,7 +525,7 @@
         `).join('');
 
         const main = document.getElementById('main-content');
-        main.innerHTML = _0x4f21.map((section, idx) => {
+        const sectionsHTML = _0x4f21.map((section, idx) => {
             const isSets = section.id === 'sets';
             const renderItem = (item) => {
                 if(isSets) {
@@ -619,6 +620,25 @@
             </section>
             `;
         }).join('');
+
+        const infoHTML = `
+          <div class="bg-alabaster border-t border-gray-200 py-16 px-6">
+              <div class="max-w-3xl mx-auto text-center">
+                  <h4 class="font-cinzel text-gold-dark text-lg mb-4 tracking-widest uppercase">
+                      ${ALLERGIES.title[currentLang]}
+                  </h4>
+                  <p class="font-rajdhani text-gray-600 text-sm leading-7 mb-8">
+                      ${ALLERGIES.text[currentLang]}
+                  </p>
+                   <div class="w-24 h-[1px] bg-gold/30 mx-auto mb-8"></div>
+                  <p class="font-rajdhani text-ink font-semibold text-sm tracking-wide uppercase">
+                      ${ALLERGIES.service[currentLang]}
+                  </p>
+              </div>
+          </div>
+        `;
+
+        main.innerHTML = sectionsHTML + infoHTML;
     }
     })();
   </script>
