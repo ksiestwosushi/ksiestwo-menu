@@ -286,7 +286,7 @@
       <button onclick="closeInfoModal()" class="absolute top-6 right-6 text-3xl text-gray-300 hover:text-gold transition-colors leading-none cursor-pointer">&times;</button>
       <h2 id="modal-title" class="font-cinzel text-3xl text-ink mb-8 text-center tracking-widest">Allergy Information</h2>
       <div id="modal-text" class="font-rajdhani text-gray-600 leading-8 text-lg mb-8 text-justify font-light"></div>
-      <div id="modal-service" class="p-4 bg-alabaster text-center text-xs text-gold-dark font-bold uppercase tracking-[0.2em] border border-gold/10"></div>
+     <div id="modal-service" class="hidden p-4 bg-alabaster text-center text-xs text-gold-dark font-bold uppercase tracking-[0.2em] border border-gold/10"></div>
     </div>
   </div>
 
@@ -311,7 +311,7 @@
     const ALLERGIES = {
       title: {en: 'Allergy Information', pl: 'Informacja o alergenach'},
       text: {en: 'According to the recipe, they may contain: gluten, cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame seeds, Philadelphia cream cheese, mayonnaise, sauces, edible gold.', pl: 'Zgodnie z recepturą mogą zawierać: gluten, ogórek, oshinko, kampyo, awokado, mango, melon, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'},
-      service: {en: 'We kindly inform you that we add a waiter service of 10% to the final bill.', pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.'}
+      service: {en: '', pl: ''}
     };
 
     // MINIFIED DATA TO DETER CASUAL THEFT
@@ -621,7 +621,7 @@
             `;
         }).join('');
 
-        const infoHTML = `
+  const infoHTML = `
           <div class="bg-alabaster border-t border-gray-200 py-16 px-6">
               <div class="max-w-3xl mx-auto text-center">
                   <h4 class="font-cinzel text-gold-dark text-lg mb-4 tracking-widest uppercase">
@@ -630,14 +630,10 @@
                   <p class="font-rajdhani text-gray-600 text-sm leading-7 mb-8">
                       ${ALLERGIES.text[currentLang]}
                   </p>
-                   <div class="w-24 h-[1px] bg-gold/30 mx-auto mb-8"></div>
-                  <p class="font-rajdhani text-ink font-semibold text-sm tracking-wide uppercase">
-                      ${ALLERGIES.service[currentLang]}
-                  </p>
               </div>
           </div>
         `;
-
+      
         main.innerHTML = sectionsHTML + infoHTML;
     }
     })();
