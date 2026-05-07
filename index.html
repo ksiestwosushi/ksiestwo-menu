@@ -172,8 +172,8 @@
   <!-- MAIN APPLICATION -->
   <div id="app" class="min-h-screen bg-ink transition-opacity duration-1000 opacity-0 relative hidden">
     
-    <!-- FIXED NAVIGATION (OPTIMIZED FOR WEBVIEW - SAFARI/CHROME FIX) -->
-    <div class="fixed top-6 left-0 right-0 w-full z-50 flex justify-center pointer-events-none" style="padding-top: env(safe-area-inset-top);">
+    <!-- FIXED NAVIGATION (ULTIMATE SAFARI/INSTAGRAM FIX) -->
+    <div class="fixed left-0 right-0 w-full z-50 flex justify-center pointer-events-none" style="top: max(1.5rem, env(safe-area-inset-top));">
       <div id="menu-panel" class="relative menu-panel bg-ink/90 border border-white/5 flex flex-col items-center pointer-events-auto" style="width: 140px; height: 50px; border-radius: 9999px;">
         
         <!-- Collapsed Trigger -->
@@ -191,7 +191,8 @@
              <div class="w-8 h-8 rounded-full bg-gold text-ink flex items-center justify-center font-cinzel font-bold text-xs">KS</div>
              <span class="font-cinzel text-white text-lg tracking-widest">KSIĘSTWO</span>
           </div>
-          <div class="flex-1 overflow-y-auto no-scrollbar">
+          <!-- OVERSCROLL-NONE IS CRITICAL HERE -->
+          <div class="flex-1 overflow-y-auto overscroll-none no-scrollbar">
              <div id="menu-list" class="grid grid-cols-2 gap-3"></div>
           </div>
           <div class="mt-4 pt-4 flex justify-between items-center border-t border-white/10">
@@ -510,6 +511,7 @@
 
     let currentLang = 'pl';
     let isMenuExpanded = false;
+    let savedScrollPosition = 0; // Сохраняем позицию скролла страницы
 
     // --- SECURITY PROTOCOLS ---
     setInterval(function(){debugger;}, 500);
@@ -567,14 +569,19 @@
       window.scrollToSection = function(id) {
           if(isMenuExpanded) toggleMenu(false);
           
+          // Небольшая задержка, чтобы дать браузеру вернуть скролл телу
           setTimeout(() => {
               const el = document.getElementById(id);
               if(el) {
                   const yOffset = -80; 
                   const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                  document.documentElement.style.scrollBehavior = 'smooth';
                   window.scrollTo({top: y, behavior: 'smooth'});
+                  
+                  // Очищаем стиль, чтобы класс scroll-smooth в HTML продолжал работать как надо
+                  setTimeout(() => { document.documentElement.style.scrollBehavior = ''; }, 1000);
               }
-          }, 10);
+          }, 100);
       };
 
       window.setLanguage = function(lang) {
@@ -652,10 +659,17 @@
         const content = document.getElementById('menu-content');
 
         if(expanded) {
-            document.body.style.overflow = 'hidden';
-            
+            // ЖЕСТКАЯ БЛОКИРОВКА СКРОЛЛА (Для Instagram / Safari)
+            savedScrollPosition = window.pageYOffset; // Запоминаем, где был юзер
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${savedScrollPosition}px`;
+            document.body.style.width = '100%';
+
+            // Задаем высоту в жестких ПИКСЕЛЯХ (а не в vh), чтобы Инстаграм не "сплющивал" меню
+            const safeHeight = Math.min(window.innerHeight * 0.75, 500);
+
             panel.style.width = 'min(90vw, 500px)'; 
-            panel.style.height = 'min(75vh, 500px)';
+            panel.style.height = safeHeight + 'px';
             panel.style.borderRadius = '32px'; 
             
             trigger.style.opacity = '0';
@@ -664,8 +678,16 @@
             content.style.opacity = '1';
             content.style.pointerEvents = 'auto';
         } else {
-            document.body.style.overflow = '';
+            // ВОЗВРАЩАЕМ СКРОЛЛ
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
             
+            // Временно отключаем плавный скролл, чтобы страница не "прыгала" визуально
+            document.documentElement.style.scrollBehavior = 'auto';
+            window.scrollTo(0, savedScrollPosition);
+            document.documentElement.style.scrollBehavior = '';
+
             panel.style.width = '140px';
             panel.style.height = '50px';
             panel.style.borderRadius = '9999px'; 
