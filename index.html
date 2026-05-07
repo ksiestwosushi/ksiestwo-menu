@@ -172,39 +172,40 @@
   <!-- MAIN APPLICATION -->
   <div id="app" class="min-h-screen bg-ink transition-opacity duration-1000 opacity-0 relative hidden">
     
-    <!-- FIXED NAVIGATION (OPTIMIZED FOR WEBVIEW) -->
-    <!-- Centered exactly using left-1/2 and -translate-x-1/2 to avoid pointer-events bugs -->
-    <div id="menu-panel" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 menu-panel bg-ink/90 border border-white/5 flex flex-col items-center" style="margin-top: env(safe-area-inset-top);">
-      
-      <!-- Collapsed Trigger -->
-      <div id="menu-trigger" class="absolute top-0 left-0 w-full h-[50px] flex items-center justify-center cursor-pointer z-50 group transition-all duration-300">
-        <div class="flex items-center gap-3 group-hover:scale-105 transition-transform duration-500 ease-out">
-          <div class="w-2 h-2 rounded-full bg-gold animate-pulse"></div>
-          <span class="font-cinzel font-bold text-xs tracking-[0.2em] text-white group-hover:text-gold transition-colors">MENU</span>
+    <!-- FIXED NAVIGATION (OPTIMIZED FOR WEBVIEW - SAFARI/CHROME FIX) -->
+    <div class="fixed top-6 left-0 right-0 w-full z-50 flex justify-center pointer-events-none" style="padding-top: env(safe-area-inset-top);">
+      <div id="menu-panel" class="relative menu-panel bg-ink/90 border border-white/5 flex flex-col items-center pointer-events-auto" style="width: 140px; height: 50px; border-radius: 9999px;">
+        
+        <!-- Collapsed Trigger -->
+        <div id="menu-trigger" class="absolute top-0 left-0 w-full h-[50px] flex items-center justify-center cursor-pointer z-50 group transition-all duration-300">
+          <div class="flex items-center gap-3 group-hover:scale-105 transition-transform duration-500 ease-out">
+            <div class="w-2 h-2 rounded-full bg-gold animate-pulse"></div>
+            <span class="font-cinzel font-bold text-xs tracking-[0.2em] text-white group-hover:text-gold transition-colors">MENU</span>
+          </div>
         </div>
-      </div>
 
-      <!-- Expanded Content -->
-      <div id="menu-content" class="w-full h-full pt-[60px] pb-6 px-6 opacity-0 transition-opacity duration-300 flex flex-col pointer-events-none">
-        <button id="close-menu" class="absolute top-4 right-6 text-white/50 hover:text-white text-xl z-50 transition-colors cursor-pointer">&times;</button>
-        <div class="flex items-center gap-4 border-b border-white/10 pb-4 mb-4 mt-2">
-           <div class="w-8 h-8 rounded-full bg-gold text-ink flex items-center justify-center font-cinzel font-bold text-xs">KS</div>
-           <span class="font-cinzel text-white text-lg tracking-widest">KSIĘSTWO</span>
-        </div>
-        <div class="flex-1 overflow-y-auto no-scrollbar">
-           <div id="menu-list" class="grid grid-cols-2 gap-3"></div>
-        </div>
-        <div class="mt-4 pt-4 flex justify-between items-center border-t border-white/10">
-           <div class="flex bg-white/10 rounded-full p-1 gap-1">
-              <button onclick="switchLang('pl')" class="lang-btn-pl px-4 py-1.5 rounded-full text-[10px] font-bold transition-all uppercase tracking-wider text-white/60 cursor-pointer">PL</button>
-              <button onclick="switchLang('en')" class="lang-btn-en px-4 py-1.5 rounded-full text-[10px] font-bold transition-all uppercase tracking-wider text-white/60 cursor-pointer">EN</button>
-           </div>
-           <button onclick="openInfoModal()" class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-gold hover:bg-gold hover:text-ink transition-colors cursor-pointer">!</button>
+        <!-- Expanded Content -->
+        <div id="menu-content" class="w-full h-full pt-[60px] pb-6 px-6 opacity-0 transition-opacity duration-300 flex flex-col pointer-events-none">
+          <button id="close-menu" class="absolute top-4 right-6 text-white/50 hover:text-white text-xl z-50 transition-colors cursor-pointer">&times;</button>
+          <div class="flex items-center gap-4 border-b border-white/10 pb-4 mb-4 mt-2">
+             <div class="w-8 h-8 rounded-full bg-gold text-ink flex items-center justify-center font-cinzel font-bold text-xs">KS</div>
+             <span class="font-cinzel text-white text-lg tracking-widest">KSIĘSTWO</span>
+          </div>
+          <div class="flex-1 overflow-y-auto no-scrollbar">
+             <div id="menu-list" class="grid grid-cols-2 gap-3"></div>
+          </div>
+          <div class="mt-4 pt-4 flex justify-between items-center border-t border-white/10">
+             <div class="flex bg-white/10 rounded-full p-1 gap-1">
+                <button onclick="switchLang('pl')" class="lang-btn-pl px-4 py-1.5 rounded-full text-[10px] font-bold transition-all uppercase tracking-wider text-white/60 cursor-pointer">PL</button>
+                <button onclick="switchLang('en')" class="lang-btn-en px-4 py-1.5 rounded-full text-[10px] font-bold transition-all uppercase tracking-wider text-white/60 cursor-pointer">EN</button>
+             </div>
+             <button onclick="openInfoModal()" class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-gold hover:bg-gold hover:text-ink transition-colors cursor-pointer">!</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- SHARED FIXED BACKGROUND (HERO + SPECIALS) -->
+    <!-- SHARED FIXED BACKGROUND -->
     <div class="fixed inset-0 z-0 bg-ink pointer-events-none">
         <div class="absolute inset-0 z-20"></div>
         <img id="hero-img" src="" class="w-full h-full object-cover opacity-40 mix-blend-overlay relative z-0" alt="Hero Background">
@@ -318,7 +319,7 @@
         id:'specials',
         title:{en:"Chef's Specials",pl:'Szef Kuchni Poleca'},
         img:'',
-        desc:{en:'Unique dishes highly recommended by our Chef.',pl:'Wyjątkowe dania polecane przez нашего Szefa Kuchni.'},
+        desc:{en:'Unique dishes highly recommended by our Chef.',pl:'Wyjątkowe dania polecane przez naszego Szefa Kuchni.'},
         items:[
           {
             name:{en:'Korean spicy noodle',pl:'Koreańskie pikantne noodle'},
@@ -438,7 +439,7 @@
         id:'hosomaki',
         title:{en:'Hosomaki (6 pcs)',pl:'Hosomaki (6 szt.)'},
         img:PHOTOS_PATH+'hosomaki.jpg',
-        desc:{en:'Classic, minimalist rolls with a single ingredient, celebrating the purity of flavor.',pl:'Subtelne i minimalistyczne. Cienkie rolki z ryżem wewnątrz, skrywające один, wyrazisty składnik.'},
+        desc:{en:'Classic, minimalist rolls with a single ingredient, celebrating the purity of flavor.',pl:'Subtelne i minimalistyczne. Cienkie rolki z ryżem wewnątrz, skrywające jeden, wyrazisty składnik.'},
         items:[
           {name:{en:'Vegetable',pl:'Warzywne'},price:'35 zł',desc:{en:'to choose from: cucumber, avocado, oshinko',pl:'do wyboru: ogórek, avocado, oshinko'}},
           {name:{en:'Fish',pl:'Rybne'},price:'40 zł',desc:{en:'to choose from: salmon, tuna, butterfish',pl:'do wyboru: łosoś, tuńczyk, maślana'}}
@@ -448,10 +449,10 @@
         id:'futomaki',
         title:{en:'Futomaki (4 pcs)',pl:'Futomaki (4 szt.)'},
         img:PHOTOS_PATH+'futomaki.jpg',
-        desc:{en:'Thick rolls with nori outside.',pl:'Grube rolki z nori на zewnątrz.'},
+        desc:{en:'Thick rolls with nori outside.',pl:'Grube rolki z nori na zewnątrz.'},
         items:[
           {name:{en:'Sake Philadelphia',pl:'Sake Philadelphia'},price:'50 zł',desc:{en:'salmon with philadelphia cheese',pl:'łosoś z serkiem philadelphia'}},
-          {name:{en:'Maguro Negi Togarashi',pl:'Maguro Negi Togarashi'},price:'53 zł',desc:{en:'tuna with spicy leek',pl:'tuńczyk z porem на ostro'}},
+          {name:{en:'Maguro Negi Togarashi',pl:'Maguro Negi Togarashi'},price:'53 zł',desc:{en:'tuna with spicy leek',pl:'tuńczyk z porem na ostro'}},
           {name:{en:'Ohio Spice Mango',pl:'Ohio Spice Mango'},price:'50 zł',desc:{en:'spicy butterfish with mango',pl:'pikantna maślana z mango'}},
           {name:{en:'Ebi Tempura',pl:'Ebi Tempura'},price:'50 zł',desc:{en:'spicy shrimps',pl:'krewetki w tempurze'}},
           {name:{en:'Unagi Kabayaki',pl:'Unagi Kabayaki'},price:'55 zł',desc:{en:'grilled eel with kabayaki sauce',pl:'grillowany węgorz w sosie kabayaki'}},
@@ -462,7 +463,7 @@
         id:'uramaki',
         title:{en:'Uramaki & Tempura',pl:'Uramaki & Tempura'},
         img:PHOTOS_PATH+'tempura.jpg',
-        desc:{en:'Our selection of Uramaki (inside-out rolls) and crispy Tempura Uramaki.',pl:'Nasz wybór Uramaki (rolek ryżem на zewnątrz) oraz chrupiących Uramaki w Tempurze.'},
+        desc:{en:'Our selection of Uramaki (inside-out rolls) and crispy Tempura Uramaki.',pl:'Nasz wybór Uramaki (rolek ryżem na zewnątrz) oraz chrupiących Uramaki w Tempurze.'},
         isSplit:true,
         items:[
           {name:{en:'Sake Philadelphia',pl:'Sake Philadelphia'},price:'55 zł',desc:{en:'salmon with philadelphia cheese',pl:'łosoś z serkiem philadelphia'}},
@@ -489,7 +490,7 @@
         id:'oyakomaki',
         title:{en:'Oyakomaki (2 pcs)',pl:'Oyakomaki (2 szt.)'},
         img:PHOTOS_PATH+'oyakomaki.jpg',
-        desc:{en:'Our specialty rolls, wrapped in fish instead of nori.',pl:'Nasze специальныe rolki, zawijane w rybę zamiast nori.'},
+        desc:{en:'Our specialty rolls, wrapped in fish instead of nori.',pl:'Nasze specjalne rolki, zawijane w rybę zamiast nori.'},
         items:[
           {name:{en:'Sake Ebi Tataki',pl:'Sake Ebi Tataki'},price:'44 zł',desc:{en:'chopped shrimps wrapped in salmon',pl:'siekane krewetki owijane w łososia'}},
           {name:{en:'Maguro Sake Ikura',pl:'Maguro Sake Ikura'},price:'50 zł',desc:{en:'salmon caviar wrapped in tuna',pl:'kawior z łososia owijany tuńczykiem'}},
@@ -553,6 +554,7 @@
       setMenuState(false);
 
       trigger.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         if(!isMenuExpanded) toggleMenu(true);
       });
@@ -563,13 +565,16 @@
       });
 
       window.scrollToSection = function(id) {
-          const el = document.getElementById(id);
-          if(el) {
-              const yOffset = -80; 
-              const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-              window.scrollTo({top: y, behavior: 'smooth'});
-              if(isMenuExpanded) toggleMenu(false);
-          }
+          if(isMenuExpanded) toggleMenu(false);
+          
+          setTimeout(() => {
+              const el = document.getElementById(id);
+              if(el) {
+                  const yOffset = -80; 
+                  const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                  window.scrollTo({top: y, behavior: 'smooth'});
+              }
+          }, 10);
       };
 
       window.setLanguage = function(lang) {
@@ -647,8 +652,10 @@
         const content = document.getElementById('menu-content');
 
         if(expanded) {
+            document.body.style.overflow = 'hidden';
+            
             panel.style.width = 'min(90vw, 500px)'; 
-            panel.style.height = '500px';
+            panel.style.height = 'min(75vh, 500px)';
             panel.style.borderRadius = '32px'; 
             
             trigger.style.opacity = '0';
@@ -657,6 +664,8 @@
             content.style.opacity = '1';
             content.style.pointerEvents = 'auto';
         } else {
+            document.body.style.overflow = '';
+            
             panel.style.width = '140px';
             panel.style.height = '50px';
             panel.style.borderRadius = '9999px'; 
