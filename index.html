@@ -307,8 +307,8 @@
       hero_subtitle: {en: "Experience the art of Japanese cuisine \n Reimagined for the modern era.", pl: "Poznaj sztukę japońskiej kuchni \n Stworzoną na nowo dla współczesności."},
       explore_btn: {en: "Explore Menu", pl: "Odkryj Menu"},
       description_label: {en: "Description", pl: "Opis"},
-      uramaki_title: {en: "URAMAKI", pl: "URAMAKI"},
-      tempura_title: {en: "TEMPURA URAMAKI", pl: "URAMAKI W TEMPURZE"},
+      uramaki_title: {en: "URAMAKI (8 pcs)", pl: "URAMAKI (8 szt.)"},
+      tempura_title: {en: "TEMPURA URAMAKI (8 pcs)", pl: "URAMAKI W TEMPURZE (8 szt.)"},
       location_label: {en: "LOCATION", pl: "LOKALIZACJA"},
       contact_label: {en: "CONTACT", pl: "KONTAKT"},
       poland: {en: "Poland", pl: "Polska"}
@@ -467,7 +467,7 @@
       },
       {
         id:'uramaki',
-        title:{en:'Uramaki & Tempura',pl:'Uramaki & Tempura'},
+        title:{en:'Uramaki & Tempura (8 pcs)',pl:'Uramaki & Tempura (8 szt.)'},
         img:PHOTOS_PATH+'tempura.jpg',
         desc:{en:'Our selection of Uramaki (inside-out rolls) and crispy Tempura Uramaki.',pl:'Nasz wybór Uramaki (rolek ryżem na zewnątrz) oraz chrupiących Uramaki w Tempurze.'},
         isSplit:true,
@@ -740,6 +740,7 @@
         const sectionsHTML = _0x4f21.map((section, idx) => {
             const isSets = section.id === 'sets';
             const isSpecials = section.id === 'specials';
+            const isLast = idx === _0x4f21.length - 1;
             
             const renderItem = (item, dark = false) => {
                 if(isSets) {
