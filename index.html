@@ -36,6 +36,7 @@
             'slide-up': 'slideUp 1.0s cubic-bezier(0.16, 1, 0.3, 1) forwards',
             'grow-line': 'growLine 1.0s ease-out forwards',
             'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'scroll-down': 'scrollDown 2s cubic-bezier(0.4, 0, 0.2, 1) infinite',
           },
           keyframes: {
             fadeIn: {
@@ -49,6 +50,12 @@
             growLine: {
               '0%': { width: '0' },
               '100%': { width: '100px' },
+            },
+            scrollDown: {
+              '0%': { transform: 'translateY(-100%)', opacity: '0' },
+              '30%': { opacity: '1' },
+              '70%': { opacity: '1' },
+              '100%': { transform: 'translateY(100%)', opacity: '0' },
             }
           }
         }
@@ -226,9 +233,11 @@
                 <!-- Text injected by JS -->
               </p>
           </div>
-          <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce z-20 cursor-pointer text-gold/50 hover:text-gold transition-colors" onclick="scrollToSection('specials')">
-              <span class="text-xs uppercase tracking-[0.3em] font-rajdhani mb-2">Scroll</span>
-              <span class="text-xl">↓</span>
+          <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center z-20 cursor-pointer group" onclick="scrollToSection('specials')">
+              <span class="text-[10px] uppercase tracking-[0.3em] font-rajdhani mb-4 text-gray-400 group-hover:text-gold transition-colors duration-300">Scroll</span>
+              <div class="w-[2px] h-16 bg-white/10 relative overflow-hidden rounded-full">
+                 <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-gold to-transparent animate-scroll-down"></div>
+              </div>
           </div>
       </div>
 
