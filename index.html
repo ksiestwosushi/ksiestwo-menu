@@ -204,7 +204,7 @@
     </div>
 
     <!-- SHARED FIXED BACKGROUND -->
-    <div class="fixed inset-0 z-0 bg-ink pointer-events-none">
+    <div id="fixed-bg" class="fixed top-0 left-0 w-full h-screen z-0 bg-ink pointer-events-none" style="transform: translateZ(0);">
         <div class="absolute inset-0 z-20"></div>
         <img id="hero-img" src="" class="w-full h-full object-cover opacity-40 mix-blend-overlay relative z-0" alt="Hero Background">
         <div class="absolute inset-0 bg-gradient-to-b from-transparent via-ink/50 to-ink z-10"></div>
@@ -225,11 +225,11 @@
               <p id="hero-subtitle" class="font-rajdhani text-gray-300 tracking-widest uppercase text-sm md:text-base max-w-lg mx-auto leading-loose pt-6 whitespace-pre-line">
                 <!-- Text injected by JS -->
               </p>
-              <button onclick="scrollToSection('specials')" id="hero-btn" class="mt-12 px-8 py-4 border border-gold text-gold font-cinzel hover:bg-gold hover:text-ink transition-all duration-500 uppercase tracking-widest text-sm cursor-pointer relative z-30">
-                Explore
-              </button>
           </div>
-          <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-gold/50 text-2xl z-20 cursor-pointer" onclick="scrollToSection('specials')">↓</div>
+          <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce z-20 cursor-pointer text-gold/50 hover:text-gold transition-colors" onclick="scrollToSection('specials')">
+              <span class="text-xs uppercase tracking-[0.3em] font-rajdhani mb-2">Scroll</span>
+              <span class="text-xl">↓</span>
+          </div>
       </div>
 
       <!-- MAIN CONTENT AREA -->
@@ -511,6 +511,12 @@
     let savedScrollPosition = 0;
 
     function initApp() {
+      const bg = document.getElementById('fixed-bg');
+      if (bg) {
+          // Freeze height to prevent jumping when mobile browser UI shows/hides
+          bg.style.height = (window.innerHeight + 100) + 'px';
+      }
+
       setTimeout(() => {
         const intro = document.getElementById('intro');
         if (intro) {
@@ -555,10 +561,7 @@
               if(el) {
                   const yOffset = -80; 
                   const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-                  document.documentElement.style.scrollBehavior = 'smooth';
                   window.scrollTo({top: y, behavior: 'smooth'});
-                  
-                  setTimeout(() => { document.documentElement.style.scrollBehavior = ''; }, 1000);
               }
           }, 100);
       };
@@ -703,7 +706,6 @@
 
     function renderApp() {
         document.getElementById('hero-subtitle').textContent = UI_TEXT.hero_subtitle[currentLang];
-        document.getElementById('hero-btn').textContent = UI_TEXT.explore_btn[currentLang];
         document.getElementById('footer-loc').textContent = UI_TEXT.location_label[currentLang];
         document.getElementById('footer-contact').textContent = UI_TEXT.contact_label[currentLang];
         document.getElementById('footer-country').textContent = UI_TEXT.poland[currentLang];
