@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl" class="scroll-smooth">
+<html lang="pl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover" />
@@ -70,8 +70,7 @@
       -moz-osx-font-smoothing: grayscale;
     }
     
-    html.scroll-smooth {
-      scroll-behavior: smooth;
+    html {
       -webkit-overflow-scrolling: touch;
     }
     
@@ -99,9 +98,9 @@
       background-size: cover;
     }
     
-    @media (pointer: coarse), (hover: none) {
+    @media screen and (max-width: 1024px), (pointer: coarse), (hover: none) {
         .parallax-bg {
-            background-attachment: scroll;
+            background-attachment: scroll !important;
         }
     }
 
@@ -128,11 +127,35 @@
       filter: invert(76%) sepia(35%) saturate(859%) hue-rotate(5deg) brightness(92%) contrast(85%);
     }
   </style>
+
+  <!-- IN-APP BROWSER REDIRECT -->
+  <script>
+    (function() {
+      var ua = navigator.userAgent || navigator.vendor || window.opera;
+      var isInApp = /Instagram|FBAN|FBAV|Snapchat|Line|TikTok/i.test(ua);
+      var isAndroid = /Android/i.test(ua);
+      var isIOS = /iPhone|iPad|iPod/i.test(ua);
+      
+      if (isInApp) {
+        if (isAndroid) {
+          var urlNoProtocol = window.location.href.replace(/^https?:\/\//, '');
+          window.location.href = 'intent://' + urlNoProtocol + '#Intent;scheme=https;package=com.android.chrome;end';
+        } else if (isIOS) {
+          document.addEventListener('DOMContentLoaded', function() {
+            var overlay = document.createElement('div');
+            overlay.className = 'fixed inset-0 z-[999999] bg-ink flex flex-col items-center justify-center p-8 text-center';
+            overlay.innerHTML = '<div class="text-6xl mb-6 animate-bounce">↗️</div><h2 class="font-cinzel text-2xl text-gold mb-4 tracking-widest uppercase">OTWÓRZ W SAFARI</h2><p class="font-rajdhani text-gray-300 text-lg leading-relaxed max-w-sm">Przeglądarki w aplikacjach (np. Instagram) często ograniczają płynność animacji.<br><br>Jeśli zauważysz skoki podczas przewijania, kliknij ikonę <b>trzech kropek</b> w prawym górnym rogu i wybierz:<br><br><span class="text-gold font-bold">\"Otwórz w domyślnej przeglądarce\"</span>.</p>';
+            document.body.appendChild(overlay);
+          });
+        }
+      }
+    })();
+  </script>
 </head>
 <body class="antialiased" oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
 
   <!-- INTRO SCREEN -->
-  <div id="intro" class="fixed inset-0 z-[9999] bg-ink flex flex-col items-center justify-center transition-opacity duration-1000 min-h-[100svh]">
+  <div id="intro" class="fixed inset-0 z-[9999] bg-ink flex flex-col items-center justify-center transition-opacity duration-1000 min-h-screen">
     <div class="relative text-center p-8 flex flex-col items-center">
       <h1 class="font-cinzel text-6xl md:text-9xl text-white font-bold tracking-[0.2em] mb-6 animate-slide-up">
         KS
@@ -145,7 +168,7 @@
   </div>
 
   <!-- LANGUAGE SELECTION -->
-  <div id="lang-select" class="fixed inset-0 z-[9990] bg-ink flex flex-col items-center justify-center transition-opacity duration-700 opacity-0 pointer-events-none min-h-[100svh]">
+  <div id="lang-select" class="fixed inset-0 z-[9990] bg-ink flex flex-col items-center justify-center transition-opacity duration-700 opacity-0 pointer-events-none min-h-screen">
     <div class="relative z-10 text-center p-8 w-full max-w-lg flex flex-col items-center">
        <div class="w-16 h-16 border border-gold text-gold flex items-center justify-center font-cinzel text-xl mx-auto mb-16 animate-fade-in">KS</div>
        
@@ -162,13 +185,13 @@
   </div>
 
   <!-- MAIN APPLICATION -->
-  <div id="app" class="min-h-[100svh] bg-ink transition-opacity duration-1000 opacity-0 relative hidden">
+  <div id="app" class="min-h-screen bg-ink transition-opacity duration-1000 opacity-0 relative hidden">
     
     <!-- MENU OVERLAY -->
     <div id="menu-overlay" class="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]" onclick="toggleMenu(false)"></div>
 
     <!-- FIXED NAVIGATION RIGHT ALIGNED -->
-    <div class="fixed right-6 z-50 flex justify-end pointer-events-none" style="top: max(1.5rem, env(safe-area-inset-top));">
+    <div class="fixed right-6 top-6 z-50 flex justify-end pointer-events-none">
       <div id="menu-panel" class="relative menu-panel bg-ink/95 border border-white/10 flex flex-col items-center pointer-events-auto transform origin-top-right overflow-hidden shadow-2xl" style="width: 60px; height: 60px; border-radius: 30px;">
         
         <!-- Collapsed Trigger -->
@@ -215,7 +238,7 @@
     <div class="relative z-10 w-full flex flex-col">
       
       <!-- HERO TEXT -->
-      <div class="h-[100svh] w-full relative flex items-center justify-center overflow-hidden">
+      <div class="h-screen w-full relative flex items-center justify-center overflow-hidden">
           <div class="relative z-30 text-center px-6 mt-10">
               <h1 class="font-cinzel text-4xl md:text-7xl text-white font-bold tracking-[0.15em] mb-6 drop-shadow-2xl">
                 KSIĘSTWO
@@ -656,10 +679,7 @@
               overlay.style.pointerEvents = 'auto';
             }
 
-            savedScrollPosition = window.pageYOffset; 
-            document.body.style.position = 'fixed';
-            document.body.style.top = '-' + savedScrollPosition + 'px';
-            document.body.style.width = '100%';
+            document.body.style.overflow = 'hidden';
 
             const safeHeight = Math.min(window.innerHeight * 0.85, 600);
             const safeWidth = Math.min(window.innerWidth * 0.9, 380);
@@ -685,13 +705,7 @@
               overlay.style.pointerEvents = 'none';
             }
 
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.width = '';
-            
-            document.documentElement.style.scrollBehavior = 'auto';
-            window.scrollTo(0, savedScrollPosition);
-            document.documentElement.style.scrollBehavior = '';
+            document.body.style.overflow = '';
 
             if (panel) {
               panel.style.width = '60px';
@@ -831,7 +845,7 @@
 
             return `
             <section id="${section.id}" class="mb-0 w-full bg-white relative">
-                <div class="w-full h-[60svh] md:h-[80svh] relative flex items-center justify-center overflow-hidden bg-ink">
+                <div class="w-full h-[60vh] md:h-[80vh] relative flex items-center justify-center overflow-hidden bg-ink">
                     <div class="absolute inset-0 z-20"></div>
                     ${section.img ? `<div class="absolute inset-0 parallax-bg" style="background-image: url('${section.img}')"></div>` : `<div class="absolute inset-0 bg-gradient-to-b from-ink via-[#1a1a1a] to-ink"></div>`}
                     <div class="absolute inset-0 bg-black/40 pointer-events-none"></div>
