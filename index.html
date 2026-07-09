@@ -127,30 +127,6 @@
       filter: invert(76%) sepia(35%) saturate(859%) hue-rotate(5deg) brightness(92%) contrast(85%);
     }
   </style>
-
-  <!-- IN-APP BROWSER REDIRECT -->
-  <script>
-    (function() {
-      var ua = navigator.userAgent || navigator.vendor || window.opera;
-      var isInApp = /Instagram|FBAN|FBAV|Snapchat|Line|TikTok/i.test(ua);
-      var isAndroid = /Android/i.test(ua);
-      var isIOS = /iPhone|iPad|iPod/i.test(ua);
-      
-      if (isInApp) {
-        if (isAndroid) {
-          var urlNoProtocol = window.location.href.replace(/^https?:\/\//, '');
-          window.location.href = 'intent://' + urlNoProtocol + '#Intent;scheme=https;package=com.android.chrome;end';
-        } else if (isIOS) {
-          document.addEventListener('DOMContentLoaded', function() {
-            var overlay = document.createElement('div');
-            overlay.className = 'fixed inset-0 z-[999999] bg-ink flex flex-col items-center justify-center p-8 text-center';
-            overlay.innerHTML = '<div class="text-6xl mb-6 animate-bounce">↗️</div><h2 class="font-cinzel text-2xl text-gold mb-4 tracking-widest uppercase">OTWÓRZ W SAFARI</h2><p class="font-rajdhani text-gray-300 text-lg leading-relaxed max-w-sm">Przeglądarki w aplikacjach (np. Instagram) często ograniczają płynność animacji.<br><br>Jeśli zauważysz skoki podczas przewijania, kliknij ikonę <b>trzech kropek</b> w prawym górnym rogu i wybierz:<br><br><span class="text-gold font-bold">\"Otwórz w domyślnej przeglądarce\"</span>.</p>';
-            document.body.appendChild(overlay);
-          });
-        }
-      }
-    })();
-  </script>
 </head>
 <body class="antialiased" oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
 
