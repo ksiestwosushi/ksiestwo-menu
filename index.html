@@ -141,6 +141,7 @@
     }
 
     .menu-panel {
+      display: none !important;
       width: min(calc(100vw - 2.5rem), 380px);
       height: min(85vh, 620px);
       max-height: calc(100svh - 2.5rem);
@@ -163,6 +164,10 @@
     }
 
     .menu-panel.is-open {
+      display: flex !important;
+    }
+
+    .menu-panel.is-visible {
       transform: translate3d(0, 0, 0) scale(1);
       opacity: 1;
       pointer-events: auto;
@@ -170,6 +175,7 @@
     }
 
     .menu-overlay {
+      display: none !important;
       opacity: 0;
       pointer-events: none;
       visibility: hidden;
@@ -182,6 +188,10 @@
     }
 
     .menu-overlay.is-active {
+      display: block !important;
+    }
+
+    .menu-overlay.is-visible {
       opacity: 1;
       pointer-events: auto;
       visibility: visible;
@@ -628,7 +638,7 @@
       const trigger = document.getElementById('menu-trigger');
       const closeBtn = document.getElementById('close-menu');
 
-      setMenuState(false);
+      setMenuState(false, true);
 
       if (trigger) {
         trigger.addEventListener('click', (e) => {
@@ -743,24 +753,56 @@
       initApp();
     }
 
+    let menuCloseTimer = null;
+
     window.toggleMenu = function(expand) {
         isMenuExpanded = typeof expand === 'boolean' ? expand : !isMenuExpanded;
         setMenuState(isMenuExpanded);
     };
 
-    function setMenuState(expanded) {
+    function setMenuState(expanded, immediate = false) {
         const panel = document.getElementById('menu-panel');
         const trigger = document.getElementById('menu-trigger');
         const overlay = document.getElementById('menu-overlay');
 
+        if (menuCloseTimer) {
+            clearTimeout(menuCloseTimer);
+            menuCloseTimer = null;
+        }
+
         if (expanded) {
+            // 1. Remove display: none (apply display: flex / block)
             if (overlay) overlay.classList.add('is-active');
             if (panel) panel.classList.add('is-open');
             if (trigger) trigger.classList.add('is-hidden');
+
+            // Force reflow tick so initial scale(0.25) & opacity: 0 are registered
+            if (panel) void panel.offsetHeight;
+            if (overlay) void overlay.offsetHeight;
+
+            // 2. Trigger GPU-accelerated transition to scale(1) & opacity: 1
+            if (panel) panel.classList.add('is-visible');
+            if (overlay) overlay.classList.add('is-visible');
         } else {
-            if (overlay) overlay.classList.remove('is-active');
-            if (panel) panel.classList.remove('is-open');
+            // 1. Trigger transition back to scale(0.25) & opacity: 0
+            if (panel) panel.classList.remove('is-visible');
+            if (overlay) overlay.classList.remove('is-visible');
             if (trigger) trigger.classList.remove('is-hidden');
+
+            if (immediate) {
+                if (panel) panel.classList.remove('is-open');
+                if (overlay) overlay.classList.remove('is-active');
+                return;
+            }
+
+            // 2. Return display: none strictly AFTER the 380ms CSS animation completes
+            menuCloseTimer = setTimeout(() => {
+                if (!isMenuExpanded) {
+                    if (panel) panel.classList.remove('is-open');
+                    if (overlay) overlay.classList.remove('is-active');
+                }
+                menuCloseTimer = null;
+            }, 380);
         }
     }
 
