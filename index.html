@@ -232,6 +232,13 @@
       -webkit-backface-visibility: hidden;
     }
 
+    /* Disable body scroll when menu is active */
+    body.scroll-locked {
+      overflow: hidden !important;
+      touch-action: none !important;
+      -webkit-overflow-scrolling: auto !important;
+    }
+
     .icon-filter-gold {
       filter: invert(76%) sepia(35%) saturate(859%) hue-rotate(5deg) brightness(92%) contrast(85%);
     }
@@ -278,7 +285,7 @@
   <!-- FLOATING MENU UI (PLACED AT ROOT BODY LEVEL TO PREVENT FIXED COORDINATE DESYNC) -->
   <div id="menu-overlay" class="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm menu-overlay" onclick="toggleMenu(false)"></div>
 
-  <button id="menu-trigger" aria-label="Open Menu" class="fixed right-6 top-6 z-50 w-[56px] h-[56px] md:w-[60px] md:h-[60px] rounded-full bg-ink/90 border border-white/15 flex items-center justify-center cursor-pointer shadow-2xl menu-trigger group hover:border-gold/50 active:scale-95 focus:outline-none">
+  <button id="menu-trigger" aria-label="Open Menu" class="fixed right-6 top-6 z-50 w-[56px] h-[56px] md:w-[60px] md:h-[60px] rounded-full bg-ink/90 border border-white/15 flex items-center justify-center cursor-pointer shadow-2xl menu-trigger group hover:border-gold/50 active:scale-95 focus:outline-none opacity-0 pointer-events-none transition-opacity duration-500">
     <div class="flex flex-col gap-1.5 items-end justify-center group-hover:scale-110 transition-transform duration-300 ease-out">
       <span class="w-6 h-0.5 bg-white group-hover:bg-gold transition-colors duration-300"></span>
       <span class="w-4 h-0.5 bg-white group-hover:bg-gold transition-colors duration-300"></span>
@@ -344,11 +351,12 @@
 
   <!-- MAIN APPLICATION -->
   <div id="app" class="min-h-[100svh] bg-ink transition-opacity duration-1000 opacity-0 relative hidden">
-    <!-- SHARED FIXED BACKGROUND -->
-    <div id="fixed-bg" class="fixed inset-0 w-full h-[100lvh] z-0 bg-ink pointer-events-none transform-gpu" style="transform: translateZ(0);">
-        <div class="absolute inset-0 z-20"></div>
-        <img id="hero-img" src="" class="w-full h-full object-cover opacity-40 mix-blend-overlay relative z-0" alt="Hero Background">
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-ink/50 to-ink z-10"></div>
+    <!-- SHARED FIXED BACKGROUND WITH DYNAMIC SUBTLE PARALLAX -->
+    <div id="fixed-bg" class="fixed inset-0 w-full h-[100lvh] z-0 bg-ink pointer-events-none transform-gpu overflow-hidden" style="transform: translateZ(0);">
+        <div id="fixed-bg-img" class="absolute -top-[15%] -left-[5%] w-[110%] h-[130%] bg-center bg-cover bg-no-repeat opacity-30 mix-blend-luminosity filter brightness-90 contrast-125 transition-transform ease-out duration-100 will-change-transform" style="background-image: url('./images/zestawy.jpg'); transform: translate3d(0, 0, 0);"></div>
+        <!-- Atmospheric Vignette & Soft Gradient Mesh -->
+        <div class="absolute inset-0 bg-gradient-to-b from-ink/80 via-ink/60 to-ink z-10 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(15,15,15,0.7)_100%)] z-15 pointer-events-none"></div>
     </div>
 
     <!-- SCROLLABLE CONTENT -->
@@ -432,12 +440,12 @@
   </div>
 
   <!-- ALLERGY INFO MODAL -->
-  <div id="info-modal" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex justify-center items-center p-6 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] hidden opacity-0" style="padding-top: env(safe-area-inset-top);">
-    <div class="bg-paper max-w-xl w-full p-12 relative shadow-2xl border border-gold/20 transform scale-95 transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]" id="info-modal-content">
-      <button onclick="closeInfoModal()" class="absolute top-6 right-6 text-3xl text-gray-300 hover:text-gold transition-colors leading-none cursor-pointer">&times;</button>
-      <h2 id="modal-title" class="font-cinzel text-3xl text-ink mb-8 text-center tracking-widest">Allergy Information</h2>
-      <div id="modal-text" class="font-rajdhani text-gray-600 leading-8 text-lg mb-8 text-justify font-light"></div>
-     <div id="modal-service" class="hidden p-4 bg-alabaster text-center text-xs text-gold-dark font-bold uppercase tracking-[0.2em] border border-gold/10"></div>
+  <div id="info-modal" onclick="closeInfoModal()" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex justify-center items-center p-6 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] hidden opacity-0 cursor-pointer" style="padding-top: env(safe-area-inset-top);">
+    <div onclick="event.stopPropagation()" class="bg-paper max-w-xl w-full p-8 md:p-12 relative shadow-2xl border border-gold/20 transform scale-95 transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] rounded-2xl cursor-default" id="info-modal-content">
+      <button onclick="closeInfoModal()" aria-label="Close allergy info" class="absolute top-4 right-5 md:top-6 md:right-6 text-3xl text-gray-400 hover:text-gold transition-colors leading-none cursor-pointer p-2">&times;</button>
+      <h2 id="modal-title" class="font-cinzel text-2xl md:text-3xl text-ink mb-6 md:mb-8 text-center tracking-widest">Allergy Information</h2>
+      <div id="modal-text" class="font-rajdhani text-gray-600 leading-7 md:leading-8 text-base md:text-lg mb-6 md:mb-8 text-justify font-light"></div>
+      <div id="modal-service" class="hidden p-4 bg-alabaster text-center text-xs text-gold-dark font-bold uppercase tracking-[0.2em] border border-gold/10"></div>
     </div>
   </div>
 
@@ -698,7 +706,25 @@
         });
       }
 
-      // Desktop accessibility: Close menu / modal on Escape
+      // Smooth background parallax gliding with scroll
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            const bgImg = document.getElementById('fixed-bg-img');
+            if (bgImg) {
+              const scrolled = window.pageYOffset || document.documentElement.scrollTop;
+              // Gentle smooth parallax displacement down
+              const yPos = scrolled * 0.15;
+              bgImg.style.transform = `translate3d(0, ${yPos}px, 0)`;
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+
+      // Accessibility: Close menu / modal on Escape
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           if (isMenuExpanded) toggleMenu(false);
@@ -728,7 +754,13 @@
             langSel.style.display = 'none';
             const app = document.getElementById('app');
             app.classList.remove('hidden');
-            requestAnimationFrame(() => app.classList.remove('opacity-0'));
+            requestAnimationFrame(() => {
+              app.classList.remove('opacity-0');
+              const trigger = document.getElementById('menu-trigger');
+              if (trigger) {
+                trigger.classList.remove('opacity-0', 'pointer-events-none');
+              }
+            });
             renderApp();
           }, 700);
       };
@@ -813,6 +845,9 @@
         }
 
         if (expanded) {
+            // Lock body scroll to prevent page scrolling while menu is open
+            document.body.classList.add('scroll-locked');
+
             // 1. Remove display: none (apply display: flex / block)
             if (overlay) overlay.classList.add('is-active');
             if (panel) panel.classList.add('is-open');
@@ -826,6 +861,9 @@
             if (panel) panel.classList.add('is-visible');
             if (overlay) overlay.classList.add('is-visible');
         } else {
+            // Unlock body scroll immediately so scrolling works naturally
+            document.body.classList.remove('scroll-locked');
+
             // 1. Trigger transition back to scale(0.25) & opacity: 0
             if (panel) panel.classList.remove('is-visible');
             if (overlay) overlay.classList.remove('is-visible');
