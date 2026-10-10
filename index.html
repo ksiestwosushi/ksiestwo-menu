@@ -124,7 +124,7 @@
 
     /* GPU ACCELERATED MENU SYSTEM (NO RESIZE/REFLOW JANK) */
     .menu-trigger {
-      transform: translate3d(0, 0, 0) scale(1);
+      transform: scale(1);
       opacity: 1;
       pointer-events: auto;
       will-change: transform, opacity;
@@ -135,7 +135,7 @@
     }
 
     .menu-trigger.is-hidden {
-      transform: translate3d(0, 0, 0) scale(0.6);
+      transform: scale(0.6);
       opacity: 0;
       pointer-events: none;
     }
@@ -275,43 +275,40 @@
     </div>
   </div>
 
-  <!-- MAIN APPLICATION -->
-  <div id="app" class="min-h-[100svh] bg-ink transition-opacity duration-1000 opacity-0 relative hidden">
+  <!-- FLOATING MENU UI (PLACED AT ROOT BODY LEVEL TO PREVENT FIXED COORDINATE DESYNC) -->
+  <div id="menu-overlay" class="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm menu-overlay" onclick="toggleMenu(false)"></div>
+
+  <button id="menu-trigger" aria-label="Open Menu" class="fixed right-6 top-6 z-50 w-[56px] h-[56px] md:w-[60px] md:h-[60px] rounded-full bg-ink/90 border border-white/15 flex items-center justify-center cursor-pointer shadow-2xl menu-trigger group hover:border-gold/50 active:scale-95 focus:outline-none">
+    <div class="flex flex-col gap-1.5 items-end justify-center group-hover:scale-110 transition-transform duration-300 ease-out">
+      <span class="w-6 h-0.5 bg-white group-hover:bg-gold transition-colors duration-300"></span>
+      <span class="w-4 h-0.5 bg-white group-hover:bg-gold transition-colors duration-300"></span>
+      <span class="w-6 h-0.5 bg-white group-hover:bg-gold transition-colors duration-300"></span>
+    </div>
+  </button>
+
+  <div id="menu-panel" class="fixed right-6 top-6 z-50 menu-panel bg-ink/95 border border-white/10 flex flex-col rounded-3xl p-6 overflow-hidden">
+    <button id="close-menu" aria-label="Close Menu" class="absolute top-5 right-6 text-white/70 hover:text-gold text-3xl z-50 transition-colors cursor-pointer leading-none font-light p-2 focus:outline-none">&times;</button>
     
-    <!-- MENU OVERLAY -->
-    <div id="menu-overlay" class="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm menu-overlay" onclick="toggleMenu(false)"></div>
-
-    <!-- FLOATING TRIGGER BUTTON (GPU-ACCELERATED) -->
-    <button id="menu-trigger" aria-label="Open Menu" class="fixed right-6 top-6 z-50 w-[56px] h-[56px] md:w-[60px] md:h-[60px] rounded-full bg-ink/90 border border-white/15 flex items-center justify-center cursor-pointer shadow-2xl menu-trigger group hover:border-gold/50 active:scale-95 focus:outline-none">
-      <div class="flex flex-col gap-1.5 items-end justify-center group-hover:scale-110 transition-transform duration-300 ease-out">
-        <span class="w-6 h-0.5 bg-white group-hover:bg-gold transition-colors duration-300"></span>
-        <span class="w-4 h-0.5 bg-white group-hover:bg-gold transition-colors duration-300"></span>
-        <span class="w-6 h-0.5 bg-white group-hover:bg-gold transition-colors duration-300"></span>
-      </div>
-    </button>
-
-    <!-- FLOATING MENU PANEL (GPU-ACCELERATED SCALE & OPACITY) -->
-    <div id="menu-panel" class="fixed right-6 top-6 z-50 menu-panel bg-ink/95 border border-white/10 flex flex-col rounded-3xl p-6 overflow-hidden">
-      <button id="close-menu" aria-label="Close Menu" class="absolute top-5 right-6 text-white/70 hover:text-gold text-3xl z-50 transition-colors cursor-pointer leading-none font-light p-2 focus:outline-none">&times;</button>
-      
-      <div class="flex items-center gap-4 border-b border-white/10 pb-5 mb-4 pr-10">
-         <div class="w-10 h-10 rounded-full bg-gold text-ink flex items-center justify-center font-cinzel font-bold text-sm shrink-0">KS</div>
-         <span class="font-cinzel text-white text-xl tracking-[0.2em] font-medium truncate">KSIĘSTWO</span>
-      </div>
-
-      <div class="flex-1 overflow-y-auto overscroll-contain no-scrollbar flex flex-col gap-2 py-1" style="-webkit-overflow-scrolling: touch;">
-         <div id="menu-list" class="flex flex-col gap-2"></div>
-      </div>
-
-      <div class="mt-auto pt-5 flex justify-between items-center border-t border-white/10">
-         <div class="flex bg-white/5 rounded-full p-1 gap-1">
-            <button onclick="switchLang('pl')" class="lang-btn-pl px-4 py-2 rounded-full text-xs font-bold transition-all uppercase tracking-widest text-white/60 cursor-pointer">PL</button>
-            <button onclick="switchLang('en')" class="lang-btn-en px-4 py-2 rounded-full text-xs font-bold transition-all uppercase tracking-widest text-white/60 cursor-pointer">EN</button>
-         </div>
-         <button onclick="openInfoModal()" aria-label="Allergy Info" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gold hover:bg-gold hover:text-ink transition-colors cursor-pointer text-lg font-cinzel">i</button>
-      </div>
+    <div class="flex items-center gap-4 border-b border-white/10 pb-5 mb-4 pr-10">
+       <div class="w-10 h-10 rounded-full bg-gold text-ink flex items-center justify-center font-cinzel font-bold text-sm shrink-0">KS</div>
+       <span class="font-cinzel text-white text-xl tracking-[0.2em] font-medium truncate">KSIĘSTWO</span>
     </div>
 
+    <div class="flex-1 overflow-y-auto overscroll-contain no-scrollbar flex flex-col gap-2 py-1" style="-webkit-overflow-scrolling: touch;">
+       <div id="menu-list" class="flex flex-col gap-2"></div>
+    </div>
+
+    <div class="mt-auto pt-5 flex justify-between items-center border-t border-white/10">
+       <div class="flex bg-white/5 rounded-full p-1 gap-1">
+          <button onclick="switchLang('pl')" class="lang-btn-pl px-4 py-2 rounded-full text-xs font-bold transition-all uppercase tracking-widest text-white/60 cursor-pointer">PL</button>
+          <button onclick="switchLang('en')" class="lang-btn-en px-4 py-2 rounded-full text-xs font-bold transition-all uppercase tracking-widest text-white/60 cursor-pointer">EN</button>
+       </div>
+       <button onclick="openInfoModal()" aria-label="Allergy Info" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gold hover:bg-gold hover:text-ink transition-colors cursor-pointer text-lg font-cinzel">i</button>
+    </div>
+  </div>
+
+  <!-- MAIN APPLICATION -->
+  <div id="app" class="min-h-[100svh] bg-ink transition-opacity duration-1000 opacity-0 relative hidden">
     <!-- SHARED FIXED BACKGROUND -->
     <div id="fixed-bg" class="fixed inset-0 w-full h-[100lvh] z-0 bg-ink pointer-events-none transform-gpu" style="transform: translateZ(0);">
         <div class="absolute inset-0 z-20"></div>
