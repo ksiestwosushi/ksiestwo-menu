@@ -75,6 +75,7 @@
       background-color: #0F0F0F;
       color: #0F0F0F;
       overflow-x: hidden;
+      overscroll-behavior-y: none;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
@@ -88,6 +89,7 @@
     html {
       -webkit-overflow-scrolling: touch;
       scroll-behavior: smooth;
+      overscroll-behavior-y: none;
     }
     
     img {
@@ -367,7 +369,7 @@
   <!-- MAIN APPLICATION -->
   <div id="app" class="min-h-[100svh] bg-ink transition-opacity duration-1000 opacity-0 relative hidden">
     <!-- SHARED FIXED BACKGROUND WITH DYNAMIC SUBTLE PARALLAX -->
-    <div id="fixed-bg" class="fixed inset-0 w-full h-[100lvh] z-0 bg-ink pointer-events-none transform-gpu overflow-hidden" style="transform: translateZ(0);">
+    <div id="fixed-bg" class="fixed inset-0 w-full z-0 bg-ink pointer-events-none transform-gpu overflow-hidden" style="transform: translateZ(0);">
         <div id="fixed-bg-img" class="absolute -top-[15%] -left-[5%] w-[110%] h-[130%] bg-center bg-cover bg-no-repeat opacity-30 mix-blend-luminosity filter brightness-90 contrast-125 transition-transform ease-out duration-100 will-change-transform" style="background-image: url('./images/zestawy.jpg'); transform: translate3d(0, 0, 0);"></div>
         <!-- Atmospheric Vignette & Soft Gradient Mesh -->
         <div class="absolute inset-0 bg-gradient-to-b from-ink/80 via-ink/60 to-ink z-10 pointer-events-none"></div>
@@ -746,8 +748,14 @@
       }
 
       // Smooth background parallax gliding with scroll
+      // (skipped on touch/mobile devices — same condition as the .parallax-bg
+      // CSS rule above — so phones aren't repainting a huge blended/filtered
+      // layer on every scroll frame while the browser's own toolbar is also
+      // animating; that combination is what was reading as "jumping".)
+      const noParallaxMQ = window.matchMedia('(max-width: 1024px), (pointer: coarse), (hover: none)');
       let ticking = false;
       window.addEventListener('scroll', () => {
+        if (noParallaxMQ.matches) return;
         if (!ticking) {
           window.requestAnimationFrame(() => {
             const bgImg = document.getElementById('fixed-bg-img');
