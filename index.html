@@ -367,7 +367,7 @@
   </div>
 
   <!-- MAIN APPLICATION -->
-  <div id="app" class="min-h-[100svh] bg-ink transition-opacity duration-1000 opacity-0 relative hidden">
+  <div id="app" class="min-h-[100svh] bg-ink transition-opacity duration-1000 opacity-0 relative">
     <!-- SHARED FIXED BACKGROUND WITH DYNAMIC SUBTLE PARALLAX -->
     <div id="fixed-bg" class="fixed inset-0 w-full z-0 bg-ink pointer-events-none transform-gpu overflow-hidden" style="transform: translateZ(0);">
         <div id="fixed-bg-img" class="absolute -top-[15%] -left-[5%] w-[110%] h-[130%] bg-center bg-cover bg-no-repeat opacity-30 mix-blend-luminosity filter brightness-90 contrast-125 transition-transform ease-out duration-100 will-change-transform" style="background-image: url('./images/zestawy.jpg'); transform: translate3d(0, 0, 0);"></div>
@@ -711,6 +711,11 @@
     let menuCloseTimer = null;
 
     function initApp() {
+      // Render the menu into the DOM straight away (default language: pl),
+      // underneath the intro/language screens, so search engines index the
+      // real content instead of an empty shell waiting for a language click.
+      renderApp();
+
       setTimeout(() => {
         const intro = document.getElementById('intro');
         if (intro) {
@@ -800,7 +805,6 @@
           setTimeout(() => {
             langSel.style.display = 'none';
             const app = document.getElementById('app');
-            app.classList.remove('hidden');
             requestAnimationFrame(() => {
               app.classList.remove('opacity-0');
               const trigger = document.getElementById('menu-trigger');
